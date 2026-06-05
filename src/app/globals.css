@@ -1,0 +1,238 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Core palette */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* El VAR Design Tokens */
+  --color-pitch-black: #0a0a12;
+  --color-surface-deep: #11111c;
+  --color-surface: #18182a;
+  --color-surface-raised: #20203a;
+  --color-border: #2a2a45;
+  --color-border-subtle: #1e1e35;
+
+  /* Brand green — football pitch */
+  --color-var-green: #00c85a;
+  --color-var-green-dim: #009942;
+  --color-var-green-glow: rgba(0, 200, 90, 0.15);
+
+  /* VAR blue — broadcast screen */
+  --color-var-blue: #3b82f6;
+  --color-var-blue-dim: #2563eb;
+  --color-var-blue-glow: rgba(59, 130, 246, 0.15);
+
+  /* Gold — trophies and top scores */
+  --color-gold: #f59e0b;
+  --color-gold-dim: #d97706;
+
+  /* Status */
+  --color-live-red: #ef4444;
+  --color-live-red-glow: rgba(239, 68, 68, 0.2);
+  --color-exact-gold: #fbbf24;
+  --color-correct: #10b981;
+  --color-wrong: #6b7280;
+
+  /* Text */
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #475569;
+}
+
+:root {
+  --background: #0a0a12;
+  --foreground: #f1f5f9;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden; /* prevent horizontal scroll on all pages */
+  width: 100%;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2a45;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3b3b60;
+}
+
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid #00c85a;
+  outline-offset: 2px;
+}
+
+/* Smooth transitions for interactive elements */
+a,
+button {
+  transition-property: color, background-color, border-color, opacity, transform;
+  transition-duration: 150ms;
+  transition-timing-function: ease;
+}
+
+/* VAR scan line animation — subtle */
+@keyframes var-scan {
+  0% { transform: translateY(-100%); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+/* Pulse glow for live indicator */
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* Fade in up */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.4s ease both;
+}
+
+.animate-live-pulse {
+  animation: live-pulse 1.5s ease-in-out infinite;
+}
+
+/* Gradient text */
+.text-gradient-green {
+  background: linear-gradient(135deg, #00c85a, #00e87a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-blue {
+  background: linear-gradient(135deg, #3b82f6, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Live match card glow — pulses the border shadow */
+@keyframes live-glow {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px rgba(239, 68, 68, 0.40),
+      0 0 16px rgba(239, 68, 68, 0.20),
+      0 0 36px rgba(239, 68, 68, 0.09);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(239, 68, 68, 0.70),
+      0 0 28px rgba(239, 68, 68, 0.38),
+      0 0 56px rgba(239, 68, 68, 0.16);
+  }
+}
+.animate-live-glow {
+  animation: live-glow 1.8s ease-in-out infinite;
+}
+
+/* ── Goal celebration ─────────────────────────────────────────────────
+   Triggered client-side when a live match score changes between refreshes.
+   animate-goal-card replaces animate-live-glow for its 2 s duration.
+   Reduced-motion: shake is disabled; green glow still plays.
+   ──────────────────────────────────────────────────────────────────── */
+@keyframes goal-shake {
+  0%,100% { transform: translateX(0)    rotate(0deg); }
+  15%     { transform: translateX(-5px) rotate(-0.6deg); }
+  30%     { transform: translateX( 5px) rotate( 0.6deg); }
+  50%     { transform: translateX(-4px); }
+  70%     { transform: translateX( 3px); }
+  85%     { transform: translateX(-2px); }
+}
+
+@keyframes goal-glow {
+  0%   { box-shadow: 0 0 0 0   rgba(0,200,90,0);    border-color: rgba(239,68,68,0.35); }
+  15%  { box-shadow: 0 0 0 8px rgba(0,200,90,0.55), 0 0 48px rgba(0,200,90,0.40); border-color: rgba(0,200,90,0.90); }
+  50%  { box-shadow: 0 0 0 4px rgba(0,200,90,0.30), 0 0 24px rgba(0,200,90,0.25); border-color: rgba(0,200,90,0.60); }
+  100% { box-shadow: 0 0 0 0   rgba(0,200,90,0);    border-color: rgba(239,68,68,0.35); }
+}
+
+@keyframes goal-badge {
+  0%   { opacity: 0; transform: scale(0.55) translateY(8px); }
+  20%  { opacity: 1; transform: scale(1.12); }
+  45%  { transform: scale(1); opacity: 1; }
+  75%  { transform: scale(1); opacity: 1; }
+  100% { opacity: 0; transform: scale(0.9) translateY(-6px); }
+}
+
+.animate-goal-card {
+  animation:
+    goal-shake 0.55s cubic-bezier(0.36, 0.07, 0.19, 0.97),
+    goal-glow  2s ease-out;
+}
+
+.animate-goal-badge {
+  animation: goal-badge 2s ease-in-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-goal-card {
+    /* Drop shake, keep the green glow so the change is still noticed */
+    animation: goal-glow 2s ease-out;
+  }
+}
+
+/* Confetti particles — used inside GoalCelebrationOverlay.
+   Duration is supplied per-particle via inline animationDuration.
+   Reduced-motion: particles are hidden entirely; the badge still shows. */
+@keyframes confetti-fall {
+  0%   { transform: translateY(0)     rotate(0deg);   opacity: 1; }
+  65%  { opacity: 1; }
+  100% { transform: translateY(160px) rotate(540deg); opacity: 0; }
+}
+
+.animate-confetti-particle {
+  position: absolute;
+  animation: confetti-fall linear forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-confetti-particle { display: none; }
+}
+
+/* Hide scrollbar while preserving scroll behaviour */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
