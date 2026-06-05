@@ -44,11 +44,11 @@ export default function ForgotPasswordPage() {
       {/* Logo */}
       <div className="text-center mb-8">
         <Link href="/login" className="inline-flex items-center gap-2 mb-6">
-          <div className="w-9 h-9 rounded-xl bg-[#00c85a] flex items-center justify-center">
-            <span className="text-xl leading-none">🏆</span>
+          <div className="w-9 h-9 rounded-xl bg-[#38BDF8] flex items-center justify-center">
+            <span className="text-xl leading-none">⚽</span>
           </div>
           <span className="font-bold text-xl text-[#f1f5f9]">
-            La <span className="text-[#00c85a]">Mundialista</span>
+            Techtivo <span className="text-[#38BDF8]">Mundialista</span>
           </span>
         </Link>
         <h1 className="text-2xl font-black text-[#f1f5f9]">Recuperar contraseña</h1>
@@ -59,7 +59,7 @@ export default function ForgotPasswordPage() {
 
       {sent ? (
         <div className="bg-[#11111c] border border-[#1e1e35] rounded-2xl p-6 text-center space-y-4">
-          <CheckCircle2 size={32} className="text-[#00c85a] mx-auto" />
+          <CheckCircle2 size={32} className="text-[#38BDF8] mx-auto" />
           <div>
             <p className="text-sm font-bold text-[#f1f5f9] mb-1">Revisa tu correo</p>
             <p className="text-xs text-[#94a3b8] leading-relaxed">
@@ -68,7 +68,7 @@ export default function ForgotPasswordPage() {
           </div>
           <Link
             href="/login"
-            className="block text-sm text-[#00c85a] hover:text-[#00e87a] transition-colors"
+            className="block text-sm text-[#38BDF8] hover:text-[#7DD3FC] transition-colors"
           >
             ← Volver al inicio de sesión
           </Link>
@@ -98,7 +98,7 @@ export default function ForgotPasswordPage() {
             <button
               type="submit"
               disabled={loading}
-              className="h-14 px-8 bg-[#00c85a] text-[#0a0a12] text-base font-bold rounded-xl hover:bg-[#00e87a] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+              className="h-14 px-8 bg-[#38BDF8] text-[#0a0a12] text-base font-bold rounded-xl hover:bg-[#7DD3FC] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
             >
               {loading ? (
                 <><Loader2 size={16} className="animate-spin" /> Enviando...</>

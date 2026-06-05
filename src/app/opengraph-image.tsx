@@ -29,23 +29,23 @@ export default function OgImage() {
         width:           800,
         height:          500,
         borderRadius:    "50%",
-        background:      "radial-gradient(ellipse, rgba(0,200,90,0.18) 0%, transparent 70%)",
+        background:      "radial-gradient(ellipse, rgba(56,189,248,0.18) 0%, transparent 70%)",
         pointerEvents:   "none",
       }} />
 
-      {/* Trophy icon */}
+      {/* Brand icon */}
       <div style={{
         width:           96,
         height:          96,
         borderRadius:    22,
-        backgroundColor: "#00c85a",
+        backgroundColor: "#38BDF8",
         display:         "flex",
         alignItems:      "center",
         justifyContent:  "center",
         fontSize:        56,
         marginBottom:    32,
       }}>
-        🏆
+        ⚽
       </div>
 
       {/* App name */}
@@ -56,9 +56,9 @@ export default function OgImage() {
         marginBottom: 16,
       }}>
         <span style={{ fontSize: 64, fontWeight: 900, color: "#f1f5f9", letterSpacing: "-1px" }}>
-          La{" "}
+          Techtivo{" "}
         </span>
-        <span style={{ fontSize: 64, fontWeight: 900, color: "#00c85a", letterSpacing: "-1px" }}>
+        <span style={{ fontSize: 64, fontWeight: 900, color: "#38BDF8", letterSpacing: "-1px" }}>
           Mundialista
         </span>
       </div>
@@ -93,7 +93,7 @@ export default function OgImage() {
         left:            0,
         right:           0,
         height:          4,
-        background:      "linear-gradient(90deg, transparent, #00c85a, transparent)",
+        background:      "linear-gradient(90deg, transparent, #38BDF8, transparent)",
       }} />
     </div>,
     { ...size }

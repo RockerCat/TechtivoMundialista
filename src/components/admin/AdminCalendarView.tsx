@@ -81,10 +81,10 @@ function DateSection({ dateKey, matches }: { dateKey: string; matches: Match[] }
 
         <span className={cn(
           "text-xs font-bold uppercase tracking-wide",
-          isToday ? "text-[#00c85a]" : "text-[#94a3b8]"
+          isToday ? "text-[#38BDF8]" : "text-[#94a3b8]"
         )}>
           {formatDateHeader(dateKey)}
-          {isToday && <span className="ml-1.5 text-[9px] font-mono text-[#00c85a]/70">hoy</span>}
+          {isToday && <span className="ml-1.5 text-[9px] font-mono text-[#38BDF8]/70">hoy</span>}
         </span>
 
         {/* Stats pills */}
@@ -96,7 +96,7 @@ function DateSection({ dateKey, matches }: { dateKey: string; matches: Match[] }
             </span>
           )}
           {finished > 0 && (
-            <span className="text-[9px] text-[#00c85a]/60 bg-[#00c85a]/5 px-1 rounded">
+            <span className="text-[9px] text-[#38BDF8]/60 bg-[#38BDF8]/5 px-1 rounded">
               {finished} fin.
             </span>
           )}
@@ -151,7 +151,7 @@ export default function AdminCalendarView({ matches }: { matches: Match[] }) {
             className={cn(
               "flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium transition-colors",
               filter === id
-                ? "bg-[#00c85a]/15 text-[#00c85a] border border-[#00c85a]/25"
+                ? "bg-[#38BDF8]/15 text-[#38BDF8] border border-[#38BDF8]/25"
                 : "bg-[#18182a] text-[#94a3b8] border border-[#2a2a45] hover:text-[#f1f5f9]"
             )}
           >

@@ -56,20 +56,20 @@ function LeaderboardRow({
 
   // Current user overrides top-3 styling
   const rowBg = isCurrentUser
-    ? "bg-[#00c85a]/[0.05]"
+    ? "bg-[#38BDF8]/[0.05]"
     : topAccent?.bg ?? "bg-[#18182a]";
   const rowBorder = isCurrentUser
-    ? "border-[#00c85a]/25"
+    ? "border-[#38BDF8]/25"
     : topAccent?.border ?? "border-[#2a2a45]";
   const rankColor = isCurrentUser
-    ? "text-[#00c85a]"
+    ? "text-[#38BDF8]"
     : topAccent?.text ?? "text-[#64748b]";
 
   const pointsColor =
     entry.total_points === 0
       ? "text-[#2a2a45]"
       : isCurrentUser
-      ? "text-[#00c85a]"
+      ? "text-[#38BDF8]"
       : entry.rank === 1
       ? "text-[#f59e0b]"
       : "text-[#f1f5f9]";
@@ -96,7 +96,7 @@ function LeaderboardRow({
         className={cn(
           "w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-xs font-bold",
           isCurrentUser
-            ? "bg-[#00c85a]/20 text-[#00c85a]"
+            ? "bg-[#38BDF8]/20 text-[#38BDF8]"
             : "bg-[#1e1e35] text-[#94a3b8]"
         )}
       >
@@ -109,13 +109,13 @@ function LeaderboardRow({
           <p
             className={cn(
               "text-sm font-bold truncate",
-              isCurrentUser ? "text-[#00c85a]" : "text-[#f1f5f9]"
+              isCurrentUser ? "text-[#38BDF8]" : "text-[#f1f5f9]"
             )}
           >
             {entry.display_name}
           </p>
           {isCurrentUser && (
-            <span className="text-[10px] text-[#00c85a]/60 font-mono shrink-0">tú</span>
+            <span className="text-[10px] text-[#38BDF8]/60 font-mono shrink-0">tú</span>
           )}
         </div>
         <div className="flex items-center gap-2">
@@ -125,7 +125,7 @@ function LeaderboardRow({
             </span>
           )}
           {entry.result_count > 0 && (
-            <span className="text-[10px] text-[#00c85a] font-mono">
+            <span className="text-[10px] text-[#38BDF8] font-mono">
               ✓{entry.result_count}
             </span>
           )}

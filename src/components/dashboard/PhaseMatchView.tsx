@@ -166,7 +166,7 @@ export default function PhaseMatchView({ matches }: PhaseMatchViewProps) {
               className={cn(
                 "shrink-0 text-sm font-semibold pb-0.5 whitespace-nowrap transition-colors",
                 activeStage === stage
-                  ? "text-[#00c85a]"
+                  ? "text-[#38BDF8]"
                   : "text-[#64748b] hover:text-[#94a3b8]"
               )}
             >

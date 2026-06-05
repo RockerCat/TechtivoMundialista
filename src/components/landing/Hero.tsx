@@ -8,20 +8,20 @@ export default function Hero() {
       <PitchGrid />
 
       {/* Glow effects */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[#00c85a]/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-[#38BDF8]/5 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute bottom-1/4 left-1/4 w-[300px] h-[300px] bg-[#3b82f6]/5 rounded-full blur-[80px] pointer-events-none" />
 
       <div className="relative z-10 flex flex-col items-center text-center max-w-2xl mx-auto gap-6">
         {/* VAR Review label */}
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#18182a] border border-[#2a2a45] text-xs text-[#94a3b8] font-medium">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#00c85a] animate-live-pulse" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] animate-live-pulse" />
           Copa del Mundo 2026 · Grupos de predicciones
         </div>
 
         {/* Main headline */}
         <div className="flex flex-col gap-2">
           <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-none text-[#f1f5f9]">
-            La{" "}
+            Techtivo{" "}
             <span className="text-gradient-green relative">
               Mundialista
               <VarUnderline />
@@ -83,7 +83,7 @@ function VarUnderline() {
     >
       <path
         d="M0 5 Q20 1 40 4 Q60 7 80 3"
-        stroke="#00c85a"
+        stroke="#38BDF8"
         strokeWidth="2"
         strokeLinecap="round"
       />
@@ -148,7 +148,7 @@ function PitchGrid() {
             <path
               d="M 60 0 L 0 0 0 60"
               fill="none"
-              stroke="#00c85a"
+              stroke="#38BDF8"
               strokeWidth="0.5"
             />
           </pattern>

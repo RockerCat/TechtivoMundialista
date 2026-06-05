@@ -50,7 +50,7 @@ function ToggleBtn({ active, onClick, icon, label }: {
   return (
     <button onClick={onClick} className={cn(
       "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all",
-      active ? "bg-[#00c85a]/15 text-[#00c85a] border border-[#00c85a]/25"
+      active ? "bg-[#38BDF8]/15 text-[#38BDF8] border border-[#38BDF8]/25"
              : "text-[#64748b] hover:text-[#94a3b8]"
     )}>
       {icon}{label}

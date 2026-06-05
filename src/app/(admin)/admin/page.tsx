@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { getAdminDashboardStats, getAdminCommunityGroup } from "@/lib/db/admin";
 import CopyInviteLinkButton from "@/components/groups/CopyInviteLinkButton";
-import { CalendarDays, Users, Trophy, Link2, Activity } from "lucide-react";
+import { CalendarDays, Users, Link2, Activity } from "lucide-react";
+import { SoccerBallIcon } from "@/components/ui/SoccerBallIcon";
 
 export default async function AdminPage() {
   const [stats, group] = await Promise.all([
@@ -58,7 +59,7 @@ export default async function AdminPage() {
               <StatCard
                 label="Predicciones"
                 value={stats.total_predictions}
-                icon={<Trophy size={14} />}
+                icon={<SoccerBallIcon size={14} />}
               />
               <StatCard
                 label="Programados"
@@ -90,7 +91,7 @@ export default async function AdminPage() {
           </p>
           <div className="bg-[#11111c] border border-[#1e1e35] rounded-2xl p-5">
             <div className="flex items-center gap-2 mb-3">
-              <Link2 size={14} className="text-[#00c85a]" />
+              <Link2 size={14} className="text-[#38BDF8]" />
               <p className="text-sm font-bold text-[#f1f5f9]">{group.name}</p>
             </div>
             <div className="flex items-center gap-3 flex-wrap">
@@ -126,7 +127,7 @@ export default async function AdminPage() {
           />
           <QuickLink
             href="/admin/ranking"
-            icon={<Trophy size={16} />}
+            icon={<SoccerBallIcon size={16} />}
             label="Ver ranking"
             description="Tabla de posiciones en tiempo real"
           />
@@ -151,7 +152,7 @@ function StatCard({
   accent?: "green" | "red";
 }) {
   const valueColor =
-    accent === "green" ? "text-[#00c85a]" :
+    accent === "green" ? "text-[#38BDF8]" :
     accent === "red"   ? "text-[#ef4444]" :
                          "text-[#f1f5f9]";
 
@@ -182,13 +183,13 @@ function QuickLink({
   return (
     <Link
       href={href}
-      className="flex items-start gap-3 bg-[#11111c] border border-[#1e1e35] rounded-xl p-4 hover:border-[#00c85a]/30 transition-colors group"
+      className="flex items-start gap-3 bg-[#11111c] border border-[#1e1e35] rounded-xl p-4 hover:border-[#38BDF8]/30 transition-colors group"
     >
-      <span className="text-[#64748b] group-hover:text-[#00c85a] transition-colors mt-0.5">
+      <span className="text-[#64748b] group-hover:text-[#38BDF8] transition-colors mt-0.5">
         {icon}
       </span>
       <div>
-        <p className="text-sm font-semibold text-[#f1f5f9] group-hover:text-[#00c85a] transition-colors">
+        <p className="text-sm font-semibold text-[#f1f5f9] group-hover:text-[#38BDF8] transition-colors">
           {label}
         </p>
         <p className="text-[10px] text-[#64748b] mt-0.5">{description}</p>

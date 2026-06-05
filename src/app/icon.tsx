@@ -10,14 +10,14 @@ export default function Icon() {
         width: 32,
         height: 32,
         borderRadius: 7,
-        backgroundColor: "#00c85a",
+        backgroundColor: "#38BDF8",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         fontSize: 20,
       }}
     >
-      🏆
+      ⚽
     </div>,
     { ...size }
   );

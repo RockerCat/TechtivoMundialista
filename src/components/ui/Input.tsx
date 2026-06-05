@@ -39,7 +39,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               "transition-colors duration-150",
               error
                 ? "border-[#ef4444]/50 focus:border-[#ef4444] focus:ring-[#ef4444]/20"
-                : "border-[#2a2a45] focus:border-[#00c85a]/60 focus:ring-[#00c85a]/10",
+                : "border-[#2a2a45] focus:border-[#38BDF8]/60 focus:ring-[#38BDF8]/10",
               "focus:outline-none focus:ring-4",
               leftIcon ? "pl-10 pr-4" : "px-4",
               className

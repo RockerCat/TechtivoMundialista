@@ -94,16 +94,16 @@ export default function ChangePasswordForm() {
       )}
 
       {success && (
-        <div className="flex items-start gap-2 bg-[#00c85a]/8 border border-[#00c85a]/20 rounded-xl px-3 py-2.5">
-          <CheckCircle2 size={14} className="text-[#00c85a] mt-0.5 shrink-0" />
-          <p className="text-xs text-[#00c85a]">Contraseña actualizada correctamente.</p>
+        <div className="flex items-start gap-2 bg-[#38BDF8]/8 border border-[#38BDF8]/20 rounded-xl px-3 py-2.5">
+          <CheckCircle2 size={14} className="text-[#38BDF8] mt-0.5 shrink-0" />
+          <p className="text-xs text-[#38BDF8]">Contraseña actualizada correctamente.</p>
         </div>
       )}
 
       <button
         type="submit"
         disabled={loading}
-        className="h-11 px-6 bg-[#00c85a] text-[#0a0a12] text-sm font-bold rounded-xl hover:bg-[#00e87a] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+        className="h-11 px-6 bg-[#38BDF8] text-[#0a0a12] text-sm font-bold rounded-xl hover:bg-[#7DD3FC] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
       >
         {loading ? (
           <><Loader2 size={14} className="animate-spin" /> Actualizando...</>

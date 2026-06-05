@@ -32,7 +32,7 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
         <div className="bg-[#11111c] border border-[#1e1e35] rounded-2xl p-5 text-left mb-4">
           <p className="text-xs text-[#64748b] leading-relaxed">
             Si ya tienes una cuenta,{" "}
-            <Link href="/login" className="text-[#00c85a] font-semibold hover:text-[#00e87a]">
+            <Link href="/login" className="text-[#38BDF8] font-semibold hover:text-[#7DD3FC]">
               inicia sesión aquí
             </Link>
             . Si recibiste un enlace de invitación, úsalo directamente.

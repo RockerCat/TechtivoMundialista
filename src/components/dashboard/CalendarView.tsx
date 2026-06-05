@@ -106,7 +106,7 @@ function daySubtitle(
 const SUBTITLE_COLOR: Record<SubtitleKind, string> = {
   live:    "text-[#ef4444]",
   pending: "text-[#f59e0b]",
-  done:    "text-[#00c85a]/70",
+  done:    "text-[#38BDF8]/70",
   neutral: "text-[#475569]",
 };
 
@@ -243,7 +243,7 @@ export default function CalendarView({ matches }: { matches: MatchWithPrediction
               className={cn(
                 "shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors",
                 filter === id
-                  ? "bg-[#00c85a]/15 text-[#00c85a] border border-[#00c85a]/25"
+                  ? "bg-[#38BDF8]/15 text-[#38BDF8] border border-[#38BDF8]/25"
                   : "text-[#94a3b8] hover:text-[#f1f5f9] hover:bg-[#18182a] border border-transparent"
               )}
             >

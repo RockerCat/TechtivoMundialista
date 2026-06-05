@@ -105,7 +105,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
           <div className="flex flex-col gap-2 w-full">
             <Link
               href={`/signup?invite=${group.invite_code}&group=${encodeURIComponent(group.name)}`}
-              className="flex items-center justify-center h-12 w-full bg-[#00c85a] text-[#0a0a12] font-bold text-sm rounded-xl hover:bg-[#00e87a] transition-colors"
+              className="flex items-center justify-center h-12 w-full bg-[#38BDF8] text-[#0a0a12] font-bold text-sm rounded-xl hover:bg-[#7DD3FC] transition-colors"
             >
               Crear cuenta y unirme
             </Link>
@@ -142,7 +142,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
             </p>
             <Link
               href="/dashboard"
-              className="inline-flex items-center justify-center h-12 px-8 bg-[#00c85a] text-[#0a0a12] font-bold text-sm rounded-xl hover:bg-[#00e87a] transition-colors"
+              className="inline-flex items-center justify-center h-12 px-8 bg-[#38BDF8] text-[#0a0a12] font-bold text-sm rounded-xl hover:bg-[#7DD3FC] transition-colors"
             >
               Ir al dashboard
             </Link>
@@ -170,7 +170,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
         <InviteJoinForm inviteCode={upperCode} />
         <p className="text-xs text-[#64748b] text-center mt-3">
           ¿No eres tú?{" "}
-          <Link href="/login" className="text-[#00c85a] hover:text-[#00e87a]">
+          <Link href="/login" className="text-[#38BDF8] hover:text-[#7DD3FC]">
             Cambiar de cuenta
           </Link>
         </p>
@@ -191,13 +191,13 @@ function InviteLayout({
   return (
     <main className="min-h-[calc(100dvh-56px)] flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden">
       {/* Glow */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-[#00c85a]/4 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-[#38BDF8]/4 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="relative z-10 w-full max-w-sm animate-fade-in-up">
         {/* Header */}
         <div className="text-center mb-6">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#18182a] border border-[#2a2a45] text-xs text-[#94a3b8] mb-4">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00c85a] animate-live-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] animate-live-pulse" />
             Te invitaron a jugar Techtivo Mundialista
           </div>
           <p className="text-sm text-[#94a3b8] mb-2">Únete al grupo y demuestra que sabes más fútbol que tus amigos.</p>
@@ -207,7 +207,7 @@ function InviteLayout({
         {/* Group card */}
         <Card className="p-5 mb-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#00c85a]/10 flex items-center justify-center shrink-0 text-xl">
+            <div className="w-10 h-10 rounded-xl bg-[#38BDF8]/10 flex items-center justify-center shrink-0 text-xl">
               ⚽
             </div>
             <div>

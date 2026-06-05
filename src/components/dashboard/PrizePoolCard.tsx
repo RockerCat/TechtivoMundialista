@@ -1,4 +1,4 @@
-import { type PrizePool, formatCOP, type LeaderboardEntry } from "@/lib/groups";
+import { type PrizePool, formatCOP, formatCompactCOP, type LeaderboardEntry } from "@/lib/groups";
 
 interface PrizePoolCardProps {
   pool:        PrizePool;
@@ -44,7 +44,10 @@ export default function PrizePoolCard({ pool, leaderboard }: PrizePoolCardProps)
         </div>
         <div className="bg-[#18182a] border border-[#1e1e35] rounded-xl p-3 text-center">
           <p className="text-[10px] text-[#64748b] mb-1">Inscripción</p>
-          <p className="text-xl font-black text-[#f1f5f9]">{formatCOP(pool.config.entry_fee)}</p>
+          <p className="text-xl font-black text-[#f1f5f9] tabular-nums leading-none">
+            <span className="lg:hidden">{formatCOP(pool.config.entry_fee)}</span>
+            <span className="hidden lg:inline">{formatCompactCOP(pool.config.entry_fee)}</span>
+          </p>
         </div>
       </div>
 

@@ -20,13 +20,13 @@ interface Props {
 
 function positionClass(idx: number): string {
   if (idx === 0) return "border-l-2 border-l-[#f59e0b]";
-  if (idx === 1) return "border-l-2 border-l-[#00c85a]";
+  if (idx === 1) return "border-l-2 border-l-[#38BDF8]";
   if (idx === 2) return "border-l-2 border-l-[#f59e0b]/50";
   return "border-l-2 border-l-transparent";
 }
 
 function goalDiffClass(d: number): string {
-  if (d > 0) return "text-[#00c85a]";
+  if (d > 0) return "text-[#38BDF8]";
   if (d < 0) return "text-red-400";
   return "text-[#64748b]";
 }
@@ -85,7 +85,7 @@ function GroupCard({ group }: { group: GroupStanding }) {
                 <td className={`px-1.5 py-2.5 text-center font-mono ${goalDiffClass(s.goal_diff)}`}>
                   {fmtDiff(s.goal_diff)}
                 </td>
-                <td className={`px-1.5 py-2.5 text-center font-black text-sm ${idx === 0 ? "text-[#f59e0b]" : idx === 1 ? "text-[#00c85a]" : "text-[#94a3b8]"}`}>
+                <td className={`px-1.5 py-2.5 text-center font-black text-sm ${idx === 0 ? "text-[#f59e0b]" : idx === 1 ? "text-[#38BDF8]" : "text-[#94a3b8]"}`}>
                   {s.points}
                 </td>
               </tr>
@@ -117,7 +117,7 @@ function GruposTab({ groups }: { groups: GroupStanding[] }) {
           <span className="w-2 h-2 rounded-full bg-[#f59e0b]" /> 1° — clasifica directo
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-[#00c85a]" /> 2° — clasifica directo
+          <span className="w-2 h-2 rounded-full bg-[#38BDF8]" /> 2° — clasifica directo
         </span>
         <span className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-[#f59e0b]/40" /> 3° — posible mejor tercero
@@ -188,15 +188,15 @@ function ClasificadosTab({
 
                 {second ? (
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[9px] font-bold text-[#00c85a] w-4">2°</span>
+                    <span className="text-[9px] font-bold text-[#38BDF8] w-4">2°</span>
                     <span className="text-sm leading-none">{second.team.flag_emoji ?? "🏳️"}</span>
                     <span className="text-xs font-semibold text-[#94a3b8]">{second.team.code}</span>
                     <span className="text-[10px] text-[#64748b] truncate flex-1 min-w-0">{second.team.name}</span>
-                    <span className="text-[10px] font-black text-[#00c85a] shrink-0">{second.points}pts</span>
+                    <span className="text-[10px] font-black text-[#38BDF8] shrink-0">{second.points}pts</span>
                   </div>
                 ) : (
                   <div className="flex items-center gap-1.5 opacity-40">
-                    <span className="text-[9px] font-bold text-[#00c85a] w-4">2°</span>
+                    <span className="text-[9px] font-bold text-[#38BDF8] w-4">2°</span>
                     <span className="text-[10px] text-[#64748b]">Por definir</span>
                   </div>
                 )}
@@ -362,7 +362,7 @@ export default function ClassificationTabs({ groups, bestThirds, roundOf32 }: Pr
               onClick={() => setTab(t)}
               className={`px-4 py-2 rounded-lg text-xs font-semibold transition-colors ${
                 active
-                  ? "bg-[#00c85a]/10 text-[#00c85a]"
+                  ? "bg-[#38BDF8]/10 text-[#38BDF8]"
                   : "text-[#64748b] hover:text-[#94a3b8]"
               }`}
             >

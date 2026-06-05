@@ -118,7 +118,7 @@ function filterClass(active: boolean): string {
   return [
     "text-xs px-2.5 py-1 rounded-lg transition-colors font-medium",
     active
-      ? "bg-[#00c85a]/15 text-[#00c85a] border border-[#00c85a]/25"
+      ? "bg-[#38BDF8]/15 text-[#38BDF8] border border-[#38BDF8]/25"
       : "bg-[#18182a] text-[#94a3b8] border border-[#2a2a45] hover:text-[#94a3b8]",
   ].join(" ");
 }

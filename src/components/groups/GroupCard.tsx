@@ -10,7 +10,7 @@ export default function GroupCard({ group }: { group: GroupWithMeta }) {
     <div
       className={cn(
         "relative bg-[#18182a] border border-[#2a2a45] rounded-2xl p-4 transition-all duration-200 cursor-pointer",
-        "hover:border-[#00c85a]/25 hover:shadow-[0_0_20px_rgba(0,200,90,0.06)]"
+        "hover:border-[#38BDF8]/25 hover:shadow-[0_0_20px_rgba(56,189,248,0.06)]"
       )}
     >
       {/* Overlay link — covers entire card, below z-10 content */}

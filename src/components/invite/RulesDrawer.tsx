@@ -58,13 +58,13 @@ export default function RulesDrawer({
             Marcador exacto: 3 puntos (fase de grupos)
           </li>
           <li className="flex items-center gap-2.5 text-xs text-[#94a3b8]">
-            <span className="w-5 h-5 rounded-full bg-[#00c85a]/15 text-[#00c85a] flex items-center justify-center text-[10px] font-black shrink-0">
+            <span className="w-5 h-5 rounded-full bg-[#38BDF8]/15 text-[#38BDF8] flex items-center justify-center text-[10px] font-black shrink-0">
               1
             </span>
             Ganador correcto: 1 punto (fase de grupos)
           </li>
           <li className="flex items-center gap-2.5 text-xs text-[#94a3b8]">
-            <span className="text-base leading-none shrink-0">🏆</span>
+            <span className="text-base leading-none shrink-0">⚽</span>
             Bolsa de premios para los mejores participantes
           </li>
         </ul>
@@ -134,7 +134,7 @@ export default function RulesDrawer({
                   <div className="grid grid-cols-[1fr_auto_auto] gap-3 px-4 py-2.5 border-b border-[#1e1e35]">
                     <span className="text-[10px] font-bold text-[#64748b] uppercase tracking-widest">Fase</span>
                     <span className="text-[10px] font-bold text-[#f59e0b]/70 uppercase tracking-widest text-right w-[72px]">Exacto</span>
-                    <span className="text-[10px] font-bold text-[#00c85a]/70 uppercase tracking-widest text-right w-[72px]">Ganador</span>
+                    <span className="text-[10px] font-bold text-[#38BDF8]/70 uppercase tracking-widest text-right w-[72px]">Ganador</span>
                   </div>
 
                   {SCORING_TABLE_ROWS.map(({ stage, label }) => {
@@ -148,7 +148,7 @@ export default function RulesDrawer({
                         <span className="text-sm font-black text-[#f59e0b] text-right w-[72px] tabular-nums">
                           {scoring.exact} pts
                         </span>
-                        <span className="text-sm font-black text-[#00c85a] text-right w-[72px] tabular-nums">
+                        <span className="text-sm font-black text-[#38BDF8] text-right w-[72px] tabular-nums">
                           {scoring.result} pt{scoring.result !== 1 ? "s" : ""}
                         </span>
                       </div>

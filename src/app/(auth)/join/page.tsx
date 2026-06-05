@@ -55,11 +55,11 @@ export default function JoinPage() {
       {/* Logo */}
       <div className="text-center mb-8">
         <Link href="/login" className="inline-flex items-center gap-2 mb-6">
-          <div className="w-9 h-9 rounded-xl bg-[#00c85a] flex items-center justify-center">
-            <span className="text-xl leading-none">🏆</span>
+          <div className="w-9 h-9 rounded-xl bg-[#38BDF8] flex items-center justify-center">
+            <span className="text-xl leading-none">⚽</span>
           </div>
           <span className="font-bold text-xl text-[#f1f5f9]">
-            La <span className="text-[#00c85a]">Mundialista</span>
+            Techtivo <span className="text-[#38BDF8]">Mundialista</span>
           </span>
         </Link>
         <h1 className="text-2xl font-black text-[#f1f5f9]">Únete al grupo</h1>
@@ -95,7 +95,7 @@ export default function JoinPage() {
                 autoCapitalize="characters"
                 spellCheck={false}
                 autoFocus
-                className="w-full h-12 rounded-xl bg-[#18182a] border border-[#2a2a45] text-[#f1f5f9] pl-10 pr-4 text-sm font-mono tracking-[0.25em] uppercase placeholder:text-[#64748b] placeholder:tracking-normal focus:outline-none focus:border-[#00c85a]/60 focus:ring-4 focus:ring-[#00c85a]/10 transition-colors"
+                className="w-full h-12 rounded-xl bg-[#18182a] border border-[#2a2a45] text-[#f1f5f9] pl-10 pr-4 text-sm font-mono tracking-[0.25em] uppercase placeholder:text-[#64748b] placeholder:tracking-normal focus:outline-none focus:border-[#38BDF8]/60 focus:ring-4 focus:ring-[#38BDF8]/10 transition-colors"
               />
             </div>
             <p className="text-xs text-[#64748b]">
@@ -113,7 +113,7 @@ export default function JoinPage() {
           <button
             type="submit"
             disabled={loading || !code.trim()}
-            className="h-14 px-8 bg-[#00c85a] text-[#0a0a12] text-base font-bold rounded-xl hover:bg-[#00e87a] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+            className="h-14 px-8 bg-[#38BDF8] text-[#0a0a12] text-base font-bold rounded-xl hover:bg-[#7DD3FC] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
           >
             {loading ? (
               <><Loader2 size={16} className="animate-spin" /> Verificando...</>
@@ -126,7 +126,7 @@ export default function JoinPage() {
         <div className="mt-5 pt-4 border-t border-[#1e1e35] text-center">
           <p className="text-sm text-[#94a3b8]">
             ¿Ya tienes cuenta?{" "}
-            <Link href="/login" className="text-[#00c85a] font-semibold hover:text-[#00e87a]">
+            <Link href="/login" className="text-[#38BDF8] font-semibold hover:text-[#7DD3FC]">
               Ingresar
             </Link>
           </p>

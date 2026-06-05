@@ -39,7 +39,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           "active:scale-[0.97]",
           {
             // Variants
-            "bg-[#00c85a] text-[#0a0a12] hover:bg-[#00e87a] shadow-[0_0_20px_rgba(0,200,90,0.25)] hover:shadow-[0_0_28px_rgba(0,200,90,0.4)]":
+            "bg-[#38BDF8] text-[#0a0a12] hover:bg-[#7DD3FC] shadow-[0_0_20px_rgba(56,189,248,0.25)] hover:shadow-[0_0_28px_rgba(56,189,248,0.4)]":
               variant === "primary",
             "bg-[#18182a] text-[#f1f5f9] border border-[#2a2a45] hover:bg-[#20203a] hover:border-[#3b3b60]":
               variant === "secondary",

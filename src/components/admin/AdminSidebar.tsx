@@ -7,19 +7,19 @@ import {
   LayoutDashboard,
   CalendarDays,
   Users,
-  Trophy,
   BarChart3,
   Link2,
   Activity,
   ShieldCheck,
 } from "lucide-react";
 import LogoutButton from "@/components/auth/LogoutButton";
+import { SoccerBallIcon } from "@/components/ui/SoccerBallIcon";
 
 const NAV = [
   { href: "/admin",             label: "Dashboard",    icon: LayoutDashboard },
   { href: "/admin/matches",     label: "Partidos",     icon: CalendarDays    },
   { href: "/admin/users",       label: "Usuarios",     icon: Users           },
-  { href: "/admin/ranking",         label: "Ranking",        icon: Trophy      },
+  { href: "/admin/ranking",         label: "Ranking",        icon: SoccerBallIcon },
   { href: "/admin/classification",  label: "Clasificación",  icon: BarChart3   },
   { href: "/admin/invitations",     label: "Invitaciones",   icon: Link2       },
   { href: "/admin/activity",    label: "Actividad",    icon: Activity        },
@@ -41,8 +41,8 @@ export default function AdminSidebar() {
         {/* Brand */}
         <div className="px-5 py-5 border-b border-[#1e1e35]">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-[#00c85a] flex items-center justify-center">
-              <span className="text-sm leading-none">🏆</span>
+            <div className="w-7 h-7 rounded-lg bg-[#38BDF8] flex items-center justify-center">
+              <span className="text-sm leading-none">⚽</span>
             </div>
             <div>
               <p className="text-xs font-black text-[#f1f5f9] leading-none">Techtivo Mundialista</p>
@@ -60,7 +60,7 @@ export default function AdminSidebar() {
               className={cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors",
                 isActive(href)
-                  ? "bg-[#00c85a]/10 text-[#00c85a]"
+                  ? "bg-[#38BDF8]/10 text-[#38BDF8]"
                   : "text-[#94a3b8] hover:text-[#94a3b8] hover:bg-[#18182a]"
               )}
             >
@@ -80,7 +80,7 @@ export default function AdminSidebar() {
       <header className="md:hidden sticky top-0 z-50 bg-[#080810]/90 backdrop-blur border-b border-[#1e1e35]">
         <div className="flex items-center justify-between px-4 h-12">
           <span className="text-xs font-black text-[#f1f5f9]">
-            La <span className="text-[#00c85a]">Mundialista</span>
+            Techtivo <span className="text-[#38BDF8]">Mundialista</span>
             <span className="text-[#64748b] font-mono font-normal ml-1.5">Admin</span>
           </span>
           <nav className="flex items-center gap-0.5">
@@ -91,7 +91,7 @@ export default function AdminSidebar() {
                 className={cn(
                   "w-9 h-9 flex items-center justify-center rounded-lg transition-colors",
                   isActive(href)
-                    ? "text-[#00c85a] bg-[#00c85a]/10"
+                    ? "text-[#38BDF8] bg-[#38BDF8]/10"
                     : "text-[#64748b] hover:text-[#94a3b8]"
                 )}
               >

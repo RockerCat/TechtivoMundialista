@@ -1,10 +1,10 @@
 import { getAdminActivityLog } from "@/lib/db/admin";
 
 const ACTION_LABELS: Record<string, { label: string; color: string }> = {
-  match_result:      { label: "Resultado actualizado",  color: "text-[#00c85a]"  },
+  match_result:      { label: "Resultado actualizado",  color: "text-[#38BDF8]"  },
   match_fixture:     { label: "Fixture corregido",      color: "text-[#3b82f6]"  },
   user_disable:      { label: "Usuario deshabilitado",  color: "text-[#ef4444]"  },
-  user_enable:       { label: "Usuario habilitado",     color: "text-[#00c85a]"  },
+  user_enable:       { label: "Usuario habilitado",     color: "text-[#38BDF8]"  },
   recalculate_scores:{ label: "Puntos recalculados",    color: "text-[#f59e0b]"  },
 };
 

@@ -17,7 +17,7 @@ export default function CopyInviteLinkButton({ inviteCode }: { inviteCode: strin
     <button
       onClick={handleCopy}
       aria-label="Copiar enlace de invitación"
-      className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-[#00c85a]/10 border border-[#00c85a]/20 text-[#00c85a] hover:bg-[#00c85a]/15 hover:border-[#00c85a]/35 transition-colors"
+      className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-[#38BDF8]/10 border border-[#38BDF8]/20 text-[#38BDF8] hover:bg-[#38BDF8]/15 hover:border-[#38BDF8]/35 transition-colors"
     >
       {copied ? (
         <>

@@ -15,10 +15,10 @@
   --color-border: #2a2a45;
   --color-border-subtle: #1e1e35;
 
-  /* Brand green — football pitch */
-  --color-var-green: #00c85a;
-  --color-var-green-dim: #009942;
-  --color-var-green-glow: rgba(0, 200, 90, 0.15);
+  /* Brand cyan — Techtivo Mundialista */
+  --color-brand: #38BDF8;
+  --color-brand-dim: #0284C7;
+  --color-brand-glow: rgba(56, 189, 248, 0.15);
 
   /* VAR blue — broadcast screen */
   --color-var-blue: #3b82f6;
@@ -84,7 +84,7 @@ body {
 
 /* Focus ring */
 :focus-visible {
-  outline: 2px solid #00c85a;
+  outline: 2px solid #38BDF8;
   outline-offset: 2px;
 }
 
@@ -132,7 +132,7 @@ button {
 
 /* Gradient text */
 .text-gradient-green {
-  background: linear-gradient(135deg, #00c85a, #00e87a);
+  background: linear-gradient(135deg, #38BDF8, #7DD3FC);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -167,7 +167,7 @@ button {
 /* ── Goal celebration ─────────────────────────────────────────────────
    Triggered client-side when a live match score changes between refreshes.
    animate-goal-card replaces animate-live-glow for its 2 s duration.
-   Reduced-motion: shake is disabled; green glow still plays.
+   Reduced-motion: shake is disabled; cyan glow still plays.
    ──────────────────────────────────────────────────────────────────── */
 @keyframes goal-shake {
   0%,100% { transform: translateX(0)    rotate(0deg); }
@@ -179,10 +179,10 @@ button {
 }
 
 @keyframes goal-glow {
-  0%   { box-shadow: 0 0 0 0   rgba(0,200,90,0);    border-color: rgba(239,68,68,0.35); }
-  15%  { box-shadow: 0 0 0 8px rgba(0,200,90,0.55), 0 0 48px rgba(0,200,90,0.40); border-color: rgba(0,200,90,0.90); }
-  50%  { box-shadow: 0 0 0 4px rgba(0,200,90,0.30), 0 0 24px rgba(0,200,90,0.25); border-color: rgba(0,200,90,0.60); }
-  100% { box-shadow: 0 0 0 0   rgba(0,200,90,0);    border-color: rgba(239,68,68,0.35); }
+  0%   { box-shadow: 0 0 0 0   rgba(56,189,248,0);    border-color: rgba(239,68,68,0.35); }
+  15%  { box-shadow: 0 0 0 8px rgba(56,189,248,0.55), 0 0 48px rgba(56,189,248,0.40); border-color: rgba(56,189,248,0.90); }
+  50%  { box-shadow: 0 0 0 4px rgba(56,189,248,0.30), 0 0 24px rgba(56,189,248,0.25); border-color: rgba(56,189,248,0.60); }
+  100% { box-shadow: 0 0 0 0   rgba(56,189,248,0);    border-color: rgba(239,68,68,0.35); }
 }
 
 @keyframes goal-badge {
@@ -205,7 +205,7 @@ button {
 
 @media (prefers-reduced-motion: reduce) {
   .animate-goal-card {
-    /* Drop shake, keep the green glow so the change is still noticed */
+    /* Drop shake, keep the cyan glow so the change is still noticed */
     animation: goal-glow 2s ease-out;
   }
 }

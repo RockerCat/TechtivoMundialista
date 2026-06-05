@@ -96,7 +96,7 @@ export default async function AdminInvitationsPage() {
 
             <PrizeConfigForm
               groupId={group.id}
-              entryFee={group.entry_fee ?? 20000}
+              entryFee={group.entry_fee ?? 50000}
               firstPlacePct={group.first_place_pct ?? 70}
               secondPlacePct={group.second_place_pct ?? 30}
             />

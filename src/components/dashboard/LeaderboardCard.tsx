@@ -26,7 +26,7 @@ export default function LeaderboardCard({
           </p>
           <p className="text-sm font-bold text-[#f1f5f9]">{groupName}</p>
         </div>
-        <button className="text-xs text-[#00c85a] font-semibold hover:text-[#00e87a]">
+        <button className="text-xs text-[#38BDF8] font-semibold hover:text-[#7DD3FC]">
           Ver todos
         </button>
       </div>
@@ -53,7 +53,7 @@ function LeaderboardRow({
   return (
     <div
       className={`flex items-center gap-3 px-4 py-3 ${
-        isCurrentUser ? "bg-[#00c85a]/5" : ""
+        isCurrentUser ? "bg-[#38BDF8]/5" : ""
       }`}
     >
       <div className="w-6 text-center shrink-0">
@@ -67,7 +67,7 @@ function LeaderboardRow({
       <div className="flex-1 min-w-0">
         <p
           className={`text-sm font-semibold truncate ${
-            isCurrentUser ? "text-[#00c85a]" : "text-[#f1f5f9]"
+            isCurrentUser ? "text-[#38BDF8]" : "text-[#f1f5f9]"
           }`}
         >
           {username}

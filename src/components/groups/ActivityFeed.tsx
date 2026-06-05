@@ -49,7 +49,7 @@ function ActivityItem({
         className={cn(
           "w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-xs font-bold",
           isCurrentUser
-            ? "bg-[#00c85a]/20 text-[#00c85a]"
+            ? "bg-[#38BDF8]/20 text-[#38BDF8]"
             : "bg-[#1e1e35] text-[#94a3b8]"
         )}
       >
@@ -63,7 +63,7 @@ function ActivityItem({
           <span
             className={cn(
               "text-sm font-bold",
-              isCurrentUser ? "text-[#00c85a]" : "text-[#f1f5f9]"
+              isCurrentUser ? "text-[#38BDF8]" : "text-[#f1f5f9]"
             )}
           >
             {displayName}
@@ -95,7 +95,7 @@ function ActivityItem({
         <span
           className={cn(
             "text-sm font-black tabular-nums",
-            isExact ? "text-[#f59e0b]" : "text-[#00c85a]"
+            isExact ? "text-[#f59e0b]" : "text-[#38BDF8]"
           )}
         >
           +{entry.points}

@@ -39,7 +39,7 @@ function AdminInput({ className = "", ...props }: React.InputHTMLAttributes<HTML
   return (
     <input
       {...props}
-      className={`h-10 rounded-xl bg-[#0e0e1d] border border-[#2a2a45] text-[#f1f5f9] text-sm px-3 focus:outline-none focus:border-[#00c85a]/60 focus:ring-2 focus:ring-[#00c85a]/10 transition-colors placeholder:text-[#2a2a45] ${className}`}
+      className={`h-10 rounded-xl bg-[#0e0e1d] border border-[#2a2a45] text-[#f1f5f9] text-sm px-3 focus:outline-none focus:border-[#38BDF8]/60 focus:ring-2 focus:ring-[#38BDF8]/10 transition-colors placeholder:text-[#2a2a45] ${className}`}
     />
   );
 }
@@ -48,7 +48,7 @@ function StatusBadge({ status }: { status: string }) {
   const colors: Record<string, string> = {
     scheduled: "bg-[#2a2a45] text-[#94a3b8]",
     live:      "bg-[#ef4444]/15 text-[#ef4444]",
-    finished:  "bg-[#00c85a]/15 text-[#00c85a]",
+    finished:  "bg-[#38BDF8]/15 text-[#38BDF8]",
   };
   const labels: Record<string, string> = {
     scheduled: "Programado", live: "En vivo", finished: "Finalizado",
@@ -71,7 +71,7 @@ function FormFeedback({ state }: { state: UpdateMatchState | UpdateFixtureState 
   }
   const scored = "scored" in state ? state.scored : null;
   return (
-    <div className="flex items-center gap-2 text-xs text-[#00c85a]">
+    <div className="flex items-center gap-2 text-xs text-[#38BDF8]">
       <Check size={12} className="shrink-0" />
       {scored !== null && scored > 0
         ? `Guardado · ${scored} predicción${scored === 1 ? "" : "es"} recalculada${scored === 1 ? "" : "s"}`
@@ -159,7 +159,7 @@ function PredictionsPanel({ matchId }: { matchId: string }) {
                           {p.home_score}–{p.away_score}
                         </span>
                         {p.points !== null && p.points !== undefined && (
-                          <p className={`text-[9px] font-mono ${p.points > 0 ? "text-[#00c85a]" : "text-[#64748b]"}`}>
+                          <p className={`text-[9px] font-mono ${p.points > 0 ? "text-[#38BDF8]" : "text-[#64748b]"}`}>
                             {p.points > 0 ? `+${p.points}` : "0"} pts
                           </p>
                         )}
@@ -264,7 +264,7 @@ export default function MatchEditorCard({ match }: { match: Match }) {
                 name="status"
                 value={statusVal}
                 onChange={(e) => setStatusVal(e.target.value)}
-                className="h-10 rounded-xl bg-[#0e0e1d] border border-[#2a2a45] text-[#f1f5f9] text-sm px-3 focus:outline-none focus:border-[#00c85a]/60 focus:ring-2 focus:ring-[#00c85a]/10 transition-colors"
+                className="h-10 rounded-xl bg-[#0e0e1d] border border-[#2a2a45] text-[#f1f5f9] text-sm px-3 focus:outline-none focus:border-[#38BDF8]/60 focus:ring-2 focus:ring-[#38BDF8]/10 transition-colors"
               >
                 {STATUS_OPTIONS.map(({ value, label }) => (
                   <option key={value} value={value}>{label}</option>
@@ -297,7 +297,7 @@ export default function MatchEditorCard({ match }: { match: Match }) {
 
             <button
               type="submit" disabled={resultPending}
-              className="h-9 px-4 bg-[#00c85a] text-[#0a0a12] text-xs font-bold rounded-xl hover:bg-[#00e87a] disabled:opacity-40 transition-colors flex items-center justify-center gap-2"
+              className="h-9 px-4 bg-[#38BDF8] text-[#0a0a12] text-xs font-bold rounded-xl hover:bg-[#7DD3FC] disabled:opacity-40 transition-colors flex items-center justify-center gap-2"
             >
               {resultPending ? <><Loader2 size={12} className="animate-spin" />Guardando...</> : "Guardar resultado"}
             </button>
@@ -343,7 +343,7 @@ export default function MatchEditorCard({ match }: { match: Match }) {
 
             <button
               type="submit" disabled={fixturePending}
-              className="h-9 px-4 bg-[#18182a] border border-[#2a2a45] text-[#94a3b8] text-xs font-semibold rounded-xl hover:border-[#00c85a]/40 hover:text-[#00c85a] disabled:opacity-40 transition-colors flex items-center justify-center gap-2"
+              className="h-9 px-4 bg-[#18182a] border border-[#2a2a45] text-[#94a3b8] text-xs font-semibold rounded-xl hover:border-[#38BDF8]/40 hover:text-[#38BDF8] disabled:opacity-40 transition-colors flex items-center justify-center gap-2"
             >
               {fixturePending ? <><Loader2 size={12} className="animate-spin" />Guardando...</> : "Guardar fixture"}
             </button>

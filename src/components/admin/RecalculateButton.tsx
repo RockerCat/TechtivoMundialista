@@ -13,7 +13,7 @@ export default function RecalculateButton() {
       <button
         type="submit"
         disabled={pending}
-        className="flex items-center gap-2 h-9 px-4 bg-[#18182a] border border-[#2a2a45] text-[#94a3b8] text-xs font-semibold rounded-xl hover:border-[#00c85a]/40 hover:text-[#00c85a] disabled:opacity-40 transition-colors"
+        className="flex items-center gap-2 h-9 px-4 bg-[#18182a] border border-[#2a2a45] text-[#94a3b8] text-xs font-semibold rounded-xl hover:border-[#38BDF8]/40 hover:text-[#38BDF8] disabled:opacity-40 transition-colors"
       >
         {pending ? (
           <><Loader2 size={13} className="animate-spin" />Recalculando...</>
@@ -23,7 +23,7 @@ export default function RecalculateButton() {
       </button>
 
       {state && "success" in state && (
-        <p className="flex items-center gap-1.5 text-xs text-[#00c85a]">
+        <p className="flex items-center gap-1.5 text-xs text-[#38BDF8]">
           <Check size={11} />
           Recalculado · {state.matches_processed} partidos · {state.predictions_scored} predicciones
         </p>

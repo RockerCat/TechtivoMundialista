@@ -197,11 +197,11 @@ export default function SignupForm({ inviteCode, groupName }: SignupFormProps) {
     <div className="w-full max-w-sm animate-fade-in-up">
       <div className="text-center mb-8">
         <Link href="/login" className="inline-flex items-center gap-2 mb-6">
-          <div className="w-9 h-9 rounded-xl bg-[#00c85a] flex items-center justify-center">
-            <span className="text-xl leading-none">🏆</span>
+          <div className="w-9 h-9 rounded-xl bg-[#38BDF8] flex items-center justify-center">
+            <span className="text-xl leading-none">⚽</span>
           </div>
           <span className="font-bold text-xl text-[#f1f5f9]">
-            La <span className="text-[#00c85a]">Mundialista</span>
+            Techtivo <span className="text-[#38BDF8]">Mundialista</span>
           </span>
         </Link>
         <h1 className="text-2xl font-black text-[#f1f5f9]">Únete a Techtivo Mundialista</h1>
@@ -213,9 +213,9 @@ export default function SignupForm({ inviteCode, groupName }: SignupFormProps) {
       </div>
 
       {inviteCode && (
-        <div className="mb-4 flex items-center gap-3 bg-[#00c85a]/8 border border-[#00c85a]/20 rounded-xl p-3">
-          <div className="w-8 h-8 rounded-lg bg-[#00c85a]/15 flex items-center justify-center shrink-0">
-            <Hash size={14} className="text-[#00c85a]" />
+        <div className="mb-4 flex items-center gap-3 bg-[#38BDF8]/8 border border-[#38BDF8]/20 rounded-xl p-3">
+          <div className="w-8 h-8 rounded-lg bg-[#38BDF8]/15 flex items-center justify-center shrink-0">
+            <Hash size={14} className="text-[#38BDF8]" />
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-xs text-[#94a3b8]">Te invitaron a jugar</p>
@@ -253,15 +253,15 @@ export default function SignupForm({ inviteCode, groupName }: SignupFormProps) {
         <div className="mt-4 pt-4 border-t border-[#1e1e35] text-center">
           <p className="text-sm text-[#94a3b8]">
             ¿Ya tienes cuenta?{" "}
-            <Link href="/login" className="text-[#00c85a] font-semibold hover:text-[#00e87a]">Ingresar</Link>
+            <Link href="/login" className="text-[#38BDF8] font-semibold hover:text-[#7DD3FC]">Ingresar</Link>
           </p>
         </div>
       </Card>
 
       {inviteCode && (
         <div className="flex items-center justify-center gap-2 mt-6">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#00c85a] animate-live-pulse" />
-          <span className="text-xs font-mono text-[#00c85a] uppercase tracking-widest">Invitación validada</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] animate-live-pulse" />
+          <span className="text-xs font-mono text-[#38BDF8] uppercase tracking-widest">Invitación validada</span>
         </div>
       )}
     </div>
@@ -282,7 +282,7 @@ function JoinStatusCard({
   if (status.phase === "joining") {
     return (
       <Card className="p-6 text-center">
-        <Loader2 size={28} className="animate-spin text-[#00c85a] mx-auto mb-3" />
+        <Loader2 size={28} className="animate-spin text-[#38BDF8] mx-auto mb-3" />
         <p className="text-sm font-semibold text-[#f1f5f9]">Uniéndote al grupo...</p>
       </Card>
     );
@@ -291,7 +291,7 @@ function JoinStatusCard({
   if (status.phase === "success") {
     return (
       <Card variant="glow-green" className="p-6 text-center">
-        <CheckCircle2 size={28} className="text-[#00c85a] mx-auto mb-3" />
+        <CheckCircle2 size={28} className="text-[#38BDF8] mx-auto mb-3" />
         <p className="text-base font-black text-[#f1f5f9] mb-1">¡Te uniste al grupo!</p>
         <p className="text-sm text-[#94a3b8] mb-5">{status.groupName}</p>
         <p className="text-xs text-[#64748b]">Redirigiendo al dashboard...</p>
@@ -336,7 +336,7 @@ function JoinStatusCard({
         </button>
         <button
           onClick={onContinue}
-          className="flex-1 h-9 flex items-center justify-center gap-1.5 text-xs font-bold text-[#0a0a12] bg-[#00c85a] rounded-xl hover:bg-[#00e87a] transition-colors"
+          className="flex-1 h-9 flex items-center justify-center gap-1.5 text-xs font-bold text-[#0a0a12] bg-[#38BDF8] rounded-xl hover:bg-[#7DD3FC] transition-colors"
         >
           Ir al dashboard
           <ArrowRight size={12} />

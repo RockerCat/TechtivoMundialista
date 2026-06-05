@@ -71,7 +71,7 @@ export default function PredictionForm({
       <div className="mt-2 pt-2 border-t border-[#1e1e35]">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Check size={13} className="text-[#00c85a]" />
+            <Check size={13} className="text-[#38BDF8]" />
             <span className="text-xs text-[#94a3b8]">Tu predicción</span>
             <span className="text-sm font-black font-mono text-[#f1f5f9]">
               {savedPrediction.home_score} – {savedPrediction.away_score}
@@ -115,7 +115,7 @@ export default function PredictionForm({
           <button
             type="submit"
             disabled={isPending}
-            className="shrink-0 h-9 px-3 bg-[#00c85a] text-[#0a0a12] text-xs font-bold rounded-xl hover:bg-[#00e87a] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="shrink-0 h-9 px-3 bg-[#38BDF8] text-[#0a0a12] text-xs font-bold rounded-xl hover:bg-[#7DD3FC] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {isPending ? "..." : savedPrediction ? "Actualizar" : "Guardar"}
           </button>
@@ -170,7 +170,7 @@ function ScoreInput({
       placeholder="0"
       disabled={disabled}
       required
-      className="w-11 h-9 text-center text-base font-black rounded-xl bg-[#20203a] border border-[#2a2a45] text-[#f1f5f9] placeholder:text-[#2a2a45] focus:border-[#00c85a]/60 focus:outline-none focus:ring-2 focus:ring-[#00c85a]/10 disabled:opacity-50 tabular-nums"
+      className="w-11 h-9 text-center text-base font-black rounded-xl bg-[#20203a] border border-[#2a2a45] text-[#f1f5f9] placeholder:text-[#2a2a45] focus:border-[#38BDF8]/60 focus:outline-none focus:ring-2 focus:ring-[#38BDF8]/10 disabled:opacity-50 tabular-nums"
       style={{ MozAppearance: "textfield" } as React.CSSProperties}
     />
   );

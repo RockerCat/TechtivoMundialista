@@ -133,7 +133,7 @@ export default function MatchRowCompact({ match }: { match: MatchWithPrediction 
 
     const cardClass = cn(
       "rounded-xl border overflow-hidden",
-      gotPoints ? "border-[#00c85a]/30 bg-[#00c85a]/[0.05]" :
+      gotPoints ? "border-[#38BDF8]/30 bg-[#38BDF8]/[0.05]" :
       gotZero   ? "border-[#ef4444]/25 bg-[#ef4444]/[0.04]" :
                   "border-[#2a2a45] bg-[#18182a]"
     );
@@ -150,7 +150,7 @@ export default function MatchRowCompact({ match }: { match: MatchWithPrediction 
             {isScored ? (
               <span className={cn(
                 "text-xs font-black font-mono",
-                gotPoints ? "text-[#00c85a]" : "text-[#ef4444]"
+                gotPoints ? "text-[#38BDF8]" : "text-[#ef4444]"
               )}>
                 {gotPoints ? `+${saved.points} pts` : "0 pts"}
               </span>
@@ -184,7 +184,7 @@ export default function MatchRowCompact({ match }: { match: MatchWithPrediction 
             {isScored && saved.points_reason && (
               <span className={cn(
                 "text-[10px] font-mono shrink-0",
-                gotPoints ? "text-[#00c85a]/60" : "text-[#64748b]/60"
+                gotPoints ? "text-[#38BDF8]/60" : "text-[#64748b]/60"
               )}>
                 {saved.points_reason}
               </span>
@@ -210,8 +210,8 @@ export default function MatchRowCompact({ match }: { match: MatchWithPrediction 
         <div className="flex items-center justify-between mb-2.5">
           {isOpen ? (
             <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00c85a] shrink-0" />
-              <span className="text-[10px] font-bold text-[#00c85a] uppercase tracking-widest">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] shrink-0" />
+              <span className="text-[10px] font-bold text-[#38BDF8] uppercase tracking-widest">
                 PRONOSTICAR
               </span>
             </div>
@@ -243,7 +243,7 @@ export default function MatchRowCompact({ match }: { match: MatchWithPrediction 
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="h-9 px-3 bg-[#00c85a] text-[#0a0a12] text-xs font-bold rounded-lg hover:bg-[#00e87a] disabled:opacity-40 transition-colors flex items-center gap-1.5 shrink-0"
+                  className="h-9 px-3 bg-[#38BDF8] text-[#0a0a12] text-xs font-bold rounded-lg hover:bg-[#7DD3FC] disabled:opacity-40 transition-colors flex items-center gap-1.5 shrink-0"
                 >
                   {isPending ? (
                     <Loader2 size={12} className="animate-spin" />
@@ -272,10 +272,10 @@ export default function MatchRowCompact({ match }: { match: MatchWithPrediction 
             /* Saved — show clearly, with edit option */
             <div className="mt-2.5 flex items-center justify-between">
               <div className="flex items-center gap-1.5">
-                <Check size={11} className="text-[#00c85a] shrink-0" />
+                <Check size={11} className="text-[#38BDF8] shrink-0" />
                 <span className="text-xs text-[#f1f5f9]">
                   Tu pronóstico:{" "}
-                  <span className="font-mono font-black text-[#00c85a]">
+                  <span className="font-mono font-black text-[#38BDF8]">
                     {saved!.home_score}–{saved!.away_score}
                   </span>
                 </span>
@@ -398,7 +398,7 @@ function ScoreInput({
       placeholder="0"
       disabled={disabled}
       required
-      className="w-12 h-9 text-center text-sm font-black rounded-xl bg-[#2a2a50] border-2 border-[#5252a0] text-[#f1f5f9] placeholder:text-[#5252a0] hover:border-[#6a6ac0] focus:border-[#00c85a] focus:ring-2 focus:ring-[#00c85a]/20 focus:bg-[#00c85a]/[0.05] disabled:opacity-40 tabular-nums transition-colors outline-none"
+      className="w-12 h-9 text-center text-sm font-black rounded-xl bg-[#2a2a50] border-2 border-[#5252a0] text-[#f1f5f9] placeholder:text-[#5252a0] hover:border-[#6a6ac0] focus:border-[#38BDF8] focus:ring-2 focus:ring-[#38BDF8]/20 focus:bg-[#38BDF8]/[0.05] disabled:opacity-40 tabular-nums transition-colors outline-none"
       style={{ MozAppearance: "textfield" } as React.CSSProperties}
     />
   );

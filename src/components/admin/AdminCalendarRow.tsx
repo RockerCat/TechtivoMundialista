@@ -28,7 +28,7 @@ function StatusDot({ status }: { status: string }) {
     );
   }
   if (status === "finished") {
-    return <span className="text-[9px] text-[#00c85a] font-semibold uppercase tracking-wide shrink-0">Fin.</span>;
+    return <span className="text-[9px] text-[#38BDF8] font-semibold uppercase tracking-wide shrink-0">Fin.</span>;
   }
   return <span className="text-[9px] text-[#64748b] uppercase tracking-wide shrink-0">Prog.</span>;
 }
@@ -111,7 +111,7 @@ export default function AdminCalendarRow({ match }: { match: Match }) {
             name="status"
             value={statusVal}
             onChange={(e) => setStatusVal(e.target.value)}
-            className="h-8 rounded-lg bg-[#0e0e1d] border border-[#2a2a45] text-[#f1f5f9] text-xs px-2 focus:outline-none focus:border-[#00c85a]/60 transition-colors"
+            className="h-8 rounded-lg bg-[#0e0e1d] border border-[#2a2a45] text-[#f1f5f9] text-xs px-2 focus:outline-none focus:border-[#38BDF8]/60 transition-colors"
           >
             {STATUS_OPTIONS.map(({ value, label }) => (
               <option key={value} value={value}>{label}</option>
@@ -139,7 +139,7 @@ export default function AdminCalendarRow({ match }: { match: Match }) {
           <button
             type="submit"
             disabled={isPending}
-            className="h-8 px-3 bg-[#00c85a] text-[#0a0a12] text-xs font-bold rounded-lg hover:bg-[#00e87a] disabled:opacity-40 transition-colors flex items-center gap-1 shrink-0"
+            className="h-8 px-3 bg-[#38BDF8] text-[#0a0a12] text-xs font-bold rounded-lg hover:bg-[#7DD3FC] disabled:opacity-40 transition-colors flex items-center gap-1 shrink-0"
           >
             {isPending
               ? <><Loader2 size={11} className="animate-spin" />Guardando</>
@@ -164,7 +164,7 @@ export default function AdminCalendarRow({ match }: { match: Match }) {
           </div>
         )}
         {state && "success" in state && (
-          <div className="flex items-center gap-1.5 mt-1.5 text-xs text-[#00c85a]">
+          <div className="flex items-center gap-1.5 mt-1.5 text-xs text-[#38BDF8]">
             <Check size={11} className="shrink-0" />
             {state.scored > 0
               ? `Guardado · ${state.scored} pred${state.scored === 1 ? "" : "s"} calculada${state.scored === 1 ? "" : "s"}`
@@ -194,7 +194,7 @@ function ScoreInput({
       min={0}
       max={30}
       placeholder="–"
-      className="w-10 h-8 text-center text-sm font-bold rounded-lg bg-[#0e0e1d] border border-[#2a2a45] text-[#f1f5f9] placeholder:text-[#2a2a45] focus:outline-none focus:border-[#00c85a]/60 tabular-nums transition-colors"
+      className="w-10 h-8 text-center text-sm font-bold rounded-lg bg-[#0e0e1d] border border-[#2a2a45] text-[#f1f5f9] placeholder:text-[#2a2a45] focus:outline-none focus:border-[#38BDF8]/60 tabular-nums transition-colors"
       style={{ MozAppearance: "textfield" } as React.CSSProperties}
       title={placeholder}
     />

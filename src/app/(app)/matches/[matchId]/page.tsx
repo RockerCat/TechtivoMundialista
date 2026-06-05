@@ -404,8 +404,8 @@ function StatusBadge({ status }: { status: string }) {
   }
   return (
     <div className="flex items-center gap-1.5">
-      <span className="w-1.5 h-1.5 rounded-full bg-[#00c85a]" />
-      <span className="text-[10px] font-bold text-[#00c85a] uppercase tracking-widest">PROGRAMADO</span>
+      <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8]" />
+      <span className="text-[10px] font-bold text-[#38BDF8] uppercase tracking-widest">PROGRAMADO</span>
     </div>
   );
 }
@@ -454,7 +454,7 @@ function LiveRankingCard({
             key={entry.user_id}
             className={cn(
               "flex items-center gap-3 px-4 py-3 border-b border-[#1e1e35] last:border-b-0",
-              isMe && "bg-[#00c85a]/[0.05]"
+              isMe && "bg-[#38BDF8]/[0.05]"
             )}
           >
             <div className="w-7 shrink-0 text-center">
@@ -468,10 +468,10 @@ function LiveRankingCard({
             <div className="flex-1 min-w-0">
               <p className={cn(
                 "text-sm font-bold truncate",
-                isMe ? "text-[#00c85a]" : "text-[#f1f5f9]"
+                isMe ? "text-[#38BDF8]" : "text-[#f1f5f9]"
               )}>
                 {entry.display_name}
-                {isMe && <span className="text-[10px] text-[#00c85a]/60 font-mono ml-1.5">tú</span>}
+                {isMe && <span className="text-[10px] text-[#38BDF8]/60 font-mono ml-1.5">tú</span>}
               </p>
               <p className="text-[10px] text-[#64748b] font-mono">
                 {entry.pred_home}–{entry.pred_away}
@@ -481,7 +481,7 @@ function LiveRankingCard({
             <div className="text-right shrink-0">
               <p className={cn(
                 "text-lg font-black tabular-nums",
-                pts > 0 ? (reason === "Marcador exacto" ? "text-[#f59e0b]" : "text-[#00c85a]") : "text-[#2a2a45]"
+                pts > 0 ? (reason === "Marcador exacto" ? "text-[#f59e0b]" : "text-[#38BDF8]") : "text-[#2a2a45]"
               )}>
                 {pts > 0 ? `+${pts}` : "0"}
               </p>
@@ -550,7 +550,7 @@ function TopScoresCard({ topScores, total }: { topScores: [string, number][]; to
           <div className="flex items-center gap-2 shrink-0">
             <div className="h-1.5 w-16 rounded-full bg-[#1e1e35] overflow-hidden">
               <div
-                className="h-full rounded-full bg-[#00c85a]/60"
+                className="h-full rounded-full bg-[#38BDF8]/60"
                 style={{ width: total > 0 ? `${Math.round((count / total) * 100)}%` : "0%" }}
               />
             </div>
@@ -600,7 +600,7 @@ function PredictionsTable({
           pts === null    ? "text-[#64748b]" :
           pts === 0       ? "text-[#ef4444]/70" :
           rsn === "Marcador exacto" ? "text-[#f59e0b]" :
-          "text-[#00c85a]";
+          "text-[#38BDF8]";
 
         const rsnLabel =
           rsn === "Marcador exacto"   ? "Exacto"  :
@@ -613,15 +613,15 @@ function PredictionsTable({
             key={entry.user_id}
             className={cn(
               "grid grid-cols-[1fr_auto_auto_auto] gap-2 items-center px-4 py-3 border-b border-[#1e1e35] last:border-b-0",
-              isMe && "bg-[#00c85a]/[0.04]"
+              isMe && "bg-[#38BDF8]/[0.04]"
             )}
           >
             <p className={cn(
               "text-sm font-semibold truncate",
-              isMe ? "text-[#00c85a]" : "text-[#f1f5f9]"
+              isMe ? "text-[#38BDF8]" : "text-[#f1f5f9]"
             )}>
               {entry.display_name}
-              {isMe && <span className="text-[10px] text-[#00c85a]/60 font-mono ml-1">tú</span>}
+              {isMe && <span className="text-[10px] text-[#38BDF8]/60 font-mono ml-1">tú</span>}
             </p>
 
             <span className="text-sm font-mono font-bold text-[#94a3b8] text-center w-14 tabular-nums">
@@ -635,7 +635,7 @@ function PredictionsTable({
             <span className={cn(
               "text-[11px] font-mono text-right w-20 shrink-0",
               rsn === "Marcador exacto"    ? "text-[#f59e0b]" :
-              rsn === "Resultado acertado" ? "text-[#00c85a]/80" :
+              rsn === "Resultado acertado" ? "text-[#38BDF8]/80" :
               "text-[#64748b]"
             )}>
               {rsnLabel}
@@ -656,7 +656,7 @@ function InsightCard({ insight }: { insight: Insight }) {
 
   switch (insight.type) {
     case "popular":
-      emoji = "🏆";
+      emoji = "⚽";
       title = "Marcador favorito";
       body  = `${insight.score} (${insight.count} personas)`;
       break;

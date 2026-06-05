@@ -373,7 +373,7 @@ export default function AdvancedMatchEditor({ match, teams }: Props) {
           </div>
         )}
         {state && "success" in state && (
-          <div className="flex items-center gap-2 text-xs text-[#00c85a] px-1">
+          <div className="flex items-center gap-2 text-xs text-[#38BDF8] px-1">
             <Check size={12} className="shrink-0" />
             {state.scored > 0
               ? `Guardado · ${state.scored} predicción${state.scored === 1 ? "" : "es"} recalculada${state.scored === 1 ? "" : "s"}`

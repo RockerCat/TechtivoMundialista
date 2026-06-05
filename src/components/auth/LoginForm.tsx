@@ -151,11 +151,11 @@ export default function LoginForm({ inviteCode }: LoginFormProps) {
     <div className="w-full max-w-sm animate-fade-in-up">
       <div className="text-center mb-8">
         <Link href="/login" className="inline-flex items-center gap-2 mb-6">
-          <div className="w-9 h-9 rounded-xl bg-[#00c85a] flex items-center justify-center">
-            <span className="text-xl leading-none">🏆</span>
+          <div className="w-9 h-9 rounded-xl bg-[#38BDF8] flex items-center justify-center">
+            <span className="text-xl leading-none">⚽</span>
           </div>
           <span className="font-bold text-xl text-[#f1f5f9]">
-            La <span className="text-[#00c85a]">Mundialista</span>
+            Techtivo <span className="text-[#38BDF8]">Mundialista</span>
           </span>
         </Link>
         <h1 className="text-2xl font-black text-[#f1f5f9]">Techtivo Mundialista</h1>
@@ -163,9 +163,9 @@ export default function LoginForm({ inviteCode }: LoginFormProps) {
       </div>
 
       {inviteCode && (
-        <div className="mb-4 flex items-center gap-3 bg-[#00c85a]/8 border border-[#00c85a]/20 rounded-xl p-3">
-          <div className="w-8 h-8 rounded-lg bg-[#00c85a]/15 flex items-center justify-center shrink-0">
-            <Hash size={14} className="text-[#00c85a]" />
+        <div className="mb-4 flex items-center gap-3 bg-[#38BDF8]/8 border border-[#38BDF8]/20 rounded-xl p-3">
+          <div className="w-8 h-8 rounded-lg bg-[#38BDF8]/15 flex items-center justify-center shrink-0">
+            <Hash size={14} className="text-[#38BDF8]" />
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-xs text-[#94a3b8]">Código de invitación</p>
@@ -180,7 +180,7 @@ export default function LoginForm({ inviteCode }: LoginFormProps) {
           <Input label="Contraseña" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} leftIcon={<Lock size={16} />} required autoComplete="current-password" />
 
           <div className="flex justify-end">
-            <Link href="/forgot-password" className="text-xs text-[#94a3b8] hover:text-[#00c85a] transition-colors">
+            <Link href="/forgot-password" className="text-xs text-[#94a3b8] hover:text-[#38BDF8] transition-colors">
               ¿Olvidaste tu contraseña?
             </Link>
           </div>
@@ -202,7 +202,7 @@ export default function LoginForm({ inviteCode }: LoginFormProps) {
             ¿No tienes cuenta?{" "}
             <Link
               href={inviteCode ? `/signup?invite=${inviteCode}` : "/join"}
-              className="text-[#00c85a] font-semibold hover:text-[#00e87a]"
+              className="text-[#38BDF8] font-semibold hover:text-[#7DD3FC]"
             >
               {inviteCode ? "Crear cuenta" : "Únete por invitación"}
             </Link>
@@ -234,7 +234,7 @@ function JoinStatusCard({
   if (status.phase === "joining") {
     return (
       <Card className="p-6 text-center">
-        <Loader2 size={28} className="animate-spin text-[#00c85a] mx-auto mb-3" />
+        <Loader2 size={28} className="animate-spin text-[#38BDF8] mx-auto mb-3" />
         <p className="text-sm font-semibold text-[#f1f5f9]">Uniéndote al grupo...</p>
       </Card>
     );
@@ -243,7 +243,7 @@ function JoinStatusCard({
   if (status.phase === "success") {
     return (
       <Card variant="glow-green" className="p-6 text-center">
-        <CheckCircle2 size={28} className="text-[#00c85a] mx-auto mb-3" />
+        <CheckCircle2 size={28} className="text-[#38BDF8] mx-auto mb-3" />
         <p className="text-base font-black text-[#f1f5f9] mb-1">¡Te uniste al grupo!</p>
         <p className="text-sm text-[#94a3b8] mb-5">{status.groupName}</p>
         <p className="text-xs text-[#64748b]">Redirigiendo al dashboard...</p>
@@ -280,7 +280,7 @@ function JoinStatusCard({
         <button onClick={onRetry} className="flex-1 h-9 text-xs font-semibold text-[#94a3b8] bg-[#20203a] border border-[#2a2a45] rounded-xl hover:text-[#f1f5f9] transition-colors">
           Reintentar
         </button>
-        <button onClick={onContinue} className="flex-1 h-9 flex items-center justify-center gap-1.5 text-xs font-bold text-[#0a0a12] bg-[#00c85a] rounded-xl hover:bg-[#00e87a] transition-colors">
+        <button onClick={onContinue} className="flex-1 h-9 flex items-center justify-center gap-1.5 text-xs font-bold text-[#0a0a12] bg-[#38BDF8] rounded-xl hover:bg-[#7DD3FC] transition-colors">
           Ir al dashboard <ArrowRight size={12} />
         </button>
       </div>

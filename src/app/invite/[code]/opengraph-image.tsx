@@ -84,19 +84,19 @@ function StaticCard({ code }: { code: string }) {
       <div style={{
         position: "absolute", top: -160, left: "50%", transform: "translateX(-50%)",
         width: 800, height: 500, borderRadius: "50%",
-        background: "radial-gradient(ellipse, rgba(0,200,90,0.18) 0%, transparent 70%)",
+        background: "radial-gradient(ellipse, rgba(56,189,248,0.18) 0%, transparent 70%)",
       }} />
 
       <div style={{
         width: 88, height: 88, borderRadius: 20,
-        backgroundColor: "#00c85a",
+        backgroundColor: "#38BDF8",
         display: "flex", alignItems: "center", justifyContent: "center",
         fontSize: 52, marginBottom: 28,
-      }}>🏆</div>
+      }}>⚽</div>
 
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
-        <span style={{ fontSize: 60, fontWeight: 900, color: "#f1f5f9", letterSpacing: "-1px" }}>La </span>
-        <span style={{ fontSize: 60, fontWeight: 900, color: "#00c85a", letterSpacing: "-1px" }}>Mundialista</span>
+        <span style={{ fontSize: 60, fontWeight: 900, color: "#f1f5f9", letterSpacing: "-1px" }}>Techtivo </span>
+        <span style={{ fontSize: 60, fontWeight: 900, color: "#38BDF8", letterSpacing: "-1px" }}>Mundialista</span>
       </div>
 
       <p style={{ fontSize: 26, fontWeight: 700, color: "#94a3b8", margin: "0 0 10px 0", textAlign: "center" }}>
@@ -120,7 +120,7 @@ function StaticCard({ code }: { code: string }) {
 
       <div style={{
         position: "absolute", bottom: 0, left: 0, right: 0, height: 4,
-        background: "linear-gradient(90deg, transparent, #00c85a, transparent)",
+        background: "linear-gradient(90deg, transparent, #38BDF8, transparent)",
       }} />
     </div>
   );
@@ -151,14 +151,14 @@ function StaticCard({ code }: { code: string }) {
 //       <div style={{
 //         position: "absolute", top: -160, left: "50%", transform: "translateX(-50%)",
 //         width: 800, height: 500, borderRadius: "50%",
-//         background: "radial-gradient(ellipse, rgba(0,200,90,0.18) 0%, transparent 70%)",
+//         background: "radial-gradient(ellipse, rgba(56,189,248,0.18) 0%, transparent 70%)",
 //       }} />
 //
 //       <div style={{
-//         width: 80, height: 80, borderRadius: 18, backgroundColor: "#00c85a",
+//         width: 80, height: 80, borderRadius: 18, backgroundColor: "#38BDF8",
 //         display: "flex", alignItems: "center", justifyContent: "center",
 //         fontSize: 46, marginBottom: 24,
-//       }}>🏆</div>
+//       }}>⚽</div>
 //
 //       {/* Group name */}
 //       <p style={{ fontSize: 52, fontWeight: 900, color: "#f1f5f9", margin: "0 0 8px 0", textAlign: "center", maxWidth: 900 }}>
@@ -177,7 +177,7 @@ function StaticCard({ code }: { code: string }) {
 //
 //       <div style={{
 //         position: "absolute", bottom: 0, left: 0, right: 0, height: 4,
-//         background: "linear-gradient(90deg, transparent, #00c85a, transparent)",
+//         background: "linear-gradient(90deg, transparent, #38BDF8, transparent)",
 //       }} />
 //     </div>
 //   );
@@ -187,7 +187,7 @@ function StaticCard({ code }: { code: string }) {
 //   return (
 //     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
 //       <span style={{ fontSize: 11, color: "#64748b", letterSpacing: "0.1em", textTransform: "uppercase" }}>{label}</span>
-//       <span style={{ fontSize: 32, fontWeight: 900, color: accent ? "#00c85a" : "#f1f5f9", fontFamily: mono ? "monospace" : "sans-serif", letterSpacing: mono ? "0.15em" : 0 }}>
+//       <span style={{ fontSize: 32, fontWeight: 900, color: accent ? "#38BDF8" : "#f1f5f9", fontFamily: mono ? "monospace" : "sans-serif", letterSpacing: mono ? "0.15em" : 0 }}>
 //         {value}
 //       </span>
 //     </div>

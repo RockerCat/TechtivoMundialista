@@ -23,7 +23,7 @@ export default function UserToggleButton({
         disabled={pending}
         className={
           isDisabled
-            ? "text-xs font-semibold px-3 py-1.5 rounded-lg border border-[#00c85a]/30 text-[#00c85a] bg-[#00c85a]/8 hover:bg-[#00c85a]/15 disabled:opacity-40 transition-colors"
+            ? "text-xs font-semibold px-3 py-1.5 rounded-lg border border-[#38BDF8]/30 text-[#38BDF8] bg-[#38BDF8]/8 hover:bg-[#38BDF8]/15 disabled:opacity-40 transition-colors"
             : "text-xs font-semibold px-3 py-1.5 rounded-lg border border-[#ef4444]/25 text-[#ef4444] bg-[#ef4444]/8 hover:bg-[#ef4444]/15 disabled:opacity-40 transition-colors"
         }
       >

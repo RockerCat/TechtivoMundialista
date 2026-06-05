@@ -79,7 +79,7 @@ export default async function RulesPage() {
               text={`La participación tiene un costo único de ${formatCOP(prizePool.config.entry_fee)} COP por jugador.`}
             />
             <RuleItem
-              icon="🏆"
+              icon="⚽"
               text="Este valor cubre todo el torneo (los 104 partidos del Mundial 2026)."
             />
             <RuleItem
@@ -156,7 +156,7 @@ export default async function RulesPage() {
           <div className="grid grid-cols-[1fr_auto_auto] gap-4 px-4 py-2.5 border-b border-[#1e1e35]">
             <span className="text-[10px] font-bold text-[#64748b] uppercase tracking-widest">Fase</span>
             <span className="text-[10px] font-bold text-[#f59e0b]/70 uppercase tracking-widest text-right w-24">Exacto</span>
-            <span className="text-[10px] font-bold text-[#00c85a]/70 uppercase tracking-widest text-right w-24">Ganador</span>
+            <span className="text-[10px] font-bold text-[#38BDF8]/70 uppercase tracking-widest text-right w-24">Ganador</span>
           </div>
 
           {SCORING_TABLE_ROWS.map(({ stage, label }) => {
@@ -169,7 +169,7 @@ export default async function RulesPage() {
                 className={cn(
                   "grid grid-cols-[1fr_auto_auto] gap-4 px-4 py-3 border-b border-[#1e1e35] last:border-b-0",
                   isCurrent
-                    ? "bg-[#00c85a]/[0.04] border-l-2 border-l-[#00c85a]/40"
+                    ? "bg-[#38BDF8]/[0.04] border-l-2 border-l-[#38BDF8]/40"
                     : "hover:bg-[#18182a]/50"
                 )}
               >
@@ -181,7 +181,7 @@ export default async function RulesPage() {
                     {label}
                   </span>
                   {isCurrent && (
-                    <span className="text-[9px] font-mono text-[#00c85a] bg-[#00c85a]/10 px-1.5 py-0.5 rounded-full">
+                    <span className="text-[9px] font-mono text-[#38BDF8] bg-[#38BDF8]/10 px-1.5 py-0.5 rounded-full">
                       actual
                     </span>
                   )}
@@ -194,7 +194,7 @@ export default async function RulesPage() {
                 </span>
                 <span className={cn(
                   "text-sm font-black tabular-nums text-right w-24",
-                  isCurrent ? "text-[#00c85a]" : "text-[#94a3b8]"
+                  isCurrent ? "text-[#38BDF8]" : "text-[#94a3b8]"
                 )}>
                   {scoring.result} pt{scoring.result !== 1 ? "s" : ""}
                 </span>
@@ -331,8 +331,8 @@ export default async function RulesPage() {
         <div className="bg-[#11111c] border border-[#1e1e35] rounded-2xl divide-y divide-[#1e1e35]">
           <StateRow
             label="Pronosticar"
-            color="text-[#00c85a]"
-            bg="bg-[#00c85a]/10"
+            color="text-[#38BDF8]"
+            bg="bg-[#38BDF8]/10"
             desc="El partido aún no ha comenzado. Puedes ingresar o modificar tu pronóstico."
           />
           <StateRow
@@ -403,7 +403,7 @@ function RuleItem({
 }) {
   const iconColor =
     accent === "yellow" ? "text-[#f59e0b]" :
-    accent === "green"  ? "text-[#00c85a]" :
+    accent === "green"  ? "text-[#38BDF8]" :
     accent === "red"    ? "text-[#ef4444]" :
     "text-[#64748b]";
 
@@ -427,12 +427,12 @@ function PredictionRow({
   const icon  = kind === "wrong" ? "✕" : "✓";
   const iconColor =
     kind === "exact"   ? "text-[#f59e0b]" :
-    kind === "correct" ? "text-[#00c85a]" :
+    kind === "correct" ? "text-[#38BDF8]" :
     "text-[#ef4444]";
   const scoreColor = kind === "wrong" ? "text-[#475569]" : "text-[#f1f5f9]";
   const labelColor =
     kind === "exact"   ? "text-[#f59e0b]" :
-    kind === "correct" ? "text-[#00c85a]" :
+    kind === "correct" ? "text-[#38BDF8]" :
     "text-[#475569]";
 
   return (

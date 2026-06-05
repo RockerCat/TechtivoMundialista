@@ -202,7 +202,7 @@ function FeaturedMatchCard({ match }: { match: MatchWithPrediction }) {
             <div className="shrink-0 text-right">
               <span className={cn(
                 "text-sm font-black tabular-nums",
-                match.prediction!.points > 0 ? "text-[#00c85a]" : "text-[#64748b]"
+                match.prediction!.points > 0 ? "text-[#38BDF8]" : "text-[#64748b]"
               )}>
                 {match.prediction!.points > 0 ? `+${match.prediction!.points}` : "0"} pts
               </span>
@@ -244,8 +244,8 @@ function FeaturedMatchCard({ match }: { match: MatchWithPrediction }) {
         {hasPrediction ? (
           <div>
             <div className="flex items-center justify-end gap-1 mb-0.5">
-              <Check size={9} className="text-[#00c85a]" />
-              <span className="text-[10px] text-[#00c85a]">Guardado</span>
+              <Check size={9} className="text-[#38BDF8]" />
+              <span className="text-[10px] text-[#38BDF8]">Guardado</span>
             </div>
             <span className="font-mono font-black text-base text-[#f1f5f9] tabular-nums">
               {match.prediction!.home_score}–{match.prediction!.away_score}
@@ -284,8 +284,8 @@ function UserSummaryPanel({
       {/* Mobile: avatar smaller, rank+pts inline to the right */}
       {/* Desktop: avatar larger, "Techtivo Mundialista" subtitle, rank+pts in cards below */}
       <div className="flex items-center gap-3 mb-3 lg:mb-5">
-        <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-[#00c85a]/15 border border-[#00c85a]/20 flex items-center justify-center shrink-0">
-          <span className="text-xs lg:text-sm font-black text-[#00c85a]">{initial}</span>
+        <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-[#38BDF8]/15 border border-[#38BDF8]/20 flex items-center justify-center shrink-0">
+          <span className="text-xs lg:text-sm font-black text-[#38BDF8]">{initial}</span>
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-sm font-bold text-[#f1f5f9] truncate">{displayName}</p>
@@ -341,7 +341,7 @@ function UserSummaryPanel({
               <p className="text-[10px] text-[#94a3b8]">Exactos</p>
             </div>
             <div>
-              <p className="text-sm font-black text-[#00c85a] tabular-nums">
+              <p className="text-sm font-black text-[#38BDF8] tabular-nums">
                 {userEntry.result_count}
               </p>
               <p className="text-[10px] text-[#94a3b8]">Ganadores</p>
@@ -394,7 +394,7 @@ function ScoringCard({ stage }: { stage: import("@/lib/matches").MatchStage }) {
         </div>
         <div className="flex items-center justify-between">
           <span className="text-xs text-[#94a3b8]">✓ Ganador correcto</span>
-          <span className="text-xs font-black text-[#00c85a] tabular-nums">
+          <span className="text-xs font-black text-[#38BDF8] tabular-nums">
             {scoring.result} pt{scoring.result !== 1 ? "s" : ""}
           </span>
         </div>
@@ -449,7 +449,7 @@ function LeaderboardPanel({
             <div
               className={cn(
                 "flex items-center gap-2 px-3 py-2.5",
-                isMe && "bg-[#00c85a]/5"
+                isMe && "bg-[#38BDF8]/5"
               )}
             >
               {/* Medal or rank */}

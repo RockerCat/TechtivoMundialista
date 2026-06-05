@@ -73,7 +73,7 @@ export default function MyPredictionCard({
               <button
                 type="submit"
                 disabled={isPending}
-                className="h-11 px-8 bg-[#00c85a] text-[#0a0a12] text-sm font-bold rounded-xl hover:bg-[#00e87a] disabled:opacity-40 transition-colors flex items-center gap-2"
+                className="h-11 px-8 bg-[#38BDF8] text-[#0a0a12] text-sm font-bold rounded-xl hover:bg-[#7DD3FC] disabled:opacity-40 transition-colors flex items-center gap-2"
               >
                 {isPending
                   ? <><Loader2 size={14} className="animate-spin" />Guardando...</>
@@ -94,7 +94,7 @@ export default function MyPredictionCard({
             /* Saved view */
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
-                <Check size={14} className="text-[#00c85a] shrink-0" />
+                <Check size={14} className="text-[#38BDF8] shrink-0" />
                 <p className="text-2xl font-black font-mono text-[#f1f5f9] tabular-nums">
                   {saved!.home_score}
                   <span className="text-[#64748b] mx-2 font-light">–</span>
@@ -172,7 +172,7 @@ export default function MyPredictionCard({
             <div className="border-t border-[#1e1e35] pt-3 space-y-1">
               <MySituationLine mySim={mySim} isFinished={true} />
               {saved && (saved as { scored_at?: string }).scored_at && (
-                <p className={`text-sm font-black font-mono ${gotPoints ? "text-[#00c85a]" : "text-[#ef4444]/70"}`}>
+                <p className={`text-sm font-black font-mono ${gotPoints ? "text-[#38BDF8]" : "text-[#ef4444]/70"}`}>
                   {gotPoints ? `+${(saved as { points: number }).points} pts` : "0 pts"}
                 </p>
               )}
@@ -190,7 +190,7 @@ export default function MyPredictionCard({
 function MySituationLine({ mySim, isFinished }: { mySim: ScoringResult; isFinished: boolean }) {
   if (mySim.reason === "Marcador exacto") {
     return (
-      <p className="text-sm text-[#00c85a] font-semibold">
+      <p className="text-sm text-[#38BDF8] font-semibold">
         🟢 {isFinished ? "Acertaste el marcador exacto" : "Vas sumando marcador exacto"}
         {" "}· <span className="font-black">+{mySim.points} pts</span>
       </p>
@@ -225,7 +225,7 @@ function ScoreInput({
       placeholder="0"
       disabled={disabled}
       required
-      className="w-16 h-14 text-center text-2xl font-black rounded-2xl bg-[#2a2a50] border-2 border-[#5252a0] text-[#f1f5f9] placeholder:text-[#5252a0] hover:border-[#6a6ac0] focus:border-[#00c85a] focus:ring-2 focus:ring-[#00c85a]/20 focus:bg-[#00c85a]/[0.05] disabled:opacity-40 tabular-nums transition-colors outline-none"
+      className="w-16 h-14 text-center text-2xl font-black rounded-2xl bg-[#2a2a50] border-2 border-[#5252a0] text-[#f1f5f9] placeholder:text-[#5252a0] hover:border-[#6a6ac0] focus:border-[#38BDF8] focus:ring-2 focus:ring-[#38BDF8]/20 focus:bg-[#38BDF8]/[0.05] disabled:opacity-40 tabular-nums transition-colors outline-none"
       style={{ MozAppearance: "textfield" } as React.CSSProperties}
     />
   );

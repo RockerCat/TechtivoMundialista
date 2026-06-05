@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Home, Trophy, Users, User, BookOpen } from "lucide-react";
+import { Home, Users, User, BookOpen } from "lucide-react";
+import { SoccerBallIcon } from "@/components/ui/SoccerBallIcon";
 
 const navItems = [
   { href: "/dashboard",   label: "Inicio",    icon: Home     },
-  { href: "/leaderboard", label: "Tabla",     icon: Trophy   },
+  { href: "/leaderboard", label: "Tabla",     icon: SoccerBallIcon },
   { href: "/community",   label: "Comunidad", icon: Users    },
   { href: "/profile",     label: "Perfil",    icon: User     },
   { href: "/rules",       label: "Reglas",    icon: BookOpen },
@@ -30,7 +31,7 @@ export default function BottomNav() {
               className={cn(
                 "flex-1 flex flex-col items-center justify-center gap-1 transition-colors",
                 active
-                  ? "text-[#00c85a]"
+                  ? "text-[#38BDF8]"
                   : "text-[#64748b] hover:text-[#94a3b8]"
               )}
             >

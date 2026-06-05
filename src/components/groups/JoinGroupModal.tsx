@@ -92,8 +92,8 @@ function JoinSuccessView({
   return (
     <div className="flex flex-col gap-5 text-center">
       <div className="flex flex-col items-center gap-3">
-        <div className="w-14 h-14 rounded-2xl bg-[#00c85a]/15 flex items-center justify-center">
-          <CheckCircle2 size={26} className="text-[#00c85a]" />
+        <div className="w-14 h-14 rounded-2xl bg-[#38BDF8]/15 flex items-center justify-center">
+          <CheckCircle2 size={26} className="text-[#38BDF8]" />
         </div>
         <div>
           <h3 className="text-base font-black text-[#f1f5f9]">

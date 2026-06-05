@@ -1,7 +1,8 @@
 "use client";
 
 import { useActionState, useEffect, useRef } from "react";
-import { AlertCircle, Copy, Check, Trophy } from "lucide-react";
+import { AlertCircle, Copy, Check } from "lucide-react";
+import { SoccerBallIcon } from "@/components/ui/SoccerBallIcon";
 import { useState } from "react";
 import GroupModal from "./GroupModal";
 import Button from "@/components/ui/Button";
@@ -106,8 +107,8 @@ function SuccessView({
   return (
     <div className="flex flex-col gap-5 text-center">
       <div className="flex flex-col items-center gap-3">
-        <div className="w-14 h-14 rounded-2xl bg-[#00c85a]/15 flex items-center justify-center">
-          <Trophy size={26} className="text-[#00c85a]" />
+        <div className="w-14 h-14 rounded-2xl bg-[#38BDF8]/15 flex items-center justify-center">
+          <SoccerBallIcon size={26} className="text-[#38BDF8]" />
         </div>
         <div>
           <h3 className="text-base font-black text-[#f1f5f9]">
@@ -128,10 +129,10 @@ function SuccessView({
           </span>
           <button
             onClick={handleCopy}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#18182a] border border-[#2a2a45] hover:border-[#00c85a]/40 hover:text-[#00c85a] text-xs font-semibold text-[#94a3b8] transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#18182a] border border-[#2a2a45] hover:border-[#38BDF8]/40 hover:text-[#38BDF8] text-xs font-semibold text-[#94a3b8] transition-colors"
           >
             {copied ? (
-              <><Check size={13} className="text-[#00c85a]" /><span className="text-[#00c85a]">Copiado</span></>
+              <><Check size={13} className="text-[#38BDF8]" /><span className="text-[#38BDF8]">Copiado</span></>
             ) : (
               <><Copy size={13} /><span>Copiar</span></>
             )}

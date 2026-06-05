@@ -19,7 +19,7 @@ export default function Card({
           "bg-[#18182a] border border-[#2a2a45]": variant === "default",
           "bg-[#20203a] border border-[#2a2a45]": variant === "raised",
           "bg-transparent border border-[#2a2a45]": variant === "bordered",
-          "bg-[#18182a] border border-[#00c85a]/30 shadow-[0_0_24px_rgba(0,200,90,0.08)]":
+          "bg-[#18182a] border border-[#38BDF8]/30 shadow-[0_0_24px_rgba(56,189,248,0.08)]":
             variant === "glow-green",
           "bg-[#18182a] border border-[#3b82f6]/30 shadow-[0_0_24px_rgba(59,130,246,0.08)]":
             variant === "glow-blue",

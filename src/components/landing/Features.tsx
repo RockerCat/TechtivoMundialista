@@ -1,10 +1,11 @@
-import { Trophy, Users, Target, Zap } from "lucide-react";
+import { Users, Target, Zap } from "lucide-react";
+import { SoccerBallIcon } from "@/components/ui/SoccerBallIcon";
 import Card from "@/components/ui/Card";
 
 const features = [
   {
     icon: Users,
-    color: "#00c85a",
+    color: "#38BDF8",
     title: "Grupos Privados",
     description:
       "Arma tu grupo cerrado e invita a tus amigos con un enlace único. Tus predicciones son solo entre ustedes.",
@@ -17,7 +18,7 @@ const features = [
       "Predice el marcador exacto de cada partido. Adivinar el resultado exacto vale más puntos — la precisión tiene recompensa.",
   },
   {
-    icon: Trophy,
+    icon: SoccerBallIcon,
     color: "#f59e0b",
     title: "Tabla de Posiciones en Vivo",
     description:
@@ -36,7 +37,7 @@ export default function Features() {
   return (
     <section className="px-4 py-20 max-w-5xl mx-auto">
       <div className="text-center mb-12">
-        <p className="text-xs font-mono text-[#00c85a] uppercase tracking-widest mb-3">
+        <p className="text-xs font-mono text-[#38BDF8] uppercase tracking-widest mb-3">
           ¿Cómo funciona?
         </p>
         <h2 className="text-3xl md:text-4xl font-black text-[#f1f5f9] mb-3">
@@ -94,7 +95,7 @@ function ScoringBreakdown() {
       label: "Ganador correcto + diferencia de goles",
       points: "+7",
       example: "Predijiste 3–1, salió 2–0",
-      color: "#00c85a",
+      color: "#38BDF8",
       badge: "✓",
     },
     {

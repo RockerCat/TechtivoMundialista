@@ -59,8 +59,8 @@ export default async function ProfilePage() {
       {/* Header */}
       <div className="bg-[#11111c] border border-[#1e1e35] rounded-2xl p-6">
         <div className="flex items-center gap-4 mb-5">
-          <div className="w-14 h-14 rounded-full bg-[#00c85a]/15 border border-[#00c85a]/20 flex items-center justify-center shrink-0">
-            <span className="text-xl font-black text-[#00c85a]">{initial}</span>
+          <div className="w-14 h-14 rounded-full bg-[#38BDF8]/15 border border-[#38BDF8]/20 flex items-center justify-center shrink-0">
+            <span className="text-xl font-black text-[#38BDF8]">{initial}</span>
           </div>
           <div className="min-w-0">
             <p className="text-lg font-black text-[#f1f5f9] truncate">{displayName}</p>
@@ -160,7 +160,7 @@ type Accent = "yellow" | "green" | "default";
 
 const ACCENT_MAP: Record<Accent, { value: string; bg: string; border: string }> = {
   yellow:  { value: "text-[#f59e0b]", bg: "bg-[#f59e0b]/[0.04]", border: "border-[#f59e0b]/20" },
-  green:   { value: "text-[#00c85a]", bg: "bg-[#00c85a]/[0.04]", border: "border-[#00c85a]/20" },
+  green:   { value: "text-[#38BDF8]", bg: "bg-[#38BDF8]/[0.04]", border: "border-[#38BDF8]/20" },
   default: { value: "text-[#f1f5f9]", bg: "bg-[#18182a]",        border: "border-[#2a2a45]" },
 };
 

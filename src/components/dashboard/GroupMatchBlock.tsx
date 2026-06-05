@@ -80,9 +80,9 @@ export default function GroupMatchBlock({ label, matches, isDefaultOpen = false 
   const buttonClass = cn(
     "w-full h-10 rounded-xl text-xs font-semibold border transition-all",
     isDirty
-      ? "bg-[#00c85a] border-[#00c85a] text-[#0a0a12] hover:bg-[#00e87a] shadow-[0_0_20px_rgba(0,200,90,0.2)]"
+      ? "bg-[#38BDF8] border-[#38BDF8] text-[#0a0a12] hover:bg-[#7DD3FC] shadow-[0_0_20px_rgba(56,189,248,0.2)]"
       : state?.success
-      ? "bg-[#00c85a]/10 border-[#00c85a]/30 text-[#00c85a]"
+      ? "bg-[#38BDF8]/10 border-[#38BDF8]/30 text-[#38BDF8]"
       : "bg-transparent border-[#1e1e35] text-[#2a2a45] cursor-default"
   );
 
@@ -163,8 +163,8 @@ export default function GroupMatchBlock({ label, matches, isDefaultOpen = false 
 
                   {isDirty && !isPending && (
                     <div className="flex items-center justify-center gap-1.5 mt-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#00c85a]" />
-                      <span className="text-[10px] text-[#00c85a]/70">Cambios sin guardar</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8]" />
+                      <span className="text-[10px] text-[#38BDF8]/70">Cambios sin guardar</span>
                     </div>
                   )}
                 </>

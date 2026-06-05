@@ -20,7 +20,7 @@ export default function GroupActions({ variant = "empty" }: GroupActionsProps) {
         <div className="flex gap-2">
           <button
             onClick={() => setCreateOpen(true)}
-            className="flex items-center gap-1.5 h-8 px-3 bg-[#00c85a]/10 text-[#00c85a] text-xs font-semibold rounded-xl border border-[#00c85a]/20 hover:bg-[#00c85a]/15 transition-colors"
+            className="flex items-center gap-1.5 h-8 px-3 bg-[#38BDF8]/10 text-[#38BDF8] text-xs font-semibold rounded-xl border border-[#38BDF8]/20 hover:bg-[#38BDF8]/15 transition-colors"
           >
             <Plus size={13} />
             Crear grupo
@@ -45,7 +45,7 @@ export default function GroupActions({ variant = "empty" }: GroupActionsProps) {
       <div className="flex gap-2 mt-4">
         <button
           onClick={() => setCreateOpen(true)}
-          className="flex-1 flex items-center justify-center gap-1.5 h-9 bg-[#00c85a] text-[#0a0a12] text-xs font-bold rounded-xl hover:bg-[#00e87a] transition-colors"
+          className="flex-1 flex items-center justify-center gap-1.5 h-9 bg-[#38BDF8] text-[#0a0a12] text-xs font-bold rounded-xl hover:bg-[#7DD3FC] transition-colors"
         >
           <Plus size={14} />
           Crear grupo

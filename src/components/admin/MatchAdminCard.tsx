@@ -45,7 +45,7 @@ export default function MatchAdminCard({ match }: { match: Match }) {
         <select
           name="status"
           defaultValue={match.status}
-          className="w-full h-11 rounded-xl bg-[#0e0e1d] border border-[#2a2a45] text-[#f1f5f9] text-sm px-3 focus:outline-none focus:border-[#00c85a]/60 focus:ring-2 focus:ring-[#00c85a]/10 transition-colors"
+          className="w-full h-11 rounded-xl bg-[#0e0e1d] border border-[#2a2a45] text-[#f1f5f9] text-sm px-3 focus:outline-none focus:border-[#38BDF8]/60 focus:ring-2 focus:ring-[#38BDF8]/10 transition-colors"
         >
           {Object.entries(STATUS_LABELS).map(([value, label]) => (
             <option key={value} value={value}>{label}</option>
@@ -66,7 +66,7 @@ export default function MatchAdminCard({ match }: { match: Match }) {
             min={0}
             max={30}
             placeholder="–"
-            className="h-11 rounded-xl bg-[#0e0e1d] border border-[#2a2a45] text-[#f1f5f9] text-sm px-3 text-center tabular-nums focus:outline-none focus:border-[#00c85a]/60 focus:ring-2 focus:ring-[#00c85a]/10 transition-colors"
+            className="h-11 rounded-xl bg-[#0e0e1d] border border-[#2a2a45] text-[#f1f5f9] text-sm px-3 text-center tabular-nums focus:outline-none focus:border-[#38BDF8]/60 focus:ring-2 focus:ring-[#38BDF8]/10 transition-colors"
           />
         </div>
         <div className="flex flex-col gap-1.5">
@@ -80,7 +80,7 @@ export default function MatchAdminCard({ match }: { match: Match }) {
             min={0}
             max={30}
             placeholder="–"
-            className="h-11 rounded-xl bg-[#0e0e1d] border border-[#2a2a45] text-[#f1f5f9] text-sm px-3 text-center tabular-nums focus:outline-none focus:border-[#00c85a]/60 focus:ring-2 focus:ring-[#00c85a]/10 transition-colors"
+            className="h-11 rounded-xl bg-[#0e0e1d] border border-[#2a2a45] text-[#f1f5f9] text-sm px-3 text-center tabular-nums focus:outline-none focus:border-[#38BDF8]/60 focus:ring-2 focus:ring-[#38BDF8]/10 transition-colors"
           />
         </div>
       </div>
@@ -89,7 +89,7 @@ export default function MatchAdminCard({ match }: { match: Match }) {
         <p className="text-xs text-[#ef4444]">{state.error}</p>
       )}
       {state && "success" in state && (
-        <p className="text-xs text-[#00c85a]">
+        <p className="text-xs text-[#38BDF8]">
           {state.scored > 0
             ? `✓ Guardado · Puntos recalculados correctamente (${state.scored} ${state.scored === 1 ? "predicción" : "predicciones"})`
             : "✓ Guardado"}

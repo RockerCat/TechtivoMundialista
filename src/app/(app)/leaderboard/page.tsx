@@ -96,7 +96,7 @@ function FullLeaderboard({
         <span className="text-[10px] text-[#64748b] uppercase tracking-widest">Jugador</span>
         <span className="text-[10px] text-[#64748b] uppercase tracking-widest text-center">Pts</span>
         <span className="text-[10px] text-[#f59e0b]/70 uppercase tracking-widest text-center">⚡</span>
-        <span className="text-[10px] text-[#00c85a]/70 uppercase tracking-widest text-center">✓</span>
+        <span className="text-[10px] text-[#38BDF8]/70 uppercase tracking-widest text-center">✓</span>
         <span className="text-[10px] text-[#64748b] uppercase tracking-widest text-center">Preds</span>
         {hasPrize && (
           <span className="text-[10px] text-[#f59e0b]/70 uppercase tracking-widest text-right">Premio</span>
@@ -108,12 +108,12 @@ function FullLeaderboard({
         const accent    = entry.rank in TOP_ACCENT
           ? TOP_ACCENT[entry.rank as keyof typeof TOP_ACCENT]
           : null;
-        const rowBg     = isMe ? "bg-[#00c85a]/[0.05]" : accent?.bg    ?? "bg-[#18182a]";
-        const rowBorder = isMe ? "border-[#00c85a]/25"  : accent?.border ?? "border-[#2a2a45]";
-        const rankColor = isMe ? "text-[#00c85a]"        : accent?.rankText ?? "text-[#64748b]";
+        const rowBg     = isMe ? "bg-[#38BDF8]/[0.05]" : accent?.bg    ?? "bg-[#18182a]";
+        const rowBorder = isMe ? "border-[#38BDF8]/25"  : accent?.border ?? "border-[#2a2a45]";
+        const rankColor = isMe ? "text-[#38BDF8]"        : accent?.rankText ?? "text-[#64748b]";
         const ptsColor  = entry.total_points === 0
           ? "text-[#2a2a45]"
-          : isMe            ? "text-[#00c85a]"
+          : isMe            ? "text-[#38BDF8]"
           : entry.rank === 1 ? "text-[#f59e0b]"
           : "text-[#f1f5f9]";
         const prize       = projectedPrizes?.get(entry.user_id) ?? null;
@@ -134,14 +134,14 @@ function FullLeaderboard({
               <div className="flex items-center gap-1.5 min-w-0">
                 <div className={cn(
                   "w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs font-bold",
-                  isMe ? "bg-[#00c85a]/20 text-[#00c85a]" : "bg-[#1e1e35] text-[#94a3b8]"
+                  isMe ? "bg-[#38BDF8]/20 text-[#38BDF8]" : "bg-[#1e1e35] text-[#94a3b8]"
                 )}>
                   {entry.display_name.charAt(0).toUpperCase()}
                 </div>
-                <span className={cn("text-sm font-bold truncate", isMe ? "text-[#00c85a]" : "text-[#f1f5f9]")}>
+                <span className={cn("text-sm font-bold truncate", isMe ? "text-[#38BDF8]" : "text-[#f1f5f9]")}>
                   {entry.display_name}
                 </span>
-                {isMe && <span className="text-[10px] text-[#00c85a]/60 font-mono shrink-0">tú</span>}
+                {isMe && <span className="text-[10px] text-[#38BDF8]/60 font-mono shrink-0">tú</span>}
               </div>
               <span className={cn("text-sm font-black tabular-nums text-center", ptsColor)}>
                 {entry.total_points}
@@ -149,7 +149,7 @@ function FullLeaderboard({
               <span className={cn("text-sm font-bold tabular-nums text-center", entry.exact_count  > 0 ? "text-[#f59e0b]" : "text-[#2a2a45]")}>
                 {entry.exact_count}
               </span>
-              <span className={cn("text-sm font-bold tabular-nums text-center", entry.result_count > 0 ? "text-[#00c85a]" : "text-[#2a2a45]")}>
+              <span className={cn("text-sm font-bold tabular-nums text-center", entry.result_count > 0 ? "text-[#38BDF8]" : "text-[#2a2a45]")}>
                 {entry.result_count}
               </span>
               <span className="text-sm font-bold tabular-nums text-center text-[#64748b]">
@@ -175,10 +175,10 @@ function FullLeaderboard({
                 <span className={cn("shrink-0 font-bold tabular-nums", medal ? "text-base leading-none" : cn("text-sm w-5 text-center", rankColor))}>
                   {medal ?? entry.rank}
                 </span>
-                <span className={cn("flex-1 font-bold text-sm", isMe ? "text-[#00c85a]" : "text-[#f1f5f9]")}>
+                <span className={cn("flex-1 font-bold text-sm", isMe ? "text-[#38BDF8]" : "text-[#f1f5f9]")}>
                   {entry.display_name}
                   {isMe && (
-                    <span className="text-[10px] text-[#00c85a]/60 font-mono ml-1.5">tú</span>
+                    <span className="text-[10px] text-[#38BDF8]/60 font-mono ml-1.5">tú</span>
                   )}
                 </span>
                 {hasPrize && (
@@ -195,7 +195,7 @@ function FullLeaderboard({
                 <span className={cn("text-xs font-black tabular-nums", ptsColor)}>
                   {entry.total_points} pts
                 </span>
-                <span className={cn("text-xs tabular-nums", entry.result_count > 0 ? "text-[#00c85a]" : "text-[#475569]")}>
+                <span className={cn("text-xs tabular-nums", entry.result_count > 0 ? "text-[#38BDF8]" : "text-[#475569]")}>
                   {entry.result_count} ganador{entry.result_count !== 1 ? "es" : ""}
                 </span>
                 <span className={cn("text-xs tabular-nums", entry.exact_count > 0 ? "text-[#f59e0b]" : "text-[#475569]")}>
@@ -224,7 +224,7 @@ function FullLeaderboard({
 
       <div className="flex items-center gap-4 justify-center pt-3 border-t border-[#1e1e35] mt-2">
         <span className="text-[10px] text-[#f59e0b]/70">⚡ Marcador exacto</span>
-        <span className="text-[10px] text-[#00c85a]/70">✓ Ganador correcto</span>
+        <span className="text-[10px] text-[#38BDF8]/70">✓ Ganador correcto</span>
         <span className="text-[10px] text-[#64748b] hidden sm:inline">Preds = predicciones</span>
       </div>
     </div>

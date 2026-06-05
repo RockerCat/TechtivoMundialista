@@ -21,7 +21,7 @@ export default async function Navbar() {
         <Link href={user ? "/dashboard" : "/login"} className="flex items-center gap-2 shrink-0">
           <VarLogo />
           <span className="font-bold text-lg tracking-tight text-[#f1f5f9]">
-            La <span className="text-gradient-green">Mundialista</span>
+            Techtivo <span className="text-gradient-green">Mundialista</span>
           </span>
         </Link>
 
@@ -55,8 +55,8 @@ function AuthenticatedNav({
       <div className="flex items-center gap-2">
         {/* User chip — desktop only */}
         <div className="hidden sm:flex items-center gap-2 bg-[#18182a] border border-[#2a2a45] rounded-xl px-3 py-1.5">
-          <div className="w-5 h-5 rounded-full bg-[#00c85a]/20 flex items-center justify-center shrink-0">
-            <span className="text-[10px] font-bold text-[#00c85a]">{initial}</span>
+          <div className="w-5 h-5 rounded-full bg-[#38BDF8]/20 flex items-center justify-center shrink-0">
+            <span className="text-[10px] font-bold text-[#38BDF8]">{initial}</span>
           </div>
           <span className="text-sm text-[#94a3b8] max-w-[110px] truncate">
             {displayName}
@@ -65,8 +65,8 @@ function AuthenticatedNav({
 
         {/* Mobile: avatar + name + logout — all in one flex row */}
         <div className="sm:hidden flex items-center gap-1.5 min-w-0">
-          <div className="w-7 h-7 rounded-full bg-[#00c85a]/20 border border-[#00c85a]/30 flex items-center justify-center shrink-0">
-            <span className="text-[10px] font-bold text-[#00c85a]">{initial}</span>
+          <div className="w-7 h-7 rounded-full bg-[#38BDF8]/20 border border-[#38BDF8]/30 flex items-center justify-center shrink-0">
+            <span className="text-[10px] font-bold text-[#38BDF8]">{initial}</span>
           </div>
           <span className="text-sm font-medium text-[#94a3b8] truncate max-w-[90px]">
             {displayName}
@@ -89,7 +89,7 @@ function GuestNav() {
   return (
     <Link
       href="/login"
-      className="text-sm font-semibold bg-[#00c85a] text-[#0a0a12] px-4 py-2 rounded-xl hover:bg-[#00e87a] transition-colors"
+      className="text-sm font-semibold bg-[#38BDF8] text-[#0a0a12] px-4 py-2 rounded-xl hover:bg-[#7DD3FC] transition-colors"
     >
       Ingresar
     </Link>
@@ -100,8 +100,8 @@ function GuestNav() {
 
 function VarLogo() {
   return (
-    <div className="w-8 h-8 rounded-lg bg-[#00c85a] flex items-center justify-center">
-      <span className="text-base leading-none">🏆</span>
+    <div className="w-8 h-8 rounded-lg bg-[#38BDF8] flex items-center justify-center">
+      <span className="text-base leading-none">⚽</span>
     </div>
   );
 }

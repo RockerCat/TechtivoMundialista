@@ -64,7 +64,7 @@ export default function CalendarMatchRow({ match }: { match: MatchWithPrediction
     ? cn(cardBase, goalAnim ? "animate-goal-card" : "animate-live-glow",
         "border-[#ef4444]/35 bg-gradient-to-br from-[#ef4444]/[0.10] to-[#18182a] hover:border-[#ef4444]/55")
     : gotPoints
-    ? cn(cardBase, "border-[#00c85a]/35 bg-[#00c85a]/[0.05] hover:border-[#00c85a]/50")
+    ? cn(cardBase, "border-[#38BDF8]/35 bg-[#38BDF8]/[0.05] hover:border-[#38BDF8]/50")
     : gotZero
     ? cn(cardBase, "border-[#ef4444]/20 bg-[#ef4444]/[0.04]")
     : isOpen && !saved
@@ -90,7 +90,7 @@ export default function CalendarMatchRow({ match }: { match: MatchWithPrediction
             <div className="flex-1" />
             {/* Status indicator: ⚠ pending or ✓ saved */}
             {saved
-              ? <Check size={12} className="text-[#00c85a] shrink-0" />
+              ? <Check size={12} className="text-[#38BDF8] shrink-0" />
               : <span className="text-[#f59e0b] text-xs shrink-0">⚠</span>}
           </div>
         ) : (
@@ -112,7 +112,7 @@ export default function CalendarMatchRow({ match }: { match: MatchWithPrediction
                   {match.home_score}<span className="text-[#ef4444]/40 mx-0.5 font-light">–</span>{match.away_score}
                 </span>
               ) : isFinished && hasScore ? (
-                <span className={cn("text-base font-black tabular-nums", gotPoints ? "text-[#00c85a]" : "text-[#f1f5f9]")}>
+                <span className={cn("text-base font-black tabular-nums", gotPoints ? "text-[#38BDF8]" : "text-[#f1f5f9]")}>
                   {match.home_score}<span className="text-[#475569] mx-0.5 font-light">–</span>{match.away_score}
                 </span>
               ) : (
@@ -156,7 +156,7 @@ export default function CalendarMatchRow({ match }: { match: MatchWithPrediction
                 <span className="text-[10px] text-[#475569]">Sin pronóstico</span>
               )}
               {(saved as { scored_at?: string } | null)?.scored_at && (
-                <span className={cn("text-xs font-black font-mono", gotPoints ? "text-[#00c85a]" : "text-[#ef4444]/70")}>
+                <span className={cn("text-xs font-black font-mono", gotPoints ? "text-[#38BDF8]" : "text-[#ef4444]/70")}>
                   {gotPoints ? `+${(saved as {points: number}).points} pts` : "0 pts"}
                 </span>
               )}
@@ -199,7 +199,7 @@ export default function CalendarMatchRow({ match }: { match: MatchWithPrediction
                   <button
                     type="submit"
                     disabled={isPending}
-                    className="h-9 px-6 bg-[#00c85a] text-[#0a0a12] text-xs font-bold rounded-xl hover:bg-[#00e87a] disabled:opacity-40 transition-colors flex items-center gap-1.5"
+                    className="h-9 px-6 bg-[#38BDF8] text-[#0a0a12] text-xs font-bold rounded-xl hover:bg-[#7DD3FC] disabled:opacity-40 transition-colors flex items-center gap-1.5"
                   >
                     {isPending
                       ? <><Loader2 size={11} className="animate-spin" />Guardando...</>
@@ -219,7 +219,7 @@ export default function CalendarMatchRow({ match }: { match: MatchWithPrediction
             ) : (
               <div className="flex items-center gap-2">
                 <span className="text-[10px] text-[#94a3b8]">
-                  <Check size={9} className="inline text-[#00c85a] mr-0.5" />
+                  <Check size={9} className="inline text-[#38BDF8] mr-0.5" />
                   {saved!.home_score}–{saved!.away_score}
                 </span>
                 <button
@@ -264,7 +264,7 @@ function StatusPill({ match }: { match: MatchWithPrediction }) {
   if (isOpen) {
     const hasPred = !!match.prediction;
     return hasPred
-      ? <Check size={12} className="text-[#00c85a] shrink-0" />
+      ? <Check size={12} className="text-[#38BDF8] shrink-0" />
       : <span className="text-[#f59e0b] text-xs shrink-0">⚠</span>;
   }
   return <Lock size={10} className="text-[#475569] shrink-0" />;
@@ -284,7 +284,7 @@ function ScoreInput({
       placeholder="0"
       disabled={disabled}
       required
-      className="w-11 h-8 text-center text-base font-black rounded-xl bg-[#2a2a50] border-2 border-[#5252a0] text-[#f1f5f9] placeholder:text-[#5252a0] focus:border-[#00c85a] focus:outline-none focus:ring-2 focus:ring-[#00c85a]/20 disabled:opacity-40 tabular-nums transition-colors"
+      className="w-11 h-8 text-center text-base font-black rounded-xl bg-[#2a2a50] border-2 border-[#5252a0] text-[#f1f5f9] placeholder:text-[#5252a0] focus:border-[#38BDF8] focus:outline-none focus:ring-2 focus:ring-[#38BDF8]/20 disabled:opacity-40 tabular-nums transition-colors"
       style={{ MozAppearance: "textfield" } as React.CSSProperties}
     />
   );

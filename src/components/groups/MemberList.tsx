@@ -27,7 +27,7 @@ export default function MemberList({ members, currentUserId }: MemberListProps) 
             key={member.user_id}
             className={cn(
               "flex items-center gap-3 px-4 py-3",
-              isCurrentUser && "bg-[#00c85a]/[0.03]"
+              isCurrentUser && "bg-[#38BDF8]/[0.03]"
             )}
           >
             {/* Avatar */}
@@ -35,7 +35,7 @@ export default function MemberList({ members, currentUserId }: MemberListProps) 
               className={cn(
                 "w-8 h-8 rounded-full flex items-center justify-center shrink-0 text-xs font-bold",
                 isCurrentUser
-                  ? "bg-[#00c85a]/20 text-[#00c85a]"
+                  ? "bg-[#38BDF8]/20 text-[#38BDF8]"
                   : "bg-[#1e1e35] text-[#94a3b8]"
               )}
             >
@@ -48,13 +48,13 @@ export default function MemberList({ members, currentUserId }: MemberListProps) 
                 <span
                   className={cn(
                     "text-sm font-bold truncate",
-                    isCurrentUser ? "text-[#00c85a]" : "text-[#f1f5f9]"
+                    isCurrentUser ? "text-[#38BDF8]" : "text-[#f1f5f9]"
                   )}
                 >
                   {member.display_name}
                 </span>
                 {isCurrentUser && (
-                  <span className="text-[10px] text-[#00c85a]/60 font-mono shrink-0">
+                  <span className="text-[10px] text-[#38BDF8]/60 font-mono shrink-0">
                     tú
                   </span>
                 )}

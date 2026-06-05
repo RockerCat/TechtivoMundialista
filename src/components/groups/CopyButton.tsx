@@ -16,12 +16,12 @@ export default function CopyButton({ text }: { text: string }) {
     <button
       onClick={handleCopy}
       aria-label="Copiar código"
-      className="flex items-center gap-1.5 text-xs font-mono font-semibold px-3 py-1.5 rounded-lg bg-[#20203a] border border-[#2a2a45] hover:border-[#00c85a]/40 hover:text-[#00c85a] transition-colors"
+      className="flex items-center gap-1.5 text-xs font-mono font-semibold px-3 py-1.5 rounded-lg bg-[#20203a] border border-[#2a2a45] hover:border-[#38BDF8]/40 hover:text-[#38BDF8] transition-colors"
     >
       {copied ? (
         <>
-          <Check size={12} className="text-[#00c85a]" />
-          <span className="text-[#00c85a]">Copiado</span>
+          <Check size={12} className="text-[#38BDF8]" />
+          <span className="text-[#38BDF8]">Copiado</span>
         </>
       ) : (
         <>

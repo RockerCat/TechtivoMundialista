@@ -98,6 +98,16 @@ export function formatCOP(amount: number): string {
   return "$" + Math.round(amount).toLocaleString("es-CO");
 }
 
+/** Compact COP for narrow spaces: $50K, $300K, $1.5M */
+export function formatCompactCOP(amount: number): string {
+  if (amount >= 1_000_000) {
+    const m = amount / 1_000_000;
+    return `$${m % 1 === 0 ? m.toFixed(0) : m.toFixed(1)}M`;
+  }
+  if (amount >= 1_000) return `$${Math.round(amount / 1_000)}K`;
+  return formatCOP(amount);
+}
+
 export type PrizeConfig = {
   entry_fee:        number;
   first_place_pct:  number;

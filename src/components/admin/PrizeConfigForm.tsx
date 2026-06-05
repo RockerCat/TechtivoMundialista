@@ -27,7 +27,7 @@ export default function PrizeConfigForm({
       <input type="hidden" name="group_id" value={groupId} />
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Field label="Inscripción (COP)" name="entry_fee" defaultValue={entryFee} min={0} hint="Ej: 20000" />
+        <Field label="Inscripción (COP)" name="entry_fee" defaultValue={entryFee} min={0} hint="Ej: 50000" />
         <Field label="1er lugar (%)" name="first_place_pct" defaultValue={firstPlacePct} min={0} max={100} hint="Ej: 70" />
         <Field label="2do lugar (%)" name="second_place_pct" defaultValue={secondPlacePct} min={0} max={100} hint="Ej: 30" />
       </div>
@@ -43,7 +43,7 @@ export default function PrizeConfigForm({
         </div>
       )}
       {state && "success" in state && (
-        <div className="flex items-center gap-2 text-xs text-[#00c85a]">
+        <div className="flex items-center gap-2 text-xs text-[#38BDF8]">
           <Check size={12} className="shrink-0" />
           Guardado correctamente
         </div>
@@ -52,7 +52,7 @@ export default function PrizeConfigForm({
       <button
         type="submit"
         disabled={isPending}
-        className="self-start h-9 px-4 bg-[#00c85a] text-[#0a0a12] text-xs font-bold rounded-xl hover:bg-[#00e87a] disabled:opacity-40 transition-colors flex items-center gap-2"
+        className="self-start h-9 px-4 bg-[#38BDF8] text-[#0a0a12] text-xs font-bold rounded-xl hover:bg-[#7DD3FC] disabled:opacity-40 transition-colors flex items-center gap-2"
       >
         {isPending ? <><Loader2 size={12} className="animate-spin" />Guardando...</> : "Guardar configuración"}
       </button>
@@ -77,7 +77,7 @@ function Field({
         min={min}
         max={max}
         required
-        className="h-10 rounded-xl bg-[#0e0e1d] border border-[#2a2a45] text-[#f1f5f9] text-sm px-3 focus:outline-none focus:border-[#00c85a]/60 focus:ring-2 focus:ring-[#00c85a]/10 transition-colors tabular-nums"
+        className="h-10 rounded-xl bg-[#0e0e1d] border border-[#2a2a45] text-[#f1f5f9] text-sm px-3 focus:outline-none focus:border-[#38BDF8]/60 focus:ring-2 focus:ring-[#38BDF8]/10 transition-colors tabular-nums"
       />
       {hint && <p className="text-[9px] text-[#475569]">{hint}</p>}
     </div>

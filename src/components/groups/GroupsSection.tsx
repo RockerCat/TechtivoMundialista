@@ -24,8 +24,8 @@ function EmptyState() {
   return (
     <div className="bg-[#18182a] border border-dashed border-[#2a2a45] rounded-2xl p-5">
       <div className="flex items-start gap-4">
-        <div className="w-10 h-10 rounded-xl bg-[#00c85a]/10 flex items-center justify-center shrink-0">
-          <Users size={18} className="text-[#00c85a]" />
+        <div className="w-10 h-10 rounded-xl bg-[#38BDF8]/10 flex items-center justify-center shrink-0">
+          <Users size={18} className="text-[#38BDF8]" />
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-bold text-[#f1f5f9] mb-1">

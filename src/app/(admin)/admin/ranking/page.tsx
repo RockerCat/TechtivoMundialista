@@ -82,7 +82,7 @@ export default async function AdminRankingPage() {
                   </p>
 
                   {/* Correct */}
-                  <p className="text-xs tabular-nums text-[#00c85a] text-right">
+                  <p className="text-xs tabular-nums text-[#38BDF8] text-right">
                     {entry.result_count > 0 ? `✓${entry.result_count}` : "—"}
                   </p>
 

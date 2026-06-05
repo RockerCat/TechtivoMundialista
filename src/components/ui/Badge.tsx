@@ -16,7 +16,7 @@ export default function Badge({
       className={cn(
         "inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold",
         {
-          "bg-[#00c85a]/15 text-[#00c85a]": variant === "green",
+          "bg-[#38BDF8]/15 text-[#38BDF8]": variant === "green",
           "bg-[#3b82f6]/15 text-[#3b82f6]": variant === "blue",
           "bg-[#f59e0b]/15 text-[#f59e0b]": variant === "gold",
           "bg-[#ef4444]/15 text-[#ef4444]": variant === "red",
