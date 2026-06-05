@@ -13,20 +13,33 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "La Penúltima - Polla Mundialista Interna",
-  description: "Predice, compite y pelea por la bolsa del Mundial. Solo para amigos.",
-  keywords: ["polla mundialista", "predicciones", "fútbol", "mundial 2026", "grupos privados"],
+  metadataBase: new URL("https://techtivo-mundialista.vercel.app"),
+
+  title: "Techtivo Mundialista - Polla Mundialista Interna",
+  description:
+    "Predice, compite y pelea por la bolsa del Mundial. Solo para amigos.",
+  keywords: [
+    "polla mundialista",
+    "predicciones",
+    "fútbol",
+    "mundial 2026",
+    "grupos privados"
+  ],
+
   openGraph: {
-    title:       "La Penúltima - Polla Mundialista Interna",
-    description: "Predice, compite y pelea por la bolsa del Mundial. Solo para amigos.",
-    type:        "website",
-    images:      [{ url: "/opengraph-image.png", width: 1200, height: 630 }],
+    title: "Techtivo Mundialista - Polla Mundialista Interna",
+    description:
+      "Predice, compite y pelea por la bolsa del Mundial. Solo para amigos.",
+    type: "website",
+    images: [{ url: "/opengraph-image.png", width: 1200, height: 630 }],
   },
+
   twitter: {
-    card:        "summary_large_image",
-    title:       "La Penúltima - Polla Mundialista Interna",
-    description: "Predice, compite y pelea por la bolsa del Mundial. Solo para amigos.",
-    images:      ["/opengraph-image.png"],
+    card: "summary_large_image",
+    title: "Techtivo Mundialista - Polla Mundialista Interna",
+    description:
+      "Predice, compite y pelea por la bolsa del Mundial. Solo para amigos.",
+    images: ["/opengraph-image.png"],
   },
 };
 

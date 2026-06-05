@@ -45,7 +45,7 @@ export default function AdminSidebar() {
               <span className="text-sm leading-none">🏆</span>
             </div>
             <div>
-              <p className="text-xs font-black text-[#f1f5f9] leading-none">La Penúltima</p>
+              <p className="text-xs font-black text-[#f1f5f9] leading-none">Techtivo Mundialista</p>
               <p className="text-[9px] text-[#64748b] font-mono mt-0.5">Admin</p>
             </div>
           </div>
@@ -80,7 +80,7 @@ export default function AdminSidebar() {
       <header className="md:hidden sticky top-0 z-50 bg-[#080810]/90 backdrop-blur border-b border-[#1e1e35]">
         <div className="flex items-center justify-between px-4 h-12">
           <span className="text-xs font-black text-[#f1f5f9]">
-            La <span className="text-[#00c85a]">Penúltima</span>
+            La <span className="text-[#00c85a]">Mundialista</span>
             <span className="text-[#64748b] font-mono font-normal ml-1.5">Admin</span>
           </span>
           <nav className="flex items-center gap-0.5">

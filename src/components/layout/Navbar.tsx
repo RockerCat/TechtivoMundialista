@@ -21,7 +21,7 @@ export default async function Navbar() {
         <Link href={user ? "/dashboard" : "/login"} className="flex items-center gap-2 shrink-0">
           <VarLogo />
           <span className="font-bold text-lg tracking-tight text-[#f1f5f9]">
-            La <span className="text-gradient-green">Penúltima</span>
+            La <span className="text-gradient-green">Mundialista</span>
           </span>
         </Link>
 

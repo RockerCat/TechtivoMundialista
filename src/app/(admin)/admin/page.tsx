@@ -15,7 +15,7 @@ export default async function AdminPage() {
       {/* Header */}
       <div>
         <p className="text-[10px] text-[#64748b] font-mono uppercase tracking-widest mb-1">
-          Admin · La Penúltima
+          Admin · Techtivo Mundialista
         </p>
         <h1 className="text-2xl font-black text-[#f1f5f9]">Dashboard</h1>
       </div>

@@ -161,7 +161,7 @@ export default function SignupForm({ inviteCode, groupName }: SignupFormProps) {
 
       setJoinStatus({
         phase:     "success",
-        groupName: group?.name ?? groupName ?? "La Penúltima",
+        groupName: group?.name ?? groupName ?? "Techtivo Mundialista",
       });
 
       setTimeout(() => {
@@ -201,10 +201,10 @@ export default function SignupForm({ inviteCode, groupName }: SignupFormProps) {
             <span className="text-xl leading-none">🏆</span>
           </div>
           <span className="font-bold text-xl text-[#f1f5f9]">
-            La <span className="text-[#00c85a]">Penúltima</span>
+            La <span className="text-[#00c85a]">Mundialista</span>
           </span>
         </Link>
-        <h1 className="text-2xl font-black text-[#f1f5f9]">Únete a La Penúltima</h1>
+        <h1 className="text-2xl font-black text-[#f1f5f9]">Únete a Techtivo Mundialista</h1>
         <p className="text-sm text-[#94a3b8] mt-1">
           {inviteCode
             ? "Únete al grupo y deja tu penúltima palabra."
@@ -220,7 +220,7 @@ export default function SignupForm({ inviteCode, groupName }: SignupFormProps) {
           <div className="min-w-0 flex-1">
             <p className="text-xs text-[#94a3b8]">Te invitaron a jugar</p>
             <p className="text-sm font-bold text-[#f1f5f9] truncate">
-              {groupName ?? "un grupo de La Penúltima"}
+              {groupName ?? "un grupo de Techtivo Mundialista"}
             </p>
           </div>
           <Badge variant="green">{inviteCode}</Badge>

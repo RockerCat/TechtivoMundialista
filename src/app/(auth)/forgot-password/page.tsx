@@ -48,7 +48,7 @@ export default function ForgotPasswordPage() {
             <span className="text-xl leading-none">🏆</span>
           </div>
           <span className="font-bold text-xl text-[#f1f5f9]">
-            La <span className="text-[#00c85a]">Penúltima</span>
+            La <span className="text-[#00c85a]">Mundialista</span>
           </span>
         </Link>
         <h1 className="text-2xl font-black text-[#f1f5f9]">Recuperar contraseña</h1>

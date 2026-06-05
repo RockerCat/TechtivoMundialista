@@ -36,7 +36,7 @@ export default async function InviteOgImage({ params }: Props) {
   // });
   // const group = groups?.[0] ?? null;
   //
-  // let groupName    = "La Penúltima";
+  // let groupName    = "Techtivo Mundialista";
   // let memberCount  = 0;
   // let prizeDisplay: string | null = null;
   //
@@ -96,7 +96,7 @@ function StaticCard({ code }: { code: string }) {
 
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
         <span style={{ fontSize: 60, fontWeight: 900, color: "#f1f5f9", letterSpacing: "-1px" }}>La </span>
-        <span style={{ fontSize: 60, fontWeight: 900, color: "#00c85a", letterSpacing: "-1px" }}>Penúltima</span>
+        <span style={{ fontSize: 60, fontWeight: 900, color: "#00c85a", letterSpacing: "-1px" }}>Mundialista</span>
       </div>
 
       <p style={{ fontSize: 26, fontWeight: 700, color: "#94a3b8", margin: "0 0 10px 0", textAlign: "center" }}>

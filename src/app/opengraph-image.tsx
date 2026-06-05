@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const size        = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt         = "La Penúltima - Polla Mundialista Interna";
+export const alt         = "Techtivo Mundialista - Polla Mundialista Interna";
 
 export default function OgImage() {
   return new ImageResponse(
@@ -59,7 +59,7 @@ export default function OgImage() {
           La{" "}
         </span>
         <span style={{ fontSize: 64, fontWeight: 900, color: "#00c85a", letterSpacing: "-1px" }}>
-          Penúltima
+          Mundialista
         </span>
       </div>
 

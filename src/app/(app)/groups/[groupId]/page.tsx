@@ -278,7 +278,7 @@ function PrizeSummary({
         </p>
       )}
       <p className="text-[10px] text-[#475569] leading-relaxed border-t border-[#1e1e35] pt-3">
-        La Penúltima no procesa pagos ni administra dinero. Los aportes y premios son gestionados directamente por los participantes del grupo.
+        Techtivo Mundialista no procesa pagos ni administra dinero. Los aportes y premios son gestionados directamente por los participantes del grupo.
       </p>
     </div>
   );

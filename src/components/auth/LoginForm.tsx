@@ -79,7 +79,7 @@ export default function LoginForm({ inviteCode }: LoginFormProps) {
           .select("name")
           .eq("id", existing.group_id)
           .maybeSingle();
-        setJoinStatus({ phase: "success", groupName: existingGroup?.name ?? "La Penúltima" });
+        setJoinStatus({ phase: "success", groupName: existingGroup?.name ?? "Techtivo Mundialista" });
         setTimeout(() => { router.push("/dashboard"); router.refresh(); }, 1500);
         return;
       }
@@ -124,7 +124,7 @@ export default function LoginForm({ inviteCode }: LoginFormProps) {
 
       console.log("[joinGroupExistingUser] group name:", group?.name ?? "(not found)");
 
-      setJoinStatus({ phase: "success", groupName: group?.name ?? "La Penúltima" });
+      setJoinStatus({ phase: "success", groupName: group?.name ?? "Techtivo Mundialista" });
       console.log("[loginInviteJoin] join SUCCESS ✓, redirecting to /dashboard in 1.5s");
       setTimeout(() => { router.push("/dashboard"); router.refresh(); }, 1500);
       return;
@@ -155,10 +155,10 @@ export default function LoginForm({ inviteCode }: LoginFormProps) {
             <span className="text-xl leading-none">🏆</span>
           </div>
           <span className="font-bold text-xl text-[#f1f5f9]">
-            La <span className="text-[#00c85a]">Penúltima</span>
+            La <span className="text-[#00c85a]">Mundialista</span>
           </span>
         </Link>
-        <h1 className="text-2xl font-black text-[#f1f5f9]">La Penúltima</h1>
+        <h1 className="text-2xl font-black text-[#f1f5f9]">Techtivo Mundialista</h1>
         <p className="text-sm text-[#94a3b8] mt-1">El lugar donde se sufre pero se gana</p>
       </div>
 

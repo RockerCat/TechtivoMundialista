@@ -61,7 +61,7 @@ export default async function RulesPage() {
       {/* Page header */}
       <div>
         <h1 className="text-2xl font-black text-[#f1f5f9]">
-          Reglas de La Penúltima
+          Reglas de Techtivo Mundialista
         </h1>
         <p className="text-sm text-[#64748b] mt-1">
           Fase actual:{" "}
@@ -299,7 +299,7 @@ export default async function RulesPage() {
             </div>
 
             <p className="text-[10px] text-[#475569] pt-1 border-t border-[#1e1e35]">
-              La clasificación a la siguiente ronda mediante penales no afecta el cálculo de los puntos de La Penúltima.
+              La clasificación a la siguiente ronda mediante penales no afecta el cálculo de los puntos de Techtivo Mundialista.
             </p>
           </div>
         </div>

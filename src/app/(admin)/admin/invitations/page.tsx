@@ -75,7 +75,7 @@ export default async function AdminInvitationsPage() {
               </p>
               <h2 className="text-base font-bold text-[#f1f5f9]">Configuración de premios</h2>
               <p className="text-xs text-[#94a3b8] mt-0.5">
-                Solo informativo — La Penúltima no procesa pagos.
+                Solo informativo — Techtivo Mundialista no procesa pagos.
               </p>
             </div>
 
@@ -108,7 +108,7 @@ export default async function AdminInvitationsPage() {
             <div>
               <p className="text-xs font-semibold text-[#f59e0b] mb-1">Solo para uso interno</p>
               <p className="text-[10px] text-[#94a3b8] leading-relaxed">
-                Este enlace permite unirse a La Penúltima. Compártelo únicamente con los participantes invitados.
+                Este enlace permite unirse a Techtivo Mundialista. Compártelo únicamente con los participantes invitados.
                 Los usuarios regulares no ven este código desde sus pantallas.
               </p>
             </div>

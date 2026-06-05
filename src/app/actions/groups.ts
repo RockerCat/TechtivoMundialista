@@ -130,7 +130,7 @@ export async function joinGroupAction(
         success: true,
         group: {
           id:          existing.group_id,
-          name:        group?.name        ?? "La Penúltima",
+          name:        group?.name        ?? "Techtivo Mundialista",
           invite_code: group?.invite_code ?? code,
         },
       };
@@ -197,7 +197,7 @@ export async function joinGroupAction(
       success: true,
       group: {
         id:          groupId as string,
-        name:        group?.name        ?? "La Penúltima",
+        name:        group?.name        ?? "Techtivo Mundialista",
         invite_code: group?.invite_code ?? code,
       },
     };

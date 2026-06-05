@@ -41,7 +41,7 @@ export const es = {
   // ─── Auth ─────────────────────────────────────────────────────────────────
   auth: {
     login: {
-      title: "La Penúltima",
+      title: "Techtivo Mundialista",
       subtitle: "El lugar donde se sufre pero se gana",
       emailLabel: "Correo electrónico",
       emailPlaceholder: "tú@ejemplo.com",
@@ -59,7 +59,7 @@ export const es = {
       ],
     },
     signup: {
-      title: "Únete a La Penúltima",
+      title: "Únete a Techtivo Mundialista",
       subtitle: "Demuestra que sabes más fútbol que tus amigos.",
       invitedTo: "Te invitaron a jugar",
       usernameLabel: "Nombre de usuario",
@@ -88,7 +88,7 @@ export const es = {
     ctaSignIn: "Ingresar",
     disclaimer: "Únete por invitación · Sin apuestas · Solo el orgullo futbolero",
     scrollHint: "Desliza para explorar",
-    varReview: "La Penúltima",
+    varReview: "Techtivo Mundialista",
     yourPick: "Tu predicción",
     finalScore: "Marcador final",
     predictionResult: "Resultado de tu predicción",
@@ -193,7 +193,7 @@ export const es = {
 
   // ─── Metadata ─────────────────────────────────────────────────────────────
   meta: {
-    title: "La Penúltima — Predicciones Copa del Mundo 2026",
+    title: "Techtivo Mundialista — Predicciones Copa del Mundo 2026",
     description:
       "Crea grupos privados de predicciones con tus amigos para el Mundial 2026. Predice marcadores, compite en la tabla de posiciones.",
     ogDescription: "Predice. Compite. Reclama que te robaron puntos. Grupos privados para el Mundial 2026.",

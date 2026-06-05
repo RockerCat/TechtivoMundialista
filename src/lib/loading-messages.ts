@@ -20,7 +20,7 @@ export const LOADING_MESSAGES: readonly string[] = [
   "Un Burrito de Chipotle?...",
   "En La Superior nos vemos!...",
   "Y si mejor jugamos Padelazzo?...",
-  "Que buenos recuerdos de La Penúltima...",
+  "Que buenos recuerdos de Techtivo Mundialista...",
   "Papaje?...",
   "Buscando Excusas para Maurice...",
   "Donde entre es GOL!...",

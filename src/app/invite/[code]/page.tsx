@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: InvitePageProps): Promise<Met
 
   const title = groupName
     ? `Únete a ${groupName} - Polla Mundialista Interna`
-    : "La Penúltima - Polla Mundialista Interna";
+    : "Techtivo Mundialista - Polla Mundialista Interna";
   const description = "Predice, compite y pelea por la bolsa del Mundial. Solo para amigos.";
 
   return {
@@ -198,7 +198,7 @@ function InviteLayout({
         <div className="text-center mb-6">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#18182a] border border-[#2a2a45] text-xs text-[#94a3b8] mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-[#00c85a] animate-live-pulse" />
-            Te invitaron a jugar La Penúltima
+            Te invitaron a jugar Techtivo Mundialista
           </div>
           <p className="text-sm text-[#94a3b8] mb-2">Únete al grupo y demuestra que sabes más fútbol que tus amigos.</p>
           <h1 className="text-2xl font-black text-[#f1f5f9]">{group.name}</h1>

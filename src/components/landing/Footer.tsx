@@ -7,7 +7,7 @@ export default function Footer() {
             <span className="text-xs leading-none">🏆</span>
           </div>
           <span className="text-sm font-bold text-[#f1f5f9]">
-            La <span className="text-[#00c85a]">Penúltima</span>
+            La <span className="text-[#00c85a]">Mundialista</span>
           </span>
         </div>
         <p className="text-xs text-[#475569] text-center">

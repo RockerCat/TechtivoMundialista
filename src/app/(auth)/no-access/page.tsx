@@ -19,7 +19,7 @@ export default async function NoAccessPage() {
         No perteneces a ningún grupo
       </h1>
       <p className="text-sm text-[#94a3b8] leading-relaxed mb-6">
-        La Penúltima es una liga privada.
+        Techtivo Mundialista es una liga privada.
         <br />
         Solicita una invitación al administrador para participar.
       </p>

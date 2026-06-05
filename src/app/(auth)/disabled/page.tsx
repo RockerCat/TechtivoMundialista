@@ -20,7 +20,7 @@ export default async function DisabledPage() {
       <p className="text-sm text-[#94a3b8] leading-relaxed mb-6">
         Un administrador ha deshabilitado tu cuenta.
         <br />
-        No puedes acceder a La Penúltima en este momento.
+        No puedes acceder a Techtivo Mundialista en este momento.
       </p>
 
       {/* Info card */}
