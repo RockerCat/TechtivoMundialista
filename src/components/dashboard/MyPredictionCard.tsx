@@ -18,6 +18,13 @@ interface Props {
   awayScore:    number | null;
 }
 
+interface LiveContext {
+  currentHome: number;
+  currentAway: number;
+  predHome: number;
+  predAway: number;
+}
+
 export default function MyPredictionCard({
   matchId,
   myPrediction,
@@ -144,7 +151,16 @@ export default function MyPredictionCard({
           </div>
           {mySim && hasScore && saved && (
             <div className="border-t border-[#1e1e35] pt-3">
-              <MySituationLine mySim={mySim} isFinished={false} />
+              <MySituationLine
+                mySim={mySim}
+                isFinished={false}
+                liveContext={homeScore !== null && awayScore !== null ? {
+                  currentHome: homeScore,
+                  currentAway: awayScore,
+                  predHome: saved.home_score,
+                  predAway: saved.away_score,
+                } : undefined}
+              />
             </div>
           )}
         </div>
@@ -187,7 +203,15 @@ export default function MyPredictionCard({
 
 // ── Helpers ───────────────────────────────────────────────────────────
 
-function MySituationLine({ mySim, isFinished }: { mySim: ScoringResult; isFinished: boolean }) {
+function MySituationLine({
+  mySim,
+  isFinished,
+  liveContext,
+}: {
+  mySim: ScoringResult;
+  isFinished: boolean;
+  liveContext?: LiveContext;
+}) {
   if (mySim.reason === "Marcador exacto") {
     return (
       <p className="text-sm text-[#38BDF8] font-semibold">
@@ -204,6 +228,21 @@ function MySituationLine({ mySim, isFinished }: { mySim: ScoringResult; isFinish
       </p>
     );
   }
+
+  // "Sin puntos" case — during live, check if the prediction is still mathematically possible.
+  // It becomes impossible only when current score already exceeds a predicted goal.
+  if (!isFinished && liveContext) {
+    const { currentHome, currentAway, predHome, predAway } = liveContext;
+    const isImpossible = currentHome > predHome || currentAway > predAway;
+    if (!isImpossible) {
+      return (
+        <p className="text-sm text-[#64748b] font-semibold">
+          ⏳ Tu pronóstico aún puede cumplirse
+        </p>
+      );
+    }
+  }
+
   return (
     <p className="text-sm text-[#ef4444]/80 font-semibold">
       🔴 {isFinished ? "No acertaste" : "Tu pronóstico ya no puede cumplirse"}
