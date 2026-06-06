@@ -330,6 +330,20 @@ function MatchHeader({ match }: { match: MatchWithTeams }) {
   const hasScore = match.home_score !== null && match.away_score !== null;
   const phaseLabel = PHASE_LABELS[stage as MatchStage];
 
+  // Which team advanced via penalties (bracket only — not used for scoring)
+  const isKnockoutDraw =
+    status === "finished" &&
+    hasScore &&
+    match.home_score === match.away_score &&
+    stage !== "group" &&
+    !!match.advancing_team_id;
+
+  const advancingTeam = isKnockoutDraw
+    ? match.advancing_team_id === home_team.id
+      ? home_team
+      : away_team
+    : null;
+
   return (
     <div className="bg-[#11111c] border border-[#1e1e35] rounded-2xl p-5">
 
@@ -372,6 +386,13 @@ function MatchHeader({ match }: { match: MatchWithTeams }) {
 
         <TeamDisplay team={away_team} side="away" />
       </div>
+
+      {/* Penalty shootout winner note (bracket info — not scoring) */}
+      {advancingTeam && (
+        <p className="text-[11px] text-[#94a3b8] text-center mt-2">
+          {advancingTeam.flag_emoji ?? "🏳️"} Clasificó {advancingTeam.name} por penales
+        </p>
+      )}
 
       {/* Kickoff for non-scheduled */}
       {status !== "scheduled" && (

@@ -21,7 +21,7 @@ import Link from "next/link";
 import LiveMatchPoller from "@/components/dashboard/LiveMatchPoller";
 import LiveMatchCard from "@/components/dashboard/LiveMatchCard";
 import PrizePoolCard from "@/components/dashboard/PrizePoolCard";
-import DashboardViewToggle from "@/components/dashboard/DashboardViewToggle";
+import CalendarView from "@/components/dashboard/CalendarView";
 import { computePrizePool } from "@/lib/groups";
 
 export default async function DashboardPage() {
@@ -111,7 +111,7 @@ export default async function DashboardPage() {
             ? <LiveMatchesSection matches={liveMatches} />
             : fallbackMatch && <FeaturedMatchCard match={fallbackMatch} />
           }
-          <DashboardViewToggle matches={matches} />
+          <CalendarView matches={matches} />
         </main>
 
         {/* ── Left: user summary + scoring card ────────────────────── */}

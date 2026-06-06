@@ -165,11 +165,12 @@ export async function updateMatchResultAction(
   _prev: UpdateMatchState,
   formData: FormData
 ): Promise<UpdateMatchState> {
-  const matchId    = (formData.get("match_id")    as string | null) ?? "";
-  const status     = (formData.get("status")      as string | null) ?? "";
-  const homeRaw    = (formData.get("home_score")  as string | null) ?? "";
-  const awayRaw    = (formData.get("away_score")  as string | null) ?? "";
-  const matchLabel = (formData.get("match_label") as string | null) ?? "";
+  const matchId           = (formData.get("match_id")           as string | null) ?? "";
+  const status            = (formData.get("status")             as string | null) ?? "";
+  const homeRaw           = (formData.get("home_score")         as string | null) ?? "";
+  const awayRaw           = (formData.get("away_score")         as string | null) ?? "";
+  const matchLabel        = (formData.get("match_label")        as string | null) ?? "";
+  const advancingTeamRaw  = (formData.get("advancing_team_id")  as string | null)?.trim() || null;
 
   if (!matchId || !status) return { error: "Datos incompletos." };
 
@@ -191,29 +192,32 @@ export async function updateMatchResultAction(
 
   const { data: oldMatch } = await supabase
     .from("matches")
-    .select("status, home_score, away_score")
+    .select("status, home_score, away_score, advancing_team_id")
     .eq("id", matchId)
     .single();
 
   const { data: rpcData, error } = await supabase.rpc("update_match_result", {
-    p_match_id:   matchId,
-    p_status:     status,
-    p_home_score: homeScore,
-    p_away_score: awayScore,
+    p_match_id:           matchId,
+    p_status:             status,
+    p_home_score:         homeScore,
+    p_away_score:         awayScore,
+    p_advancing_team_id:  advancingTeamRaw,
   });
 
   if (error) {
     const msg = error.message;
-    if (msg === "not_admin")       return { error: "Sin permisos de administrador." };
-    if (msg === "match_not_found") return { error: "Partido no encontrado." };
-    if (msg === "invalid_status")  return { error: "Estado inválido." };
-    if (msg === "invalid_scores")  return { error: "Marcador fuera de rango (0–30)." };
+    if (msg === "not_admin")              return { error: "Sin permisos de administrador." };
+    if (msg === "match_not_found")        return { error: "Partido no encontrado." };
+    if (msg === "invalid_status")         return { error: "Estado inválido." };
+    if (msg === "invalid_scores")         return { error: "Marcador fuera de rango (0–30)." };
+    if (msg === "advancing_team_required") return { error: "Empate en eliminatoria: debes seleccionar el equipo clasificado." };
+    if (msg === "invalid_advancing_team") return { error: "El equipo clasificado no pertenece a este partido." };
     return { error: `Error: ${msg}` };
   }
 
   const { data: { user } } = await supabase.auth.getUser();
   if (user) {
-    const newValues = { status, home_score: homeScore, away_score: awayScore };
+    const newValues = { status, home_score: homeScore, away_score: awayScore, advancing_team_id: advancingTeamRaw };
     void writeMatchAudit(supabase, {
       match_id: matchId, admin_id: user.id,
       action: "update_result", old_values: oldMatch ?? null, new_values: newValues,
@@ -305,18 +309,19 @@ export async function advancedEditMatchAction(
 ): Promise<AdvancedEditState> {
   const matchId          = (formData.get("match_id")          as string | null)?.trim() ?? "";
   const matchLabel       = (formData.get("match_label")        as string | null)?.trim() ?? "";
-  const homeTeamRaw      = (formData.get("home_team_id")       as string | null)?.trim() || null;
-  const awayTeamRaw      = (formData.get("away_team_id")       as string | null)?.trim() || null;
-  const homePlaceholder  = (formData.get("home_placeholder")   as string | null)?.trim() || null;
-  const awayPlaceholder  = (formData.get("away_placeholder")   as string | null)?.trim() || null;
-  const startsAtRaw      = (formData.get("starts_at")          as string | null)?.trim() ?? "";
-  const stage            = (formData.get("stage")              as string | null)?.trim() ?? "";
-  const status           = (formData.get("status")             as string | null)?.trim() ?? "";
-  const homeScoreRaw     = (formData.get("home_score")         as string | null)?.trim() ?? "";
-  const awayScoreRaw     = (formData.get("away_score")         as string | null)?.trim() ?? "";
-  const groupCodeRaw     = (formData.get("group_code")         as string | null)?.trim() || null;
-  const matchNumberRaw   = (formData.get("match_number")       as string | null)?.trim() ?? "";
-  const venueRaw         = (formData.get("venue")              as string | null)?.trim() || null;
+  const homeTeamRaw       = (formData.get("home_team_id")        as string | null)?.trim() || null;
+  const awayTeamRaw       = (formData.get("away_team_id")        as string | null)?.trim() || null;
+  const homePlaceholder   = (formData.get("home_placeholder")    as string | null)?.trim() || null;
+  const awayPlaceholder   = (formData.get("away_placeholder")    as string | null)?.trim() || null;
+  const startsAtRaw       = (formData.get("starts_at")           as string | null)?.trim() ?? "";
+  const stage             = (formData.get("stage")               as string | null)?.trim() ?? "";
+  const status            = (formData.get("status")              as string | null)?.trim() ?? "";
+  const homeScoreRaw      = (formData.get("home_score")          as string | null)?.trim() ?? "";
+  const awayScoreRaw      = (formData.get("away_score")          as string | null)?.trim() ?? "";
+  const groupCodeRaw      = (formData.get("group_code")          as string | null)?.trim() || null;
+  const matchNumberRaw    = (formData.get("match_number")        as string | null)?.trim() ?? "";
+  const venueRaw          = (formData.get("venue")               as string | null)?.trim() || null;
+  const advancingTeamRaw  = (formData.get("advancing_team_id")   as string | null)?.trim() || null;
 
   if (!matchId)    return { error: "match_id requerido." };
   if (!startsAtRaw) return { error: "Fecha/hora requerida." };
@@ -358,30 +363,33 @@ export async function advancedEditMatchAction(
     .single();
 
   const { data: rpcData, error: rpcErr } = await supabase.rpc("admin_edit_match_full", {
-    p_match_id:          matchId,
-    p_home_team_id:      homeTeamRaw,
-    p_away_team_id:      awayTeamRaw,
-    p_home_placeholder:  homePlaceholder,
-    p_away_placeholder:  awayPlaceholder,
-    p_starts_at:         startsAt,
-    p_stage:             stage,
-    p_status:            status,
-    p_home_score:        homeScore,
-    p_away_score:        awayScore,
-    p_group_code:        groupCodeRaw,
-    p_match_number:      matchNumber,
-    p_venue:             venueRaw,
+    p_match_id:           matchId,
+    p_home_team_id:       homeTeamRaw,
+    p_away_team_id:       awayTeamRaw,
+    p_home_placeholder:   homePlaceholder,
+    p_away_placeholder:   awayPlaceholder,
+    p_starts_at:          startsAt,
+    p_stage:              stage,
+    p_status:             status,
+    p_home_score:         homeScore,
+    p_away_score:         awayScore,
+    p_group_code:         groupCodeRaw,
+    p_match_number:       matchNumber,
+    p_venue:              venueRaw,
+    p_advancing_team_id:  advancingTeamRaw,
   });
 
   if (rpcErr) {
     const msg = rpcErr.message;
-    if (msg === "not_admin")                return { error: "Sin permisos de administrador." };
-    if (msg === "match_not_found")          return { error: "Partido no encontrado." };
-    if (msg === "invalid_status")           return { error: "Estado inválido." };
-    if (msg === "invalid_stage")            return { error: "Etapa inválida." };
-    if (msg === "same_team_both_sides")     return { error: "El equipo local y visitante no pueden ser el mismo." };
+    if (msg === "not_admin")               return { error: "Sin permisos de administrador." };
+    if (msg === "match_not_found")         return { error: "Partido no encontrado." };
+    if (msg === "invalid_status")          return { error: "Estado inválido." };
+    if (msg === "invalid_stage")           return { error: "Etapa inválida." };
+    if (msg === "same_team_both_sides")    return { error: "El equipo local y visitante no pueden ser el mismo." };
     if (msg === "finished_requires_scores") return { error: "Un partido finalizado debe tener marcador." };
-    if (msg === "invalid_scores")           return { error: "Marcador fuera de rango (0–30)." };
+    if (msg === "invalid_scores")          return { error: "Marcador fuera de rango (0–30)." };
+    if (msg === "advancing_team_required") return { error: "Empate en eliminatoria: debes seleccionar el equipo clasificado." };
+    if (msg === "invalid_advancing_team")  return { error: "El equipo clasificado no pertenece a este partido." };
     return { error: `Error: ${msg}` };
   }
 
@@ -391,6 +399,7 @@ export async function advancedEditMatchAction(
     starts_at: startsAt, stage, status,
     home_score: homeScore, away_score: awayScore,
     group_code: groupCodeRaw, match_number: matchNumber, venue: venueRaw,
+    advancing_team_id: advancingTeamRaw,
   };
 
   void writeActivity(supabase, {

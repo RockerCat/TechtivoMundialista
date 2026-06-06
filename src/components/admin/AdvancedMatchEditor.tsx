@@ -100,9 +100,10 @@ export default function AdvancedMatchEditor({ match, teams }: Props) {
   const [venue, setVenue] = useState(match.venue ?? "");
 
   // ── Controlled result fields ───────────────────────────────────────
-  const [status,    setStatus]    = useState<string>(match.status);
-  const [homeScore, setHomeScore] = useState(match.home_score?.toString() ?? "");
-  const [awayScore, setAwayScore] = useState(match.away_score?.toString() ?? "");
+  const [status,          setStatus]         = useState<string>(match.status);
+  const [homeScore,       setHomeScore]      = useState(match.home_score?.toString() ?? "");
+  const [awayScore,       setAwayScore]      = useState(match.away_score?.toString() ?? "");
+  const [advancingTeamId, setAdvancingTeamId] = useState(match.advancing_team_id ?? "");
 
   // ── Confirmation state ─────────────────────────────────────────────
   const [confirmPending, setConfirmPending] = useState(false);
@@ -354,6 +355,39 @@ export default function AdvancedMatchEditor({ match, teams }: Props) {
                   />
                 </div>
               </div>
+
+              {/* Advancing team — only for knockout stages (penalty shootout) */}
+              {stage !== "group" && (homeTeamId || awayTeamId) && (
+                <div className="flex flex-col gap-1.5">
+                  <FieldLabel>Equipo clasificado</FieldLabel>
+                  <AdminSelect
+                    name="advancing_team_id"
+                    value={advancingTeamId}
+                    onChange={(e) => setAdvancingTeamId(e.target.value)}
+                  >
+                    <option value="">— No especificado —</option>
+                    {homeTeamId && (() => {
+                      const t = teams.find((x) => x.id === homeTeamId);
+                      return t ? (
+                        <option key={t.id} value={t.id}>
+                          {t.flag_emoji ?? "🏳️"} {t.name} (local)
+                        </option>
+                      ) : null;
+                    })()}
+                    {awayTeamId && (() => {
+                      const t = teams.find((x) => x.id === awayTeamId);
+                      return t ? (
+                        <option key={t.id} value={t.id}>
+                          {t.flag_emoji ?? "🏳️"} {t.name} (visitante)
+                        </option>
+                      ) : null;
+                    })()}
+                  </AdminSelect>
+                  <p className="text-[10px] text-[#64748b]">
+                    Requerido al finalizar empate en eliminatoria · solo para bracket, no afecta puntuación
+                  </p>
+                </div>
+              )}
 
               {status === "finished" && (
                 <p className="text-[10px] text-[#f59e0b]">

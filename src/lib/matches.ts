@@ -31,6 +31,9 @@ export type Match = {
   home_placeholder: string | null;
   away_placeholder: string | null;
   venue: string | null;
+  // Which team advanced via penalty shootout — for bracket/display only.
+  // NEVER used by scoring functions; scoring only reads home_score/away_score.
+  advancing_team_id: string | null;
   created_at: string;
   home_team: Team | null;
   away_team: Team | null;

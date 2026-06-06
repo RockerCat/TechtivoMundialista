@@ -194,13 +194,15 @@ export default function MatchEditorCard({ match }: { match: Match }) {
 
   // Controlled state for the result form — synced from props so the form
   // always reflects the latest server-confirmed values after a save.
-  const [statusVal,    setStatusVal]    = useState<string>(match.status);
-  const [homeScoreVal, setHomeScoreVal] = useState(match.home_score ?? "");
-  const [awayScoreVal, setAwayScoreVal] = useState(match.away_score ?? "");
+  const [statusVal,         setStatusVal]         = useState<string>(match.status);
+  const [homeScoreVal,      setHomeScoreVal]      = useState(match.home_score ?? "");
+  const [awayScoreVal,      setAwayScoreVal]      = useState(match.away_score ?? "");
+  const [advancingTeamVal,  setAdvancingTeamVal]  = useState(match.advancing_team_id ?? "");
 
-  useEffect(() => { setStatusVal(match.status); },           [match.status]);
-  useEffect(() => { setHomeScoreVal(match.home_score ?? ""); }, [match.home_score]);
-  useEffect(() => { setAwayScoreVal(match.away_score ?? ""); }, [match.away_score]);
+  useEffect(() => { setStatusVal(match.status); },                    [match.status]);
+  useEffect(() => { setHomeScoreVal(match.home_score ?? ""); },        [match.home_score]);
+  useEffect(() => { setAwayScoreVal(match.away_score ?? ""); },        [match.away_score]);
+  useEffect(() => { setAdvancingTeamVal(match.advancing_team_id ?? ""); }, [match.advancing_team_id]);
 
   // Controlled state for the fixture form
   const [startsAtVal, setStartsAtVal] = useState(toDatetimeLocal(match.starts_at));
@@ -292,6 +294,34 @@ export default function MatchEditorCard({ match }: { match: Match }) {
                 />
               </div>
             </div>
+
+            {/* Advancing team — only for knockout stages (penales) */}
+            {match.stage !== "group" && (match.home_team || match.away_team) && (
+              <div className="flex flex-col gap-1.5">
+                <FieldLabel>Equipo clasificado</FieldLabel>
+                <select
+                  name="advancing_team_id"
+                  value={advancingTeamVal}
+                  onChange={(e) => setAdvancingTeamVal(e.target.value)}
+                  className="h-10 rounded-xl bg-[#0e0e1d] border border-[#2a2a45] text-[#f1f5f9] text-sm px-3 focus:outline-none focus:border-[#38BDF8]/60 focus:ring-2 focus:ring-[#38BDF8]/10 transition-colors"
+                >
+                  <option value="">— No especificado —</option>
+                  {match.home_team && (
+                    <option value={match.home_team.id}>
+                      {matchTeamFlag(match.home_team)} {matchTeamName(match.home_team, match.home_placeholder)} (local)
+                    </option>
+                  )}
+                  {match.away_team && (
+                    <option value={match.away_team.id}>
+                      {matchTeamFlag(match.away_team)} {matchTeamName(match.away_team, match.away_placeholder)} (visitante)
+                    </option>
+                  )}
+                </select>
+                <p className="text-[10px] text-[#64748b]">
+                  Requerido al finalizar empate · solo para bracket, no afecta puntuación
+                </p>
+              </div>
+            )}
 
             <FormFeedback state={resultState} />
 
