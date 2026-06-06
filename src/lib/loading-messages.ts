@@ -10,6 +10,9 @@
 
 export const LOADING_MESSAGES: readonly string[] = [
   "Pagandole al Arbitro..",
+  "Sobornando al VAR..",
+  "Peleando una Amarilla..",
+  "Simulandop un Penalty..",
 ];
 
 /** Returns a random message from the list. */
