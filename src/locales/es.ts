@@ -41,7 +41,7 @@ export const es = {
   // ─── Auth ─────────────────────────────────────────────────────────────────
   auth: {
     login: {
-      title: "Techtivo Mundialista",
+      title: "Techtivo Pollita",
       subtitle: "El lugar donde se sufre pero se gana",
       emailLabel: "Correo electrónico",
       emailPlaceholder: "tú@ejemplo.com",
@@ -59,7 +59,7 @@ export const es = {
       ],
     },
     signup: {
-      title: "Únete a Techtivo Mundialista",
+      title: "Únete a Techtivo Pollita",
       subtitle: "Demuestra que sabes más de fútbol que nadie.",
       invitedTo: "Te invitaron a jugar",
       usernameLabel: "Nombre de usuario",
@@ -88,7 +88,7 @@ export const es = {
     ctaSignIn: "Ingresar",
     disclaimer: "Únete por invitación · Sin apuestas · Solo el orgullo futbolero",
     scrollHint: "Desliza para explorar",
-    varReview: "Techtivo Mundialista",
+    varReview: "Techtivo Pollita",
     yourPick: "Tu predicción",
     finalScore: "Marcador final",
     predictionResult: "Resultado de tu predicción",
@@ -193,7 +193,7 @@ export const es = {
 
   // ─── Metadata ─────────────────────────────────────────────────────────────
   meta: {
-    title: "Techtivo Mundialista — Predicciones Copa del Mundo 2026",
+    title: "Techtivo Pollita — Predicciones Copa del Mundo 2026",
     description:
       "Crea grupos privados de predicciones para el Mundial 2026. Predice marcadores, compite en la tabla de posiciones.",
     ogDescription: "Predice. Compite. Reclama que te robaron puntos. Grupos privados para el Mundial 2026.",

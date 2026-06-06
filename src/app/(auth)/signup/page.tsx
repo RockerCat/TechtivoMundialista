@@ -23,7 +23,7 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
             Acceso solo por invitación
           </h1>
           <p className="text-sm text-[#94a3b8] leading-relaxed">
-            Techtivo Mundialista es un grupo privado.
+            Techtivo Pollita es un grupo privado.
             <br />
             Solicita el enlace de invitación al administrador.
           </p>

@@ -36,7 +36,7 @@ export default async function InviteOgImage({ params }: Props) {
   // });
   // const group = groups?.[0] ?? null;
   //
-  // let groupName    = "Techtivo Mundialista";
+  // let groupName    = "Techtivo Pollita";
   // let memberCount  = 0;
   // let prizeDisplay: string | null = null;
   //
@@ -96,11 +96,11 @@ function StaticCard({ code }: { code: string }) {
 
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
         <span style={{ fontSize: 60, fontWeight: 900, color: "#f1f5f9", letterSpacing: "-1px" }}>Techtivo </span>
-        <span style={{ fontSize: 60, fontWeight: 900, color: "#38BDF8", letterSpacing: "-1px" }}>Mundialista</span>
+        <span style={{ fontSize: 60, fontWeight: 900, color: "#38BDF8", letterSpacing: "-1px" }}>Pollita</span>
       </div>
 
       <p style={{ fontSize: 26, fontWeight: 700, color: "#94a3b8", margin: "0 0 10px 0", textAlign: "center" }}>
-        Te invitan a la Polla Mundialista
+        Te invitan a la Polla Pollita
       </p>
       <p style={{ fontSize: 20, color: "#64748b", margin: "0 0 28px 0", textAlign: "center" }}>
         Demuestra que sabes más de fútbol que nadie.
@@ -165,7 +165,7 @@ function StaticCard({ code }: { code: string }) {
 //         {groupName}
 //       </p>
 //       <p style={{ fontSize: 22, color: "#94a3b8", margin: "0 0 28px 0", textAlign: "center" }}>
-//         Únete a la Polla Mundialista Interna
+//         Únete a la Polla Pollita Interna
 //       </p>
 //
 //       {/* Stats row */}

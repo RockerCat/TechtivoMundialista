@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const size        = { width: 1200, height: 630 };
 export const contentType = "image/png";
-export const alt         = "Techtivo Mundialista - Polla Mundialista Interna";
+export const alt         = "Techtivo Pollita - Polla Interna";
 
 export default function OgImage() {
   return new ImageResponse(
@@ -59,7 +59,7 @@ export default function OgImage() {
           Techtivo{" "}
         </span>
         <span style={{ fontSize: 64, fontWeight: 900, color: "#38BDF8", letterSpacing: "-1px" }}>
-          Mundialista
+          Pollita
         </span>
       </div>
 
@@ -71,7 +71,7 @@ export default function OgImage() {
         margin:       "0 0 12px 0",
         textAlign:    "center",
       }}>
-        Polla Mundialista Interna
+        Polla Pollita Interna
       </p>
 
       {/* Tagline 2 */}

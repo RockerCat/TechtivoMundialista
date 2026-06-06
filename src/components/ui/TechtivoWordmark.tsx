@@ -27,7 +27,7 @@ export default function TechtivoWordmark({
         "font-semibold tracking-[0.18em] uppercase text-[#64748b]",
         subtitleClassName
       )}>
-        Mundialista
+        Pollita
       </span>
     </div>
   );

@@ -47,7 +47,7 @@ export default function RulesDrawer({
           <div className="w-9 h-9 rounded-xl bg-[#3b82f6]/10 flex items-center justify-center shrink-0 text-lg">
             📖
           </div>
-          <p className="text-sm font-bold text-[#f1f5f9]">Reglas de Techtivo Mundialista</p>
+          <p className="text-sm font-bold text-[#f1f5f9]">Reglas de Techtivo Pollita</p>
         </div>
 
         <ul className="space-y-2 mb-4">
@@ -94,7 +94,7 @@ export default function RulesDrawer({
 
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-[#1e1e35] shrink-0">
-              <h2 className="text-base font-bold text-[#f1f5f9]">Reglas de Techtivo Mundialista</h2>
+              <h2 className="text-base font-bold text-[#f1f5f9]">Reglas de Techtivo Pollita</h2>
               <button
                 onClick={() => setOpen(false)}
                 className="w-8 h-8 flex items-center justify-center rounded-xl text-[#64748b] hover:text-[#f1f5f9] hover:bg-[#20203a] transition-colors"

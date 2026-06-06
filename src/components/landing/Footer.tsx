@@ -7,7 +7,7 @@ export default function Footer() {
             <span className="text-xs leading-none">⚽</span>
           </div>
           <span className="text-sm font-bold text-[#f1f5f9]">
-            Techtivo <span className="text-[#38BDF8]">Mundialista</span>
+            Techtivo <span className="text-[#38BDF8]">Pollita</span>
           </span>
         </div>
         <p className="text-xs text-[#475569] text-center">

@@ -80,7 +80,7 @@ export default function LoginForm({ inviteCode }: LoginFormProps) {
           .select("name")
           .eq("id", existing.group_id)
           .maybeSingle();
-        setJoinStatus({ phase: "success", groupName: existingGroup?.name ?? "Techtivo Mundialista" });
+        setJoinStatus({ phase: "success", groupName: existingGroup?.name ?? "Techtivo Pollita" });
         setTimeout(() => { router.push("/dashboard"); router.refresh(); }, 1500);
         return;
       }
@@ -125,7 +125,7 @@ export default function LoginForm({ inviteCode }: LoginFormProps) {
 
       console.log("[joinGroupExistingUser] group name:", group?.name ?? "(not found)");
 
-      setJoinStatus({ phase: "success", groupName: group?.name ?? "Techtivo Mundialista" });
+      setJoinStatus({ phase: "success", groupName: group?.name ?? "Techtivo Pollita" });
       console.log("[loginInviteJoin] join SUCCESS ✓, redirecting to /dashboard in 1.5s");
       setTimeout(() => { router.push("/dashboard"); router.refresh(); }, 1500);
       return;

@@ -16,7 +16,7 @@ export default async function AdminUsersPage() {
           Usuarios
         </h1>
         <p className="text-sm text-[#94a3b8] mt-0.5">
-          {users.length} participante{users.length !== 1 ? "s" : ""} en Techtivo Mundialista
+          {users.length} participante{users.length !== 1 ? "s" : ""} en Techtivo Pollita
         </p>
       </div>
 

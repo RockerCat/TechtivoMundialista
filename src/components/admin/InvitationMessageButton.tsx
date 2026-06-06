@@ -9,7 +9,7 @@ export default function InvitationMessageButton({ inviteCode }: { inviteCode: st
   async function handleCopy() {
     const url = `${window.location.origin}/invite/${inviteCode}`;
     const message = [
-      "⚽ Te invito a participar en Techtivo Mundialista.",
+      "⚽ Te invito a participar en Techtivo Pollita.",
       "",
       "Haz tus pronósticos del Mundial y compite por el primer lugar.",
       "",

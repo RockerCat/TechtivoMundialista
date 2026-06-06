@@ -282,14 +282,14 @@ function UserSummaryPanel({
 
       {/* ── Header: avatar + name ── */}
       {/* Mobile: avatar smaller, rank+pts inline to the right */}
-      {/* Desktop: avatar larger, "Techtivo Mundialista" subtitle, rank+pts in cards below */}
+      {/* Desktop: avatar larger, "Techtivo Pollita" subtitle, rank+pts in cards below */}
       <div className="flex items-center gap-3 mb-3 lg:mb-5">
         <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-[#38BDF8]/15 border border-[#38BDF8]/20 flex items-center justify-center shrink-0">
           <span className="text-xs lg:text-sm font-black text-[#38BDF8]">{initial}</span>
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-sm font-bold text-[#f1f5f9] truncate">{displayName}</p>
-          <p className="text-[10px] text-[#64748b] hidden lg:block">Mundialista</p>
+          <p className="text-[10px] text-[#64748b] hidden lg:block">Pollita</p>
         </div>
         {/* Mobile only: rank + pts inline */}
         {userEntry && (

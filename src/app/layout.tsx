@@ -13,13 +13,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://techtivo-mundialista.vercel.app"),
+  metadataBase: new URL("https://techtivo-Pollita.vercel.app"),
 
-  title: "Techtivo Mundialista - Polla Mundialista Interna",
+  title: "Techtivo Pollita - Polla Pollita Interna",
   description:
-    "Predice, compite y pelea por la bolsa del Mundial. Solo para amigos.",
+    "Predice, compite y pelea por la bolsa del Mundial.",
   keywords: [
-    "polla mundialista",
+    "polla Pollita",
     "predicciones",
     "fútbol",
     "mundial 2026",
@@ -27,18 +27,18 @@ export const metadata: Metadata = {
   ],
 
   openGraph: {
-    title: "Techtivo Mundialista - Polla Mundialista Interna",
+    title: "Techtivo Pollita - Polla Pollita Interna",
     description:
-      "Predice, compite y pelea por la bolsa del Mundial. Solo para amigos.",
+      "Predice, compite y pelea por la bolsa del Mundial.",
     type: "website",
     images: [{ url: "/opengraph-image.png", width: 1200, height: 630 }],
   },
 
   twitter: {
     card: "summary_large_image",
-    title: "Techtivo Mundialista - Polla Mundialista Interna",
+    title: "Techtivo Pollita - Polla Pollita Interna",
     description:
-      "Predice, compite y pelea por la bolsa del Mundial. Solo para amigos.",
+      "Predice, compite y pelea por la bolsa del Mundial.",
     images: ["/opengraph-image.png"],
   },
 };

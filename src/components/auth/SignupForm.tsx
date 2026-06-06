@@ -162,7 +162,7 @@ export default function SignupForm({ inviteCode, groupName }: SignupFormProps) {
 
       setJoinStatus({
         phase:     "success",
-        groupName: group?.name ?? groupName ?? "Techtivo Mundialista",
+        groupName: group?.name ?? groupName ?? "Techtivo Pollita",
       });
 
       setTimeout(() => {
@@ -200,7 +200,7 @@ export default function SignupForm({ inviteCode, groupName }: SignupFormProps) {
         <Link href="/login" className="inline-flex mb-6">
           <TechtivoWordmark width={140} height={30} subtitleClassName="text-xs" />
         </Link>
-        <h1 className="text-2xl font-black text-[#f1f5f9]">Únete a Techtivo Mundialista</h1>
+        <h1 className="text-2xl font-black text-[#f1f5f9]">Únete a Techtivo Pollita</h1>
         <p className="text-sm text-[#94a3b8] mt-1">
           {inviteCode
             ? "Únete al grupo y deja tu penúltima palabra."
@@ -216,7 +216,7 @@ export default function SignupForm({ inviteCode, groupName }: SignupFormProps) {
           <div className="min-w-0 flex-1">
             <p className="text-xs text-[#94a3b8]">Te invitaron a jugar</p>
             <p className="text-sm font-bold text-[#f1f5f9] truncate">
-              {groupName ?? "un grupo de Techtivo Mundialista"}
+              {groupName ?? "un grupo de Techtivo Pollita"}
             </p>
           </div>
           <Badge variant="green">{inviteCode}</Badge>

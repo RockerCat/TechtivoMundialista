@@ -1,7 +1,7 @@
--- Updates the entry fee for the Techtivo Mundialista community group
+-- Updates the entry fee for the Techtivo Pollita community group
 -- from the legacy default of $20,000 COP to the new value of $50,000 COP.
 --
--- Run this once against the existing Techtivo Mundialista database.
+-- Run this once against the existing Techtivo Pollita database.
 -- Prize distribution (70% / 30%) and all other group config remain unchanged.
 
 UPDATE public.groups

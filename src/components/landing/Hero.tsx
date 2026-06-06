@@ -31,7 +31,7 @@ export default function Hero() {
           />
           <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-none text-[#f1f5f9] relative">
             <span className="text-gradient-green relative">
-              Mundialista
+              Pollita
               <VarUnderline />
             </span>
           </h1>
@@ -105,7 +105,7 @@ function VarReviewBox() {
       <div className="flex items-center gap-2 mb-3">
         <div className="w-2 h-2 rounded-full bg-[#3b82f6] animate-live-pulse" />
         <span className="text-xs font-mono text-[#3b82f6] uppercase tracking-widest">
-          Techtivo Mundialista
+          Techtivo Pollita
         </span>
       </div>
       <div className="flex items-center justify-between mb-3">
