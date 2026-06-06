@@ -99,7 +99,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
         <Navbar />
         <InviteLayout group={group}>
           <p className="text-sm text-[#94a3b8] text-center mb-5">
-            Crea tu cuenta, únete al grupo y demuestra que sabes más fútbol que tus amigos.
+            Crea tu cuenta, únete al grupo y demuestra que sabes más de fútbol que nadie.
           </p>
 
           <div className="flex flex-col gap-2 w-full">
@@ -165,7 +165,7 @@ export default async function InvitePage({ params }: InvitePageProps) {
           <span className="text-[#94a3b8] font-semibold">{displayName}</span>
         </p>
         <p className="text-xs text-[#64748b] text-center mb-5">
-          Únete para predecir los marcadores del Mundial 2026 con tus amigos.
+          Únete para predecir los marcadores del Mundial 2026.
         </p>
         <InviteJoinForm inviteCode={upperCode} />
         <p className="text-xs text-[#64748b] text-center mt-3">
@@ -200,7 +200,7 @@ function InviteLayout({
             <span className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] animate-live-pulse" />
             Te invitaron a jugar Techtivo Mundialista
           </div>
-          <p className="text-sm text-[#94a3b8] mb-2">Únete al grupo y demuestra que sabes más fútbol que tus amigos.</p>
+          <p className="text-sm text-[#94a3b8] mb-2">Únete al grupo y demuestra que sabes más de fútbol que nadie.</p>
           <h1 className="text-2xl font-black text-[#f1f5f9]">{group.name}</h1>
         </div>
 

@@ -208,7 +208,7 @@ export default function SignupForm({ inviteCode, groupName }: SignupFormProps) {
         <p className="text-sm text-[#94a3b8] mt-1">
           {inviteCode
             ? "Únete al grupo y deja tu penúltima palabra."
-            : "Demuestra que sabes más fútbol que tus amigos."}
+            : "Demuestra que sabes más fútbol que nadie."}
         </p>
       </div>
 
@@ -229,7 +229,7 @@ export default function SignupForm({ inviteCode, groupName }: SignupFormProps) {
 
       <Card variant="glow-green" className="p-6">
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <Input label="Nombre de usuario" type="text" placeholder="ej. goleador_9" value={username} onChange={(e) => setUsername(e.target.value)} leftIcon={<User size={16} />} hint="Así te van a ver tus amigos" required autoFocus />
+          <Input label="Nombre de usuario" type="text" placeholder="ej. goleador_9" value={username} onChange={(e) => setUsername(e.target.value)} leftIcon={<User size={16} />} hint="Así te van a ver" required autoFocus />
           <Input label="Correo electrónico" type="email" placeholder="tú@ejemplo.com" value={email} onChange={(e) => setEmail(e.target.value)} leftIcon={<Mail size={16} />} required autoComplete="email" />
           <Input label="Contraseña" type="password" placeholder="Mín. 8 caracteres" value={password} onChange={(e) => handlePasswordChange(e.target.value)} leftIcon={<Lock size={16} />} error={passwordError ?? undefined} required autoComplete="new-password" minLength={8} />
 

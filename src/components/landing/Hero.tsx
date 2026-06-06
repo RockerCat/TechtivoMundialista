@@ -34,7 +34,7 @@ export default function Hero() {
 
         {/* Description */}
         <p className="text-[#64748b] text-base md:text-lg max-w-md leading-relaxed">
-          Arma grupos privados de predicciones con tus amigos y compite en
+          Arma grupos privados de predicciones y compite en
           cada partido del{" "}
           <span className="text-[#94a3b8]">Mundial 2026</span>.
         </p>

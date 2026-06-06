@@ -60,11 +60,11 @@ export const es = {
     },
     signup: {
       title: "Únete a Techtivo Mundialista",
-      subtitle: "Demuestra que sabes más fútbol que tus amigos.",
+      subtitle: "Demuestra que sabes más de fútbol que nadie.",
       invitedTo: "Te invitaron a jugar",
       usernameLabel: "Nombre de usuario",
       usernamePlaceholder: "ej. goleador_9",
-      usernameHint: "Así te van a ver tus amigos",
+      usernameHint: "Así te van a ver",
       emailLabel: "Correo electrónico",
       emailPlaceholder: "tú@ejemplo.com",
       passwordLabel: "Contraseña",
@@ -83,7 +83,7 @@ export const es = {
     pill: "Copa del Mundo 2026 · Grupos de predicciones",
     tagline: "El lugar donde se sufre pero se gana",
     description:
-      "Arma grupos privados de predicciones con tus amigos y compite en cada partido del Mundial 2026.",
+      "Arma grupos privados de predicciones y compite en cada partido del Mundial 2026.",
     ctaCreate: "Crear grupo",
     ctaSignIn: "Ingresar",
     disclaimer: "Únete por invitación · Sin apuestas · Solo el orgullo futbolero",
@@ -104,7 +104,7 @@ export const es = {
       groups: {
         title: "Grupos Privados",
         description:
-          "Arma tu grupo cerrado e invita a tus amigos con un enlace único. Tus predicciones son solo entre ustedes.",
+          "Arma tu grupo cerrado e invita a otroscon un enlace único. Tus predicciones son solo entre ustedes.",
       },
       predictions: {
         title: "Predicciones de Marcador",
@@ -195,7 +195,7 @@ export const es = {
   meta: {
     title: "Techtivo Mundialista — Predicciones Copa del Mundo 2026",
     description:
-      "Crea grupos privados de predicciones con tus amigos para el Mundial 2026. Predice marcadores, compite en la tabla de posiciones.",
+      "Crea grupos privados de predicciones para el Mundial 2026. Predice marcadores, compite en la tabla de posiciones.",
     ogDescription: "Predice. Compite. Reclama que te robaron puntos. Grupos privados para el Mundial 2026.",
   },
 } as const;

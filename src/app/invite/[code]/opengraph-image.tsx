@@ -103,7 +103,7 @@ function StaticCard({ code }: { code: string }) {
         Te invitan a la Polla Mundialista
       </p>
       <p style={{ fontSize: 20, color: "#64748b", margin: "0 0 28px 0", textAlign: "center" }}>
-        Demuestra que sabes más fútbol que tus amigos
+        Demuestra que sabes más de fútbol que nadie.
       </p>
 
       {/* Invite code badge */}

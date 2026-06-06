@@ -8,7 +8,7 @@ const features = [
     color: "#38BDF8",
     title: "Grupos Privados",
     description:
-      "Arma tu grupo cerrado e invita a tus amigos con un enlace único. Tus predicciones son solo entre ustedes.",
+      "Arma tu grupo cerrado e invita con un enlace único. Tus predicciones son solo entre ustedes.",
   },
   {
     icon: Target,
