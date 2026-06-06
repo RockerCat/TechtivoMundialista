@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import LogoutButton from "@/components/auth/LogoutButton";
 import { SoccerBallIcon } from "@/components/ui/SoccerBallIcon";
+import TechtivoWordmark from "@/components/ui/TechtivoWordmark";
 
 const NAV = [
   { href: "/admin",             label: "Dashboard",    icon: LayoutDashboard },
@@ -39,16 +40,14 @@ export default function AdminSidebar() {
       <aside className="hidden md:flex flex-col w-52 min-h-dvh bg-[#080810] border-r border-[#1e1e35] shrink-0">
 
         {/* Brand */}
-        <div className="px-5 py-5 border-b border-[#1e1e35]">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-[#38BDF8] flex items-center justify-center">
-              <span className="text-sm leading-none">⚽</span>
-            </div>
-            <div>
-              <p className="text-xs font-black text-[#f1f5f9] leading-none">Techtivo Mundialista</p>
-              <p className="text-[9px] text-[#64748b] font-mono mt-0.5">Admin</p>
-            </div>
-          </div>
+        <div className="px-5 py-4 border-b border-[#1e1e35]">
+          <TechtivoWordmark
+            width={100}
+            height={22}
+            subtitleClassName="text-[9px]"
+            className="items-start"
+          />
+          <p className="text-[9px] text-[#64748b] font-mono mt-1">Admin</p>
         </div>
 
         {/* Nav */}
@@ -79,10 +78,10 @@ export default function AdminSidebar() {
       {/* ── Mobile top bar ───────────────────────────────────────────── */}
       <header className="md:hidden sticky top-0 z-50 bg-[#080810]/90 backdrop-blur border-b border-[#1e1e35]">
         <div className="flex items-center justify-between px-4 h-12">
-          <span className="text-xs font-black text-[#f1f5f9]">
-            Techtivo <span className="text-[#38BDF8]">Mundialista</span>
-            <span className="text-[#64748b] font-mono font-normal ml-1.5">Admin</span>
-          </span>
+          <div className="flex items-center gap-2">
+            <TechtivoWordmark width={72} height={16} subtitleClassName="text-[8px]" />
+            <span className="text-[9px] text-[#64748b] font-mono">Admin</span>
+          </div>
           <nav className="flex items-center gap-0.5">
             {NAV.map(({ href, icon: Icon }) => (
               <Link

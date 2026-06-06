@@ -7,6 +7,7 @@ import { Lock, AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { validatePassword } from "@/lib/auth-errors";
 import Input from "@/components/ui/Input";
+import TechtivoWordmark from "@/components/ui/TechtivoWordmark";
 
 type PageState = "loading" | "ready" | "success" | "invalid";
 
@@ -70,13 +71,8 @@ export default function ResetPasswordPage() {
     <div className="w-full max-w-sm animate-fade-in-up">
       {/* Logo */}
       <div className="text-center mb-8">
-        <Link href="/login" className="inline-flex items-center gap-2 mb-6">
-          <div className="w-9 h-9 rounded-xl bg-[#38BDF8] flex items-center justify-center">
-            <span className="text-xl leading-none">⚽</span>
-          </div>
-          <span className="font-bold text-xl text-[#f1f5f9]">
-            Techtivo <span className="text-[#38BDF8]">Mundialista</span>
-          </span>
+        <Link href="/login" className="inline-flex mb-6">
+          <TechtivoWordmark width={140} height={30} subtitleClassName="text-xs" />
         </Link>
         <h1 className="text-2xl font-black text-[#f1f5f9]">Nueva contraseña</h1>
         <p className="text-sm text-[#94a3b8] mt-1">Elige una contraseña segura para tu cuenta.</p>

@@ -289,7 +289,7 @@ function UserSummaryPanel({
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-sm font-bold text-[#f1f5f9] truncate">{displayName}</p>
-          <p className="text-[10px] text-[#64748b] hidden lg:block">Techtivo Mundialista</p>
+          <p className="text-[10px] text-[#64748b] hidden lg:block">Mundialista</p>
         </div>
         {/* Mobile only: rank + pts inline */}
         {userEntry && (

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import LogoutButton from "@/components/auth/LogoutButton";
 import NavActiveLinks from "./NavActiveLinks";
+import TechtivoWordmark from "@/components/ui/TechtivoWordmark";
 
 export default async function Navbar() {
   const supabase = await createClient();
@@ -18,11 +19,8 @@ export default async function Navbar() {
       <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between gap-3">
 
         {/* Logo */}
-        <Link href={user ? "/dashboard" : "/login"} className="flex items-center gap-2 shrink-0">
-          <VarLogo />
-          <span className="font-bold text-lg tracking-tight text-[#f1f5f9]">
-            Techtivo <span className="text-gradient-green">Mundialista</span>
-          </span>
+        <Link href={user ? "/dashboard" : "/login"} className="shrink-0">
+          <TechtivoWordmark width={88} height={19} subtitleClassName="text-[9px]" />
         </Link>
 
         {user ? (
@@ -96,12 +94,3 @@ function GuestNav() {
   );
 }
 
-/* ── Shared ─────────────────────────────────────────────────────────── */
-
-function VarLogo() {
-  return (
-    <div className="w-8 h-8 rounded-lg bg-[#38BDF8] flex items-center justify-center">
-      <span className="text-base leading-none">⚽</span>
-    </div>
-  );
-}

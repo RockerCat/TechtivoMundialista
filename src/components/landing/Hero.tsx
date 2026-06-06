@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 
@@ -19,9 +20,16 @@ export default function Hero() {
         </div>
 
         {/* Main headline */}
-        <div className="flex flex-col gap-2">
-          <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-none text-[#f1f5f9]">
-            Techtivo{" "}
+        <div className="flex flex-col items-center gap-3">
+          <Image
+            src="/techtivo-logo.png"
+            width={180}
+            height={39}
+            alt="Techtivo"
+            priority
+            className="opacity-90"
+          />
+          <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-none text-[#f1f5f9] relative">
             <span className="text-gradient-green relative">
               Mundialista
               <VarUnderline />

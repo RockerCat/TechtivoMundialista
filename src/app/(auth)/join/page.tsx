@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Hash, AlertCircle, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import TechtivoWordmark from "@/components/ui/TechtivoWordmark";
 
 export default function JoinPage() {
   const router = useRouter();
@@ -54,13 +55,8 @@ export default function JoinPage() {
     <div className="w-full max-w-sm animate-fade-in-up">
       {/* Logo */}
       <div className="text-center mb-8">
-        <Link href="/login" className="inline-flex items-center gap-2 mb-6">
-          <div className="w-9 h-9 rounded-xl bg-[#38BDF8] flex items-center justify-center">
-            <span className="text-xl leading-none">⚽</span>
-          </div>
-          <span className="font-bold text-xl text-[#f1f5f9]">
-            Techtivo <span className="text-[#38BDF8]">Mundialista</span>
-          </span>
+        <Link href="/login" className="inline-flex mb-6">
+          <TechtivoWordmark width={140} height={30} subtitleClassName="text-xs" />
         </Link>
         <h1 className="text-2xl font-black text-[#f1f5f9]">Únete al grupo</h1>
         <p className="text-sm text-[#94a3b8] mt-1">
