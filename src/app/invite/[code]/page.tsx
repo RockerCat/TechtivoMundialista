@@ -30,8 +30,8 @@ export async function generateMetadata({ params }: InvitePageProps): Promise<Met
   const groupName = (groups?.[0] as { name?: string } | null)?.name;
 
   const title = groupName
-    ? `Únete a ${groupName} - Polla Interna`
-    : "Techtivo Pollita - Polla Interna";
+    ? `Únete a ${groupName}`
+    : "Techtivo Pollita";
   const description = "Predice, compite y pelea por la bolsa del Mundial.";
 
   return {
