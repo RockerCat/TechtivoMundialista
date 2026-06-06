@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: InvitePageProps): Promise<Met
   const title = groupName
     ? `Únete a ${groupName} - Polla Mundialista Interna`
     : "Techtivo Mundialista - Polla Mundialista Interna";
-  const description = "Predice, compite y pelea por la bolsa del Mundial. Solo para amigos.";
+  const description = "Predice, compite y pelea por la bolsa del Mundial.";
 
   return {
     title,
