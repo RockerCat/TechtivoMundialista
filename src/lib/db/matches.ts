@@ -70,6 +70,19 @@ export async function getMatchesWithPredictions(
   }));
 }
 
+/**
+ * Transitions any overdue 'scheduled' match to 'live'.
+ * Idempotent and non-fatal: errors are logged but do not block page renders.
+ * Must be called server-side (uses Supabase server client).
+ */
+export async function syncStartedMatches(): Promise<void> {
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("sync_started_matches");
+  if (error) {
+    console.warn("[syncStartedMatches]", error.message);
+  }
+}
+
 export async function getMatchDetailPredictions(
   matchId: string,
   groupId: string

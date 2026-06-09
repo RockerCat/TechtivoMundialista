@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { getAdminDashboardStats, getAdminCommunityGroup } from "@/lib/db/admin";
+import { syncStartedMatches } from "@/lib/db/matches";
 import CopyInviteLinkButton from "@/components/groups/CopyInviteLinkButton";
 import { CalendarDays, Users, Link2, Activity } from "lucide-react";
 import { SoccerBallIcon } from "@/components/ui/SoccerBallIcon";
 
 export default async function AdminPage() {
+  await syncStartedMatches();
+
   const [stats, group] = await Promise.all([
     getAdminDashboardStats(),
     getAdminCommunityGroup(),

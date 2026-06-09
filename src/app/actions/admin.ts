@@ -274,12 +274,20 @@ export async function updateMatchFixtureAction(
     .eq("id", matchId)
     .single();
 
-  const { error: updateError } = await supabase
-    .from("matches")
-    .update({ starts_at: startsAt, group_code: groupCode })
-    .eq("id", matchId);
+  // Use a SECURITY DEFINER RPC — direct .update() is blocked by RLS because
+  // the matches table has no UPDATE policy (intentional; all writes go via RPC).
+  const { error: rpcError } = await supabase.rpc("update_match_fixture", {
+    p_match_id:   matchId,
+    p_starts_at:  startsAt,
+    p_group_code: groupCode ?? null,
+  });
 
-  if (updateError) return { error: updateError.message };
+  if (rpcError) {
+    const msg = rpcError.message;
+    if (msg === "not_admin")       return { error: "Sin permisos de administrador." };
+    if (msg === "match_not_found") return { error: "Partido no encontrado." };
+    return { error: `Error al guardar fixture: ${msg}` };
+  }
 
   const newValues = { starts_at: startsAt, group_code: groupCode };
   void writeMatchAudit(supabase, {
@@ -294,6 +302,7 @@ export async function updateMatchFixtureAction(
   });
 
   revalidatePath("/admin/matches");
+  revalidatePath(`/admin/matches/${matchId}`);
   revalidatePath("/dashboard");
   return { success: true };
 }

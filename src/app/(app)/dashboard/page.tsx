@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
-import { getMatchesWithPredictions } from "@/lib/db/matches";
+import { getMatchesWithPredictions, syncStartedMatches } from "@/lib/db/matches";
 import { getUserGroupsWithMeta, isGroupMember, getActivePlayerCount } from "@/lib/db/groups";
 import { getGroupLeaderboard } from "@/lib/db/leaderboard";
 import { isAdmin, isUserDisabled } from "@/lib/db/admin";
@@ -40,6 +40,8 @@ export default async function DashboardPage() {
 
   const username = user.user_metadata?.username as string | undefined;
   const displayName = username ?? user.email?.split("@")[0] ?? "jugador";
+
+  await syncStartedMatches();
 
   const [matches, groups] = await Promise.all([
     getMatchesWithPredictions(user.id),

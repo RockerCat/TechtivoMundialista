@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isAdmin, isUserDisabled } from "@/lib/db/admin";
 import { isGroupMember, getUserGroupsWithMeta } from "@/lib/db/groups";
-import { getMatchDetailPredictions, type MatchPredictionEntry } from "@/lib/db/matches";
+import { getMatchDetailPredictions, syncStartedMatches, type MatchPredictionEntry } from "@/lib/db/matches";
 import {
   formatKickoff,
   PHASE_LABELS,
@@ -40,6 +40,8 @@ export default async function MatchDetailPage({
   if (await isAdmin(user.id)) redirect("/admin");
   if (await isUserDisabled(user.id)) redirect("/disabled");
   if (!(await isGroupMember(user.id))) redirect("/no-access");
+
+  await syncStartedMatches();
 
   // ── Fetch match ───────────────────────────────────────────────────
   const { data: rawMatch } = await supabase

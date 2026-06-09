@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getMatchesForAdmin } from "@/lib/db/admin";
+import { syncStartedMatches } from "@/lib/db/matches";
 import AdminMatchesViewToggle from "@/components/admin/AdminMatchesViewToggle";
 
 const GROUPS = ["A","B","C","D","E","F","G","H","I","J","K","L"] as const;
@@ -17,6 +18,8 @@ interface PageProps {
 
 export default async function AdminMatchesPage({ searchParams }: PageProps) {
   const { group, status } = await searchParams;
+
+  await syncStartedMatches();
 
   const matches = await getMatchesForAdmin({
     group:  group  || undefined,

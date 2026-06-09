@@ -21,10 +21,27 @@ const STATUS_OPTIONS = [
   { value: "finished",  label: "✓ Finalizado" },
 ] as const;
 
-function toDatetimeLocal(iso: string): string {
-  const d = new Date(iso);
+// Colombia is always UTC-5 (no DST).
+const BOGOTA_OFFSET_MS = -5 * 60 * 60 * 1000;
+
+/**
+ * UTC ISO string → datetime-local string in Colombia time (for display).
+ * Example: "2026-06-11T19:00:00Z" → "2026-06-11T14:00"
+ */
+function utcToColombiaDatetimeLocal(iso: string): string {
+  const d = new Date(new Date(iso).getTime() + BOGOTA_OFFSET_MS);
   const pad = (n: number) => String(n).padStart(2, "0");
   return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}T${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`;
+}
+
+/**
+ * Colombia datetime-local string → UTC ISO string (for storage).
+ * Example: "2026-06-11T14:00" → "2026-06-11T19:00:00.000Z"
+ */
+function colombiaDatetimeLocalToUtc(local: string): string {
+  // Treat the Colombia local string as UTC first, then subtract the offset
+  // (UTC-5 means Colombia is 5h behind, so UTC = Colombia + 5h)
+  return new Date(new Date(local + "Z").getTime() - BOGOTA_OFFSET_MS).toISOString();
 }
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
@@ -204,11 +221,11 @@ export default function MatchEditorCard({ match }: { match: Match }) {
   useEffect(() => { setAwayScoreVal(match.away_score ?? ""); },        [match.away_score]);
   useEffect(() => { setAdvancingTeamVal(match.advancing_team_id ?? ""); }, [match.advancing_team_id]);
 
-  // Controlled state for the fixture form
-  const [startsAtVal, setStartsAtVal] = useState(toDatetimeLocal(match.starts_at));
+  // Controlled state for the fixture form — stored in Colombia time for display
+  const [startsAtVal, setStartsAtVal] = useState(utcToColombiaDatetimeLocal(match.starts_at));
   const [groupCodeVal, setGroupCodeVal] = useState(match.group_code ?? "");
 
-  useEffect(() => { setStartsAtVal(toDatetimeLocal(match.starts_at)); }, [match.starts_at]);
+  useEffect(() => { setStartsAtVal(utcToColombiaDatetimeLocal(match.starts_at)); }, [match.starts_at]);
   useEffect(() => { setGroupCodeVal(match.group_code ?? ""); },          [match.group_code]);
 
   // Human-readable label passed to server actions for activity logging
@@ -244,7 +261,7 @@ export default function MatchEditorCard({ match }: { match: Match }) {
             <span className="text-[10px] text-[#64748b] font-mono">Grupo {match.group_code}</span>
           )}
           <span className="text-[10px] text-[#64748b] font-mono">
-            {new Date(match.starts_at).toISOString().replace("T", " ").slice(0, 16)} UTC
+            {utcToColombiaDatetimeLocal(match.starts_at).replace("T", " ")} COL
           </span>
         </div>
       </div>
@@ -350,13 +367,20 @@ export default function MatchEditorCard({ match }: { match: Match }) {
             <input type="hidden" name="match_label" value={matchLabel} />
 
             <div className="flex flex-col gap-1.5">
-              <FieldLabel>Kickoff (UTC)</FieldLabel>
+              <FieldLabel>Fecha y hora (Colombia)</FieldLabel>
+              {/* Hidden input sends the UTC equivalent — server action expects UTC */}
+              <input
+                type="hidden"
+                name="starts_at"
+                value={colombiaDatetimeLocalToUtc(startsAtVal)}
+              />
               <AdminInput
-                type="datetime-local" name="starts_at"
-                value={startsAtVal} onChange={(e) => setStartsAtVal(e.target.value)}
+                type="datetime-local"
+                value={startsAtVal}
+                onChange={(e) => setStartsAtVal(e.target.value)}
                 className="w-full"
               />
-              <p className="text-[10px] text-[#64748b]">La hora ingresada se guardará como UTC.</p>
+              <p className="text-[10px] text-[#64748b]">Las fechas se muestran en hora de Colombia (UTC-5).</p>
             </div>
 
             <div className="flex flex-col gap-1.5">
