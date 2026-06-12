@@ -70,7 +70,7 @@ export default async function AdminUsersPage() {
                 </p>
 
                 {/* Actions */}
-                <UserToggleButton userId={u.user_id} isDisabled={u.is_disabled} />
+                <UserToggleButton userId={u.user_id} userName={u.display_name} isDisabled={u.is_disabled} />
               </div>
             ))}
           </div>

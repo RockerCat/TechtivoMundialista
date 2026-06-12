@@ -6,9 +6,11 @@ import { toggleUserStatusAction, type ToggleUserState } from "@/app/actions/admi
 
 export default function UserToggleButton({
   userId,
+  userName,
   isDisabled,
 }: {
   userId: string;
+  userName: string;
   isDisabled: boolean;
 }) {
   const [state, formAction, pending] =
@@ -16,8 +18,9 @@ export default function UserToggleButton({
 
   return (
     <form action={formAction}>
-      <input type="hidden" name="user_id" value={userId} />
-      <input type="hidden" name="action"  value={isDisabled ? "enable" : "disable"} />
+      <input type="hidden" name="user_id"   value={userId} />
+      <input type="hidden" name="user_name" value={userName} />
+      <input type="hidden" name="action"    value={isDisabled ? "enable" : "disable"} />
       <button
         type="submit"
         disabled={pending}

@@ -112,14 +112,17 @@ export async function recalculateAllScoresAction(
 
 // ── toggleUserStatusAction ────────────────────────────────────────────
 // Soft-disables or re-enables a user. Never deletes auth records.
+// Uses admin_set_user_disabled() SECURITY DEFINER RPC — avoids the
+// permission denied error caused by the missing INSERT/UPDATE GRANT
+// on user_profiles for the `authenticated` role.
 
 export async function toggleUserStatusAction(
   _prev: ToggleUserState,
   formData: FormData
 ): Promise<ToggleUserState> {
-  const targetId   = (formData.get("user_id")    as string | null)?.trim() ?? "";
-  const action     = (formData.get("action")     as string | null)?.trim() ?? "";
-  const targetName = (formData.get("user_name")  as string | null)?.trim() ?? targetId;
+  const targetId   = (formData.get("user_id")   as string | null)?.trim() ?? "";
+  const action     = (formData.get("action")    as string | null)?.trim() ?? "";
+  const targetName = (formData.get("user_name") as string | null)?.trim() ?? targetId;
 
   if (!targetId || !["disable", "enable"].includes(action)) {
     return { error: "Datos incompletos." };
@@ -128,21 +131,21 @@ export async function toggleUserStatusAction(
   const supabase = await createClient();
   const { data: { user }, error: authErr } = await supabase.auth.getUser();
   if (authErr || !user) return { error: "No autenticado." };
-  if (!(await isAdmin(user.id))) return { error: "Sin permisos de administrador." };
-  if (targetId === user.id) return { error: "No puedes modificar tu propio estado." };
 
   const isDisabled = action === "disable";
-  const { error: upsertErr } = await supabase
-    .from("user_profiles")
-    .upsert({
-      user_id:     targetId,
-      is_disabled: isDisabled,
-      disabled_at: isDisabled ? new Date().toISOString() : null,
-      disabled_by: isDisabled ? user.id : null,
-      updated_at:  new Date().toISOString(),
-    });
 
-  if (upsertErr) return { error: upsertErr.message };
+  const { error: rpcErr } = await supabase.rpc("admin_set_user_disabled", {
+    p_target_user_id: targetId,
+    p_disabled:       isDisabled,
+  });
+
+  if (rpcErr) {
+    const msg = rpcErr.message;
+    if (msg === "not_authenticated")  return { error: "No autenticado." };
+    if (msg === "not_admin")          return { error: "Sin permisos de administrador." };
+    if (msg === "cannot_modify_self") return { error: "No puedes modificar tu propio estado." };
+    return { error: msg };
+  }
 
   void writeActivity(supabase, {
     admin_id:     user.id,
