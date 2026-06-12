@@ -99,18 +99,25 @@ export function matchTeamFlag(team: Team | null): string {
 /** Human-readable date/time label for a match. */
 export function formatKickoff(startsAt: string): string {
   const date = new Date(startsAt);
-  const now = new Date();
-  const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const matchMidnight = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  const diffDays = Math.round(
-    (matchMidnight.getTime() - todayMidnight.getTime()) / 86_400_000
-  );
 
   const time = date.toLocaleTimeString("es-CO", {
     hour: "2-digit",
     minute: "2-digit",
     timeZone: "America/Bogota",
   });
+
+  // Compare dates in Bogota timezone — same logic used by CalendarView's colombiaDateKey.
+  // Using server local time (.getDate() etc.) would silently use UTC on Vercel and
+  // shift matches near midnight into the wrong day.
+  const now = new Date();
+  const todayStr = now.toLocaleDateString("en-CA", { timeZone: "America/Bogota" });  // "YYYY-MM-DD"
+  const matchStr = date.toLocaleDateString("en-CA", { timeZone: "America/Bogota" }); // "YYYY-MM-DD"
+
+  // Anchor both dates at noon UTC so the day diff is always a whole number.
+  const diffDays = Math.round(
+    (new Date(matchStr + "T12:00:00Z").getTime() - new Date(todayStr + "T12:00:00Z").getTime())
+    / 86_400_000
+  );
 
   if (diffDays === -1) return `Ayer · ${time}`;
   if (diffDays === 0)  return `Hoy · ${time}`;
