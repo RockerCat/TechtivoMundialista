@@ -3,12 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Home, Users, User, BookOpen } from "lucide-react";
-import { SoccerBallIcon } from "@/components/ui/SoccerBallIcon";
+import { Home, Users, User, BookOpen, Trophy, ListOrdered } from "lucide-react";
 
 const navItems = [
-  { href: "/dashboard",   label: "Inicio",    icon: Home     },
-  { href: "/leaderboard", label: "Tabla",     icon: SoccerBallIcon },
+  { href: "/dashboard",   label: "Inicio",    icon: Home        },
+  { href: "/leaderboard", label: "Tabla",     icon: ListOrdered },
+  { href: "/copa",        label: "Copa",      icon: Trophy   },
   { href: "/community",   label: "Comunidad", icon: Users    },
   { href: "/profile",     label: "Perfil",    icon: User     },
   { href: "/rules",       label: "Reglas",    icon: BookOpen },

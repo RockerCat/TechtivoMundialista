@@ -38,6 +38,10 @@ export type KnockoutPreviewMatch = {
   id: string;
   match_number: number | null;
   starts_at: string;
+  venue: string | null;
+  status: string;
+  home_score: number | null;
+  away_score: number | null;
   home_placeholder: string | null;
   away_placeholder: string | null;
   home_team: ClassificationTeam | null;
