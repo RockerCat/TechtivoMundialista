@@ -221,42 +221,52 @@ function InviteLayout({
         </Card>
 
         {/* Participation card */}
-        {group.entry_fee && (
-          <Card className="p-4 mb-3">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-[#f59e0b]/10 flex items-center justify-center shrink-0 text-lg">
-                💰
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[10px] text-[#64748b] uppercase tracking-wide mb-0.5">
-                  Inscripción única
-                </p>
-                <p className="text-xl font-black text-[#f1f5f9] tabular-nums">
-                  {formatCOP(group.entry_fee)}
-                </p>
-                <p className="text-xs text-[#94a3b8] mt-1 leading-snug">
-                  Pago único para participar durante todo el Mundial 2026.
-                </p>
-                <p className="text-xs text-[#64748b]">
-                  No se cobra por partido ni por ronda.
-                </p>
-                {group.payment_key && (
-                  <p className="text-xs text-[#64748b] mt-1">
-                    Llave:{" "}
-                    <span className="font-mono text-[#94a3b8]">{group.payment_key}</span>
-                  </p>
-                )}
-              </div>
+        <Card className="p-4 mb-3">
+          <div className="flex items-center gap-3">
+            <div className={`w-9 h-9 rounded-xl ${group.entry_fee ? "bg-[#f59e0b]/10" : "bg-[#22c55e]/10"} flex items-center justify-center shrink-0 text-lg`}>
+              {group.entry_fee ? "💰" : "🎉"}
             </div>
-          </Card>
-        )}
+            <div className="flex-1 min-w-0">
+              {group.entry_fee ? (
+                <>
+                  <p className="text-[10px] text-[#64748b] uppercase tracking-wide mb-0.5">
+                    Inscripción
+                  </p>
+                  <p className="text-xl font-black text-[#f1f5f9] tabular-nums">
+                    {formatCOP(group.entry_fee)}
+                  </p>
+                  <p className="text-xs text-[#94a3b8] mt-1 leading-snug">
+                    Valor único para participar durante todo el Mundial 2026.
+                  </p>
+                  <p className="text-xs text-[#64748b]">
+                    No se cobra por partido ni por ronda.
+                  </p>
+                  {group.payment_key && (
+                    <p className="text-xs text-[#64748b] mt-1">
+                      Llave:{" "}
+                      <span className="font-mono text-[#94a3b8]">{group.payment_key}</span>
+                    </p>
+                  )}
+                </>
+              ) : (
+                <>
+                  <p className="text-[10px] text-[#64748b] uppercase tracking-wide mb-0.5">
+                    Inscripción
+                  </p>
+                  <p className="text-xl font-black text-[#22c55e]">
+                    Gratis
+                  </p>
+                  <p className="text-xs text-[#94a3b8] mt-1 leading-snug">
+                    Participación sin costo. Compite durante todo el Mundial 2026.
+                  </p>
+                </>
+              )}
+            </div>
+          </div>
+        </Card>
 
         {/* Rules card with drawer */}
-        <RulesDrawer
-          entryFee={group.entry_fee}
-          firstPlacePct={group.first_place_pct}
-          secondPlacePct={group.second_place_pct}
-        />
+        <RulesDrawer />
 
         {children}
       </div>

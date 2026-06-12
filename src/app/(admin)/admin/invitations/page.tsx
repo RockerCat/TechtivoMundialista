@@ -1,27 +1,12 @@
 import { getAdminCommunityGroup } from "@/lib/db/admin";
-import { getActivePlayerCount } from "@/lib/db/groups";
 import CopyInviteLinkButton from "@/components/groups/CopyInviteLinkButton";
 import CopyButton from "@/components/groups/CopyButton";
 import InvitationMessageButton from "@/components/admin/InvitationMessageButton";
-import PrizeConfigForm from "@/components/admin/PrizeConfigForm";
 import { ShieldAlert } from "lucide-react";
-import { formatCOP, computePrizePool } from "@/lib/groups";
+import { formatCOP, FIXED_FIRST_PRIZE, FIXED_SECOND_PRIZE } from "@/lib/groups";
 
 export default async function AdminInvitationsPage() {
   const group = await getAdminCommunityGroup();
-  // Use active player count (excludes admins and disabled users) for prize calculations
-  const activePlayers = group ? await getActivePlayerCount(group.id) : 0;
-
-  const prizePool = group
-    ? computePrizePool(
-        {
-          entry_fee:        group.entry_fee        ?? 0,
-          first_place_pct:  group.first_place_pct  ?? 70,
-          second_place_pct: group.second_place_pct ?? 30,
-        },
-        activePlayers
-      )
-    : null;
 
   return (
     <div className="max-w-xl mx-auto px-6 py-8 space-y-6">
@@ -67,39 +52,38 @@ export default async function AdminInvitationsPage() {
             </div>
           </div>
 
-          {/* Prize pool configuration */}
-          <div className="bg-[#11111c] border border-[#1e1e35] rounded-2xl p-6 space-y-5">
+          {/* Fixed prizes info */}
+          <div className="bg-[#11111c] border border-[#1e1e35] rounded-2xl p-6 space-y-4">
             <div>
               <p className="text-[10px] text-[#64748b] font-mono uppercase tracking-widest mb-1">
-                Bolsa del Mundial
+                Premios del Mundial
               </p>
-              <h2 className="text-base font-bold text-[#f1f5f9]">Configuración de premios</h2>
-              <p className="text-xs text-[#94a3b8] mt-0.5">
-                Solo informativo — Techtivo Pollita no procesa pagos.
+              <h2 className="text-base font-bold text-[#f1f5f9]">Premios fijos</h2>
+              <p className="text-xs text-[#22c55e]/80 font-semibold mt-0.5">
+                Patrocinados por Techtivo · Inscripción gratis · No dependen del número de participantes
               </p>
             </div>
 
-            {/* Live preview */}
-            {prizePool && (
-              <div className="bg-[#18182a] border border-[#2a2a45] rounded-xl p-4 space-y-2">
-                <p className="text-[10px] text-[#64748b] uppercase tracking-widest">Vista previa</p>
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-[#94a3b8]">{activePlayers} jugadores activos × {formatCOP(prizePool.config.entry_fee)}</span>
-                  <span className="text-base font-black text-[#f1f5f9]">{formatCOP(prizePool.total)}</span>
+            <div className="bg-[#18182a] border border-[#2a2a45] rounded-xl overflow-hidden">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-[#2a2a45]">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">🥇</span>
+                  <span className="text-sm font-bold text-[#f1f5f9]">1er lugar</span>
                 </div>
-                <div className="text-xs text-[#94a3b8] space-y-0.5">
-                  <p>🥇 {formatCOP(prizePool.first_prize)} ({prizePool.config.first_place_pct}%)</p>
-                  <p>🥈 {formatCOP(prizePool.second_prize)} ({prizePool.config.second_place_pct}%)</p>
-                </div>
+                <span className="text-base font-black text-[#f59e0b] tabular-nums">{formatCOP(FIXED_FIRST_PRIZE)}</span>
               </div>
-            )}
+              <div className="flex items-center justify-between px-4 py-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">🥈</span>
+                  <span className="text-sm font-bold text-[#f1f5f9]">2do lugar</span>
+                </div>
+                <span className="text-base font-black text-[#94a3b8] tabular-nums">{formatCOP(FIXED_SECOND_PRIZE)}</span>
+              </div>
+            </div>
 
-            <PrizeConfigForm
-              groupId={group.id}
-              entryFee={group.entry_fee ?? 50000}
-              firstPlacePct={group.first_place_pct ?? 70}
-              secondPlacePct={group.second_place_pct ?? 30}
-            />
+            <p className="text-[10px] text-[#475569]">
+              Los premios son fijos y están definidos en el código. No se calculan en función de participantes ni inscripción.
+            </p>
           </div>
 
           {/* Security notice */}

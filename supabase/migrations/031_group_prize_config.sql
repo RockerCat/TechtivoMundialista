@@ -4,7 +4,7 @@
 -- configured" and hides the prize card when entry_fee is null/0.
 
 ALTER TABLE groups
-  ADD COLUMN IF NOT EXISTS entry_fee          INT     DEFAULT 50000,
+  ADD COLUMN IF NOT EXISTS entry_fee          INT     DEFAULT 0,
   ADD COLUMN IF NOT EXISTS first_place_pct    INT     DEFAULT 70,
   ADD COLUMN IF NOT EXISTS second_place_pct   INT     DEFAULT 30;
 

@@ -27,7 +27,7 @@ export default function PrizeConfigForm({
       <input type="hidden" name="group_id" value={groupId} />
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Field label="Inscripción (COP)" name="entry_fee" defaultValue={entryFee} min={0} hint="Ej: 50000" />
+        <Field label="Inscripción (COP)" name="entry_fee" defaultValue={entryFee} min={0} hint="Ej: 0 (gratis)" />
         <Field label="1er lugar (%)" name="first_place_pct" defaultValue={firstPlacePct} min={0} max={100} hint="Ej: 70" />
         <Field label="2do lugar (%)" name="second_place_pct" defaultValue={secondPlacePct} min={0} max={100} hint="Ej: 30" />
       </div>

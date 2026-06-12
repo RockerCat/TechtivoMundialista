@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { getUserGroupsWithMeta, isGroupMember, getActivePlayerCount } from "@/lib/db/groups";
+import { getUserGroupsWithMeta, isGroupMember } from "@/lib/db/groups";
 import { getGroupLeaderboard } from "@/lib/db/leaderboard";
 import { isAdmin, isUserDisabled } from "@/lib/db/admin";
 import { cn } from "@/lib/utils";
-import { computePrizePool, formatCOP, computeProjectedPrizes, type LeaderboardEntry, type PrizePool } from "@/lib/groups";
+import { formatCOP, computeProjectedPrizes, type LeaderboardEntry, type PrizePool, FIXED_FIRST_PRIZE, FIXED_SECOND_PRIZE } from "@/lib/groups";
 
 export default async function LeaderboardPage() {
   const supabase = await createClient();
@@ -16,28 +16,23 @@ export default async function LeaderboardPage() {
 
   const groups = await getUserGroupsWithMeta(user.id);
   const community = groups[0] ?? null;
-  const [leaderboard, activePlayers] = await Promise.all([
-    community ? getGroupLeaderboard(community.id) : Promise.resolve([]),
-    community ? getActivePlayerCount(community.id) : Promise.resolve(0),
-  ]);
+  const leaderboard = community ? await getGroupLeaderboard(community.id) : [];
 
-  const prizePool = community
-    ? computePrizePool(
-        {
-          entry_fee:        community.entry_fee        ?? 0,
-          first_place_pct:  community.first_place_pct  ?? 70,
-          second_place_pct: community.second_place_pct ?? 30,
-        },
-        activePlayers
-      )
-    : null;
+  // Fixed prizes sponsored by Techtivo — not based on participant count
+  const prizePool: PrizePool = {
+    config:       { entry_fee: 0, first_place_pct: 0, second_place_pct: 0 },
+    member_count: leaderboard.length,
+    total:        FIXED_FIRST_PRIZE + FIXED_SECOND_PRIZE,
+    first_prize:  FIXED_FIRST_PRIZE,
+    second_prize: FIXED_SECOND_PRIZE,
+  };
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6">
       <div className="mb-6">
         <h1 className="text-2xl font-black text-[#f1f5f9]">Tabla de posiciones</h1>
         {community && (
-          <p className="text-sm text-[#64748b] mt-1">{community.name}</p>
+          <p className="text-sm text-[#64748b] mt-1">Si el Mundial terminara hoy...</p>
         )}
       </div>
 
@@ -54,6 +49,15 @@ export default async function LeaderboardPage() {
           prizePool={prizePool}
         />
       )}
+
+      {/* Fixed prizes note */}
+      <div className="mt-4 bg-[#11111c] border border-[#1e1e35] rounded-xl px-4 py-3 flex items-center gap-3">
+        <span className="text-base shrink-0">🏆</span>
+        <div>
+          <p className="text-xs font-bold text-[#f1f5f9]">Premios patrocinados por Techtivo</p>
+          <p className="text-[10px] text-[#64748b]">🥇 {formatCOP(FIXED_FIRST_PRIZE)} · 🥈 {formatCOP(FIXED_SECOND_PRIZE)} · Inscripción gratis · No dependen del número de participantes.</p>
+        </div>
+      </div>
     </div>
   );
 }
@@ -73,19 +77,14 @@ function FullLeaderboard({
 }: {
   entries:       LeaderboardEntry[];
   currentUserId: string;
-  prizePool:     PrizePool | null;
+  prizePool:     PrizePool;
 }) {
   const allZero  = entries.every((e) => e.total_points === 0);
-  const hasPrize = prizePool !== null;
 
-  const projectedPrizes = prizePool ? computeProjectedPrizes(prizePool, entries) : null;
-  const hasSplits = projectedPrizes
-    ? [...projectedPrizes.values()].some((p) => p.isSplit)
-    : false;
+  const projectedPrizes = computeProjectedPrizes(prizePool, entries);
+  const hasSplits = [...projectedPrizes.values()].some((p) => p.isSplit);
 
-  const desktopCols = hasPrize
-    ? "grid-cols-[2rem_1fr_3rem_3rem_3rem_3rem_5rem]"
-    : "grid-cols-[2rem_1fr_3rem_3rem_3rem_3rem]";
+  const desktopCols = "grid-cols-[2rem_1fr_3rem_3rem_3rem_3rem_5rem]";
 
   return (
     <div className="flex flex-col gap-2">
@@ -98,9 +97,7 @@ function FullLeaderboard({
         <span className="text-[10px] text-[#f59e0b]/70 uppercase tracking-widest text-center">⚡</span>
         <span className="text-[10px] text-[#38BDF8]/70 uppercase tracking-widest text-center">✓</span>
         <span className="text-[10px] text-[#64748b] uppercase tracking-widest text-center">Preds</span>
-        {hasPrize && (
-          <span className="text-[10px] text-[#f59e0b]/70 uppercase tracking-widest text-right">Premio</span>
-        )}
+        <span className="text-[10px] text-[#f59e0b]/70 uppercase tracking-widest text-right">Premio</span>
       </div>
 
       {entries.map((entry) => {
@@ -155,14 +152,12 @@ function FullLeaderboard({
               <span className="text-sm font-bold tabular-nums text-center text-[#64748b]">
                 {entry.pred_count}
               </span>
-              {hasPrize && (
-                <span className={cn(
-                  "text-xs font-black tabular-nums text-right",
-                  prizeAmount !== null ? (entry.rank === 1 ? "text-[#f59e0b]" : "text-[#94a3b8]") : "text-[#475569]"
-                )}>
-                  {prizeAmount !== null ? formatCOP(prizeAmount) : "—"}
-                </span>
-              )}
+              <span className={cn(
+                "text-xs font-black tabular-nums text-right",
+                prizeAmount !== null ? (entry.rank === 1 ? "text-[#f59e0b]" : "text-[#94a3b8]") : "text-[#475569]"
+              )}>
+                {prizeAmount !== null ? formatCOP(prizeAmount) : "—"}
+              </span>
             </div>
 
             {/* ── Mobile card (<sm) ──────────────────────────────────── */}
@@ -181,14 +176,12 @@ function FullLeaderboard({
                     <span className="text-[10px] text-[#38BDF8]/60 font-mono ml-1.5">tú</span>
                   )}
                 </span>
-                {hasPrize && (
-                  <span className={cn(
-                    "text-sm font-black tabular-nums shrink-0",
-                    prizeAmount !== null ? (entry.rank === 1 ? "text-[#f59e0b]" : "text-[#94a3b8]") : "text-[#475569]"
-                  )}>
-                    {prizeAmount !== null ? formatCOP(prizeAmount) : "—"}
-                  </span>
-                )}
+                <span className={cn(
+                  "text-sm font-black tabular-nums shrink-0",
+                  prizeAmount !== null ? (entry.rank === 1 ? "text-[#f59e0b]" : "text-[#94a3b8]") : "text-[#475569]"
+                )}>
+                  {prizeAmount !== null ? formatCOP(prizeAmount) : "—"}
+                </span>
               </div>
               {/* Row 2: stats strip */}
               <div className="flex items-center gap-3 pl-7">

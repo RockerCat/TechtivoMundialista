@@ -90,6 +90,13 @@ export function formatMemberCount(n: number): string {
 }
 
 // ──────────────────────────────────────────────────────────────────────
+// Fixed prizes — sponsored by Techtivo, not based on participant count
+// ──────────────────────────────────────────────────────────────────────
+
+export const FIXED_FIRST_PRIZE  = 750_000;
+export const FIXED_SECOND_PRIZE = 250_000;
+
+// ──────────────────────────────────────────────────────────────────────
 // Prize pool helpers
 // ──────────────────────────────────────────────────────────────────────
 

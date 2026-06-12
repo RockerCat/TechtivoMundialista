@@ -3,29 +3,10 @@
 import { useState, useEffect } from "react";
 import { X, BookOpen } from "lucide-react";
 import { PHASE_SCORING, SCORING_TABLE_ROWS } from "@/lib/matches";
-import { formatCOP } from "@/lib/groups";
+import { formatCOP, FIXED_FIRST_PRIZE, FIXED_SECOND_PRIZE } from "@/lib/groups";
 
-
-const EXAMPLE_PLAYERS = 10;
-
-interface RulesDrawerProps {
-  entryFee:       number | null;
-  firstPlacePct:  number | null;
-  secondPlacePct: number | null;
-}
-
-export default function RulesDrawer({
-  entryFee,
-  firstPlacePct,
-  secondPlacePct,
-}: RulesDrawerProps) {
+export default function RulesDrawer() {
   const [open, setOpen] = useState(false);
-
-  const pct1 = firstPlacePct  ?? 70;
-  const pct2 = secondPlacePct ?? 30;
-  const exampleTotal  = entryFee ? entryFee * EXAMPLE_PLAYERS : null;
-  const exampleFirst  = exampleTotal ? Math.round(exampleTotal * pct1 / 100) : null;
-  const exampleSecond = exampleTotal ? Math.round(exampleTotal * pct2 / 100) : null;
 
   useEffect(() => {
     if (!open) return;
@@ -107,23 +88,20 @@ export default function RulesDrawer({
             <div className="overflow-y-auto flex-1 px-5 py-5 space-y-6">
 
               {/* Entry fee clarification */}
-              {entryFee && (
-                <section>
-                  <h3 className="text-xs font-bold text-[#64748b] uppercase tracking-wide mb-3">
-                    Inscripción
-                  </h3>
-                  <div className="bg-[#0d0d1a] border border-[#1e1e35] rounded-2xl p-4 space-y-2.5">
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="text-sm font-semibold text-[#f1f5f9]">Inscripción única por jugador</span>
-                      <span className="text-sm font-black text-[#f59e0b] tabular-nums shrink-0">{formatCOP(entryFee)}</span>
-                    </div>
-                    <p className="text-xs text-[#64748b] leading-relaxed">
-                      Este valor cubre todo el torneo (los 104 partidos del Mundial 2026).
-                      No existen cobros adicionales por partido, por fase ni por pronóstico.
-                    </p>
+              <section>
+                <h3 className="text-xs font-bold text-[#64748b] uppercase tracking-wide mb-3">
+                  Inscripción
+                </h3>
+                <div className="bg-[#0d0d1a] border border-[#1e1e35] rounded-2xl p-4 space-y-2.5">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-sm font-semibold text-[#f1f5f9]">Participación sin costo</span>
+                    <span className="text-sm font-black text-[#22c55e] shrink-0">Gratis</span>
                   </div>
-                </section>
-              )}
+                  <p className="text-xs text-[#64748b] leading-relaxed">
+                    La participación es completamente gratuita. No existen cobros por partido, por fase ni por pronóstico.
+                  </p>
+                </div>
+              </section>
 
               {/* Scoring table */}
               <section>
@@ -157,90 +135,52 @@ export default function RulesDrawer({
                 </div>
               </section>
 
-              {/* Prize pool — static distribution rules, no live data */}
-              {entryFee && (
-                <section>
-                  <h3 className="text-xs font-bold text-[#64748b] uppercase tracking-wide mb-3">
-                    Bolsa de premios
-                  </h3>
-                  <div className="bg-[#0d0d1a] border border-[#1e1e35] rounded-2xl overflow-hidden">
+              {/* Fixed prizes — sponsored by Techtivo */}
+              <section>
+                <h3 className="text-xs font-bold text-[#64748b] uppercase tracking-wide mb-3">
+                  Premios
+                </h3>
+                <div className="bg-[#0d0d1a] border border-[#1e1e35] rounded-2xl overflow-hidden">
 
-                    {/* Entry fee */}
-                    <div className="flex items-center justify-between px-4 py-3 border-b border-[#1e1e35]">
-                      <span className="text-sm text-[#94a3b8]">Inscripción única por jugador</span>
-                      <span className="text-sm font-black text-[#f1f5f9] tabular-nums">
-                        {formatCOP(entryFee)}
+                  {/* Sponsor note */}
+                  <div className="px-4 py-3 border-b border-[#1e1e35]">
+                    <p className="text-[10px] text-[#22c55e]/80 font-semibold">
+                      Patrocinados por Techtivo · No dependen del número de participantes
+                    </p>
+                  </div>
+
+                  {/* Prizes */}
+                  <div className="divide-y divide-[#1e1e35]">
+                    <div className="flex items-center gap-3 px-4 py-3">
+                      <span className="text-xl shrink-0">🥇</span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-[#f1f5f9]">1er lugar</p>
+                        <p className="text-[10px] text-[#64748b]">Premio fijo</p>
+                      </div>
+                      <span className="text-sm font-black text-[#f59e0b] tabular-nums shrink-0">
+                        {formatCOP(FIXED_FIRST_PRIZE)}
                       </span>
                     </div>
-
-                    {/* Distribution */}
-                    <div className="px-4 py-3 border-b border-[#1e1e35]">
-                      <p className="text-[10px] text-[#64748b] uppercase tracking-wide mb-2.5">
-                        Distribución de la bolsa
-                      </p>
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                          <span className="text-xl shrink-0">🥇</span>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-bold text-[#f1f5f9]">1er lugar</p>
-                          </div>
-                          <span className="text-sm font-black text-[#f59e0b] tabular-nums shrink-0">
-                            {pct1}% del total recaudado
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <span className="text-xl shrink-0">🥈</span>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-bold text-[#f1f5f9]">2do lugar</p>
-                          </div>
-                          <span className="text-sm font-black text-[#94a3b8] tabular-nums shrink-0">
-                            {pct2}% del total recaudado
-                          </span>
-                        </div>
+                    <div className="flex items-center gap-3 px-4 py-3">
+                      <span className="text-xl shrink-0">🥈</span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-[#f1f5f9]">2do lugar</p>
+                        <p className="text-[10px] text-[#64748b]">Premio fijo</p>
                       </div>
+                      <span className="text-sm font-black text-[#94a3b8] tabular-nums shrink-0">
+                        {formatCOP(FIXED_SECOND_PRIZE)}
+                      </span>
                     </div>
-
-                    {/* Example */}
-                    {exampleTotal && exampleFirst && exampleSecond && (
-                      <div className="px-4 py-3">
-                        <p className="text-[10px] text-[#64748b] uppercase tracking-wide mb-2">
-                          Ejemplo — {EXAMPLE_PLAYERS} participantes
-                        </p>
-                        <div className="space-y-1.5">
-                          <div className="flex items-center justify-between text-xs">
-                            <span className="text-[#64748b]">
-                              Bolsa total ({EXAMPLE_PLAYERS} × {formatCOP(entryFee)})
-                            </span>
-                            <span className="font-bold text-[#94a3b8] tabular-nums">
-                              {formatCOP(exampleTotal)}
-                            </span>
-                          </div>
-                          <div className="flex items-center justify-between text-xs">
-                            <span className="text-[#64748b]">🥇 1er lugar</span>
-                            <span className="font-black text-[#f59e0b] tabular-nums">
-                              {formatCOP(exampleFirst)}
-                            </span>
-                          </div>
-                          <div className="flex items-center justify-between text-xs">
-                            <span className="text-[#64748b]">🥈 2do lugar</span>
-                            <span className="font-black text-[#94a3b8] tabular-nums">
-                              {formatCOP(exampleSecond)}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    )}
                   </div>
-                </section>
-              )}
+                </div>
+              </section>
 
               {/* Note */}
               <section>
                 <div className="bg-[#0d0d1a] border border-[#1e1e35] rounded-2xl p-4">
                   <p className="text-xs text-[#64748b] leading-relaxed">
                     <span className="text-[#94a3b8] font-semibold">Nota:</span>{" "}
-                    La administración de pagos se realiza directamente entre los integrantes del grupo.
-                    La plataforma no procesa pagos ni recauda dinero.
+                    La plataforma no procesa pagos ni recauda dinero. Los premios son gestionados directamente por los participantes del grupo.
                   </p>
                 </div>
               </section>

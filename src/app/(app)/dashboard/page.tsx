@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
 import { getMatchesWithPredictions, syncStartedMatches } from "@/lib/db/matches";
-import { getUserGroupsWithMeta, isGroupMember, getActivePlayerCount } from "@/lib/db/groups";
+import { getUserGroupsWithMeta, isGroupMember } from "@/lib/db/groups";
 import { getGroupLeaderboard } from "@/lib/db/leaderboard";
 import { isAdmin, isUserDisabled } from "@/lib/db/admin";
 import {
@@ -22,7 +22,6 @@ import LiveMatchPoller from "@/components/dashboard/LiveMatchPoller";
 import LiveMatchCard from "@/components/dashboard/LiveMatchCard";
 import PrizePoolCard from "@/components/dashboard/PrizePoolCard";
 import CalendarView from "@/components/dashboard/CalendarView";
-import { computePrizePool } from "@/lib/groups";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -49,10 +48,7 @@ export default async function DashboardPage() {
   ]);
 
   const community   = groups[0] ?? null;
-  const [leaderboard, activePlayers] = await Promise.all([
-    community ? getGroupLeaderboard(community.id) : Promise.resolve([]),
-    community ? getActivePlayerCount(community.id) : Promise.resolve(0),
-  ]);
+  const leaderboard = community ? await getGroupLeaderboard(community.id) : [];
   const userEntry   = leaderboard.find((e) => e.user_id === user.id) ?? null;
 
   // Scheduled matches with open prediction window and no prediction yet
@@ -80,17 +76,6 @@ export default async function DashboardPage() {
 
   const currentStage   = detectCurrentStage(matches);
   const hasLiveMatch   = matches.some((m) => m.status === "live");
-
-  const prizePool = community
-    ? computePrizePool(
-        {
-          entry_fee:        community.entry_fee        ?? 0,
-          first_place_pct:  community.first_place_pct  ?? 70,
-          second_place_pct: community.second_place_pct ?? 30,
-        },
-        activePlayers   // active players only — excludes admins and disabled users
-      )
-    : null;
 
   return (
     <div className="max-w-[1320px] mx-auto px-4 py-6">
@@ -133,9 +118,7 @@ export default async function DashboardPage() {
           <aside className="order-3 lg:order-none lg:col-start-3 lg:row-start-1">
             <div className="lg:sticky lg:top-[64px] lg:max-h-[calc(100vh-88px)] lg:overflow-y-auto flex flex-col gap-4">
               <LeaderboardPanel leaderboard={leaderboard} currentUserId={user.id} />
-              {prizePool && (
-                <PrizePoolCard pool={prizePool} leaderboard={leaderboard} />
-              )}
+              <PrizePoolCard leaderboard={leaderboard} />
             </div>
           </aside>
         )}
