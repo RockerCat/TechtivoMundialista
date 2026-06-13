@@ -11,6 +11,10 @@ import TechtivoWordmark from "@/components/ui/TechtivoWordmark";
 
 type PageState = "loading" | "ready" | "success" | "invalid";
 
+// sessionStorage key that survives page reloads within the same Safari tab.
+// PASSWORD_RECOVERY only fires once; subsequent reloads emit SIGNED_IN instead.
+const RECOVERY_FLAG = "pw_recovery_session";
+
 export default function ResetPasswordPage() {
   const router = useRouter();
   const [pageState,  setPageState]  = useState<PageState>("loading");
@@ -20,20 +24,35 @@ export default function ResetPasswordPage() {
   const [error,      setError]      = useState<string | null>(null);
 
   useEffect(() => {
-    // Supabase appends the recovery token as a URL hash:
-    // /reset-password#access_token=...&type=recovery
-    // The browser Supabase client picks this up automatically on
-    // onAuthStateChange with event = "PASSWORD_RECOVERY".
     const supabase = createClient();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY") {
+    // On reload (especially Safari/iOS), the session is already stored but
+    // PASSWORD_RECOVERY won't fire again. Check sessionStorage first so we
+    // don't fall through to the "invalid" timeout on a valid recovery.
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session && sessionStorage.getItem(RECOVERY_FLAG) === "1") {
         setPageState("ready");
       }
     });
 
-    // If the user lands here without a valid recovery token the event
-    // never fires — show an error after a short grace period.
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "PASSWORD_RECOVERY") {
+        // First exchange of the recovery token — persist the flag so reloads
+        // within the same browser session still show the form.
+        sessionStorage.setItem(RECOVERY_FLAG, "1");
+        setPageState("ready");
+      } else if (
+        (event === "SIGNED_IN" || event === "INITIAL_SESSION") &&
+        session &&
+        sessionStorage.getItem(RECOVERY_FLAG) === "1"
+      ) {
+        // Safari reloaded the page: token already consumed, event is SIGNED_IN.
+        // The sessionStorage flag tells us the user legitimately arrived here.
+        setPageState("ready");
+      }
+    });
+
+    // Only show "invalid" if no recovery event and no persisted flag with session.
     const timeout = setTimeout(() => {
       setPageState((s) => s === "loading" ? "invalid" : s);
     }, 3000);
@@ -60,6 +79,7 @@ export default function ResetPasswordPage() {
     if (updateErr) {
       setError(updateErr.message ?? "No se pudo actualizar la contraseña.");
     } else {
+      sessionStorage.removeItem(RECOVERY_FLAG);
       setPageState("success");
       setTimeout(() => router.push("/login"), 2500);
     }
@@ -129,7 +149,6 @@ export default function ResetPasswordPage() {
               hint="Al menos 8 caracteres"
               required
               autoComplete="new-password"
-              autoFocus
             />
             <Input
               label="Confirmar contraseña"
