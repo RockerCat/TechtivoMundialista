@@ -169,49 +169,69 @@ export type ProjectedPrize = {
 /**
  * Returns a per-user map of projected prize amounts.
  *
- * - All players at 0 pts → every entry gets { amount: null } (pre-tournament).
- * - Tie for 1st → first_prize divided equally; no 2nd prize assigned
- *   (SQL RANK() skips rank 2 when rank 1 has multiple players).
- * - Tie for 2nd → second_prize divided equally; 1st gets full amount.
- * - Outside 1st / 2nd → { amount: null }.
+ * Tie rule: when N players share rank R, the prizes for positions R through
+ * R+N-1 are summed and split equally among them. SQL RANK() already skips
+ * the intermediate positions, so the entries array never contains those ranks.
+ *
+ * Examples (prizes: 1st=$750K, 2nd=$250K):
+ *   - 2-way tie for 1st  → positions 1+2 pooled → $1M ÷ 2 = $500K each
+ *   - 3-way tie for 1st  → positions 1+2+3 pooled → $1M ÷ 3 ≈ $333K each
+ *   - 2-way tie for 2nd  → position 2 only → $250K ÷ 2 = $125K each
+ *   - No tie             → $750K / $250K as usual
+ *   - All at 0 pts       → null for everyone (pre-tournament)
  */
 export function computeProjectedPrizes(
   pool:    PrizePool,
   entries: LeaderboardEntry[]
 ): Map<string, ProjectedPrize> {
-  const prizes = new Map<string, ProjectedPrize>();
+  const result = new Map<string, ProjectedPrize>();
   const none: ProjectedPrize = { amount: null, isSplit: false };
 
   // Pre-tournament: all zeros → no projections
   if (entries.every((e) => e.total_points === 0)) {
-    for (const e of entries) prizes.set(e.user_id, none);
-    return prizes;
+    for (const e of entries) result.set(e.user_id, none);
+    return result;
   }
 
-  const rank1 = entries.filter((e) => e.rank === 1);
-  const rank2 = entries.filter((e) => e.rank === 2);
+  // Prize pool indexed by rank position
+  const prizeByRank: Record<number, number> = {
+    1: pool.first_prize,
+    2: pool.second_prize,
+  };
 
-  if (rank1.length > 1) {
-    // Tie for 1st: split first_prize; SQL RANK skips rank 2, so no 2nd prize
-    const share = Math.round(pool.first_prize / rank1.length);
-    for (const e of entries) {
-      prizes.set(e.user_id, e.rank === 1 ? { amount: share, isSplit: true } : none);
-    }
-  } else {
-    if (rank1[0]) prizes.set(rank1[0].user_id, { amount: pool.first_prize, isSplit: false });
-    if (rank2.length > 1) {
-      // Tie for 2nd: split second_prize equally
-      const share = Math.round(pool.second_prize / rank2.length);
-      for (const e of rank2) prizes.set(e.user_id, { amount: share, isSplit: true });
-    } else if (rank2[0]) {
-      prizes.set(rank2[0].user_id, { amount: pool.second_prize, isSplit: false });
-    }
-    for (const e of entries) {
-      if (!prizes.has(e.user_id)) prizes.set(e.user_id, none);
+  // Group entries by rank
+  const byRank = new Map<number, LeaderboardEntry[]>();
+  for (const e of entries) {
+    const group = byRank.get(e.rank) ?? [];
+    group.push(e);
+    byRank.set(e.rank, group);
+  }
+
+  for (const [rank, group] of byRank) {
+    if (group.length > 1) {
+      // Tie: sum prizes for all affected positions (rank through rank+N-1)
+      let poolTotal = 0;
+      for (let i = 0; i < group.length; i++) {
+        poolTotal += prizeByRank[rank + i] ?? 0;
+      }
+      if (poolTotal > 0) {
+        const share = Math.round(poolTotal / group.length);
+        for (const e of group) result.set(e.user_id, { amount: share, isSplit: true });
+      } else {
+        for (const e of group) result.set(e.user_id, none);
+      }
+    } else {
+      const prize = prizeByRank[rank] ?? null;
+      result.set(group[0].user_id, prize !== null ? { amount: prize, isSplit: false } : none);
     }
   }
 
-  return prizes;
+  // Everyone not yet mapped gets no prize
+  for (const e of entries) {
+    if (!result.has(e.user_id)) result.set(e.user_id, none);
+  }
+
+  return result;
 }
 
 export function formatRelativeDate(isoDate: string): string {

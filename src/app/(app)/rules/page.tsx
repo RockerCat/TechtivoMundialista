@@ -91,6 +91,56 @@ export default async function RulesPage() {
         </div>
       </section>
 
+      {/* ── Empates ───────────────────────────────────────────────────── */}
+      <section>
+        <SectionHeader title="Empates en la tabla de posiciones" />
+        <div className="bg-[#11111c] border border-[#1e1e35] rounded-2xl p-5 space-y-4">
+          <RuleItem
+            icon="⚖️"
+            text="En caso de empate, los premios correspondientes a las posiciones involucradas se sumarán y se repartirán en partes iguales entre los jugadores empatados."
+            accent="yellow"
+          />
+
+          {/* Examples */}
+          <div className="space-y-3 pt-1">
+            <p className="text-[10px] font-bold text-[#64748b] uppercase tracking-widest">Ejemplos</p>
+
+            {/* Tie for 1st × 2 */}
+            <div className="bg-[#080810] border border-[#1e1e35] rounded-xl p-4 space-y-2">
+              <p className="text-xs font-bold text-[#f1f5f9]">Empate en 1º entre 2 jugadores</p>
+              <p className="text-[10px] text-[#64748b]">
+                Posiciones afectadas: 1º + 2º → {formatCOP(FIXED_FIRST_PRIZE)} + {formatCOP(FIXED_SECOND_PRIZE)} = {formatCOP(FIXED_FIRST_PRIZE + FIXED_SECOND_PRIZE)}
+              </p>
+              <p className="text-xs font-black text-[#f59e0b]">
+                {formatCOP(Math.round((FIXED_FIRST_PRIZE + FIXED_SECOND_PRIZE) / 2))} para cada uno
+              </p>
+            </div>
+
+            {/* Tie for 1st × 3 */}
+            <div className="bg-[#080810] border border-[#1e1e35] rounded-xl p-4 space-y-2">
+              <p className="text-xs font-bold text-[#f1f5f9]">Empate en 1º entre 3 jugadores</p>
+              <p className="text-[10px] text-[#64748b]">
+                Posiciones afectadas: 1º + 2º → {formatCOP(FIXED_FIRST_PRIZE + FIXED_SECOND_PRIZE)} total
+              </p>
+              <p className="text-xs font-black text-[#f59e0b]">
+                {formatCOP(Math.round((FIXED_FIRST_PRIZE + FIXED_SECOND_PRIZE) / 3))} para cada uno
+              </p>
+            </div>
+
+            {/* Tie for 2nd × 2 */}
+            <div className="bg-[#080810] border border-[#1e1e35] rounded-xl p-4 space-y-2">
+              <p className="text-xs font-bold text-[#f1f5f9]">Empate en 2º entre 2 jugadores</p>
+              <p className="text-[10px] text-[#64748b]">
+                Posición afectada: solo 2º → {formatCOP(FIXED_SECOND_PRIZE)}
+              </p>
+              <p className="text-xs font-black text-[#94a3b8]">
+                {formatCOP(Math.round(FIXED_SECOND_PRIZE / 2))} para cada uno
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── Payment note ──────────────────────────────────────────────── */}
       <section>
         <SectionHeader title="Nota" />

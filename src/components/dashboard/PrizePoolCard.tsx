@@ -1,26 +1,44 @@
-import { formatCOP, type LeaderboardEntry, FIXED_FIRST_PRIZE, FIXED_SECOND_PRIZE } from "@/lib/groups";
+import {
+  formatCOP,
+  computeProjectedPrizes,
+  type LeaderboardEntry,
+  type PrizePool,
+  FIXED_FIRST_PRIZE,
+  FIXED_SECOND_PRIZE,
+} from "@/lib/groups";
 
 interface PrizePoolCardProps {
   leaderboard: LeaderboardEntry[];
 }
 
+const FIXED_POOL: PrizePool = {
+  config:       { entry_fee: 0, first_place_pct: 0, second_place_pct: 0 },
+  member_count: 0,
+  total:        FIXED_FIRST_PRIZE + FIXED_SECOND_PRIZE,
+  first_prize:  FIXED_FIRST_PRIZE,
+  second_prize: FIXED_SECOND_PRIZE,
+};
+
 export default function PrizePoolCard({ leaderboard }: PrizePoolCardProps) {
   const allZero = leaderboard.every((e) => e.total_points === 0);
-  const rank1   = allZero ? [] : leaderboard.filter((e) => e.rank === 1);
-  const rank2   = allZero ? [] : leaderboard.filter((e) => e.rank === 2);
+  const projected = computeProjectedPrizes(FIXED_POOL, leaderboard);
 
-  const firstSplit   = rank1.length > 1;
-  const firstNames   = rank1.map((e) => e.display_name);
-  const firstAmount  = rank1.length > 1
-    ? Math.round(FIXED_FIRST_PRIZE / rank1.length)
-    : rank1.length === 1 ? FIXED_FIRST_PRIZE : null;
+  const rank1 = leaderboard.filter((e) => e.rank === 1);
+  const rank2 = leaderboard.filter((e) => e.rank === 2);
 
-  const showSecond   = rank1.length <= 1;
-  const secondSplit  = showSecond && rank2.length > 1;
-  const secondNames  = showSecond ? rank2.map((e) => e.display_name) : [];
-  const secondAmount = showSecond && rank2.length > 1
-    ? Math.round(FIXED_SECOND_PRIZE / rank2.length)
-    : showSecond && rank2.length === 1 ? FIXED_SECOND_PRIZE : null;
+  const first  = rank1[0] ? projected.get(rank1[0].user_id) : undefined;
+  const second = rank2[0] ? projected.get(rank2[0].user_id) : undefined;
+
+  // When there's a tie for 1st, rank2 entries don't exist (SQL RANK skips them).
+  // Both prize lines show the same split amount in that case.
+  const firstTied  = rank1.length > 1;
+  const secondTied = rank2.length > 1;
+
+  const firstAmount  = first?.amount  ?? null;
+  const secondAmount = firstTied ? first?.amount ?? null : (second?.amount ?? null);
+
+  const firstNames  = allZero ? [] : rank1.map((e) => e.display_name);
+  const secondNames = allZero || firstTied ? [] : rank2.map((e) => e.display_name);
 
   return (
     <div className="bg-[#11111c] border border-[#1e1e35] rounded-2xl p-5">
@@ -41,7 +59,7 @@ export default function PrizePoolCard({ leaderboard }: PrizePoolCardProps) {
           fixedAmount={FIXED_FIRST_PRIZE}
           projectedAmount={firstAmount}
           names={firstNames}
-          isSplit={firstSplit}
+          isSplit={firstTied}
           highlight
         />
         <PrizeLine
@@ -50,7 +68,7 @@ export default function PrizePoolCard({ leaderboard }: PrizePoolCardProps) {
           fixedAmount={FIXED_SECOND_PRIZE}
           projectedAmount={secondAmount}
           names={secondNames}
-          isSplit={secondSplit}
+          isSplit={secondTied || firstTied}
         />
       </div>
 

@@ -172,6 +172,14 @@ export default function RulesDrawer() {
                       </span>
                     </div>
                   </div>
+
+                  {/* Tie rule */}
+                  <div className="px-4 py-3 border-t border-[#1e1e35] bg-[#0a0a15]">
+                    <p className="text-[10px] text-[#64748b] leading-relaxed">
+                      <span className="text-[#f59e0b] font-semibold">Empates:</span>{" "}
+                      En caso de empate, los premios de las posiciones involucradas se suman y se reparten en partes iguales entre los empatados.
+                    </p>
+                  </div>
                 </div>
               </section>
 
