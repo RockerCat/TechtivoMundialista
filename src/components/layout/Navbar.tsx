@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BookOpen } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import LogoutButton from "@/components/auth/LogoutButton";
 import NavActiveLinks from "./NavActiveLinks";
@@ -61,14 +62,21 @@ function AuthenticatedNav({
           </span>
         </div>
 
-        {/* Mobile: avatar + name + logout — all in one flex row */}
+        {/* Mobile: avatar + name + rules + logout — all in one flex row */}
         <div className="sm:hidden flex items-center gap-1.5 min-w-0">
           <div className="w-7 h-7 rounded-full bg-[#38BDF8]/20 border border-[#38BDF8]/30 flex items-center justify-center shrink-0">
             <span className="text-[10px] font-bold text-[#38BDF8]">{initial}</span>
           </div>
-          <span className="text-sm font-medium text-[#94a3b8] truncate max-w-[90px]">
+          <span className="text-sm font-medium text-[#94a3b8] truncate max-w-[80px]">
             {displayName}
           </span>
+          <Link
+            href="/rules"
+            className="flex items-center gap-1 text-[11px] font-medium text-[#94a3b8] bg-[#18182a] border border-[#2a2a45] rounded-lg px-2 py-1 hover:text-[#f1f5f9] hover:border-[#38BDF8]/40 transition-colors shrink-0"
+          >
+            <BookOpen size={11} strokeWidth={1.8} />
+            Reglas
+          </Link>
           <LogoutButton compact />
         </div>
 
