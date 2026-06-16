@@ -5,10 +5,11 @@ import { createClient } from "@/lib/supabase/server";
 import { getGroupLeaderboard, getGroupActivity } from "@/lib/db/leaderboard";
 import { isUserDisabled } from "@/lib/db/admin";
 import { getActivePlayerCount } from "@/lib/db/groups";
-import Leaderboard from "@/components/groups/Leaderboard";
+import { getRecentNews } from "@/lib/db/news";
 import MemberList from "@/components/groups/MemberList";
 import GroupStats from "@/components/groups/GroupStats";
 import ActivityFeed from "@/components/groups/ActivityFeed";
+import NewsFeed from "@/components/groups/NewsFeed";
 import CopyButton from "@/components/groups/CopyButton";
 import CopyInviteLinkButton from "@/components/groups/CopyInviteLinkButton";
 import {
@@ -16,6 +17,7 @@ import {
   formatRelativeDate,
   formatCOP,
   type MemberDetail,
+  type LeaderboardEntry,
   FIXED_FIRST_PRIZE,
   FIXED_SECOND_PRIZE,
 } from "@/lib/groups";
@@ -54,8 +56,8 @@ export default async function GroupPage({
   const group = rawGroup as RawGroup;
   const isOwner = group.owner_id === user.id;
 
-  // Parallel fetch: leaderboard, activity, member join dates, match counts, active player count
-  const [leaderboard, activity, membersResult, matchesResult, activePlayers] = await Promise.all([
+  // Parallel fetch: leaderboard, activity, member join dates, match counts, active player count, news
+  const [leaderboard, activity, membersResult, matchesResult, activePlayers, recentNews] = await Promise.all([
     getGroupLeaderboard(groupId),
     getGroupActivity(groupId),
     supabase
@@ -65,6 +67,7 @@ export default async function GroupPage({
       .order("joined_at", { ascending: true }),
     supabase.from("matches").select("status"),
     getActivePlayerCount(groupId),
+    getRecentNews(3),
   ]);
 
   // Derive members: names come from leaderboard, join dates from group_members.
@@ -87,11 +90,10 @@ export default async function GroupPage({
 
   // Group stats
   const totalPredictions = leaderboard.reduce((sum, e) => sum + e.pred_count, 0);
-  const leader           = leaderboard.find((e) => e.total_points > 0);
 
   // Current user context
-  const userEntry  = leaderboard.find((e) => e.user_id === user.id);
-  const isLeading  =
+  const userEntry = leaderboard.find((e) => e.user_id === user.id);
+  const isLeading =
     !!userEntry &&
     userEntry.rank === 1 &&
     leaderboard.length > 1 &&
@@ -150,7 +152,21 @@ export default async function GroupPage({
         </div>
       )}
 
-      {/* Group stats */}
+      {/* 1. Últimas noticias */}
+      <section>
+        <SectionHeader title="Últimas noticias" />
+        <NewsFeed items={recentNews} />
+        {recentNews.length > 0 && (
+          <Link
+            href="/noticias"
+            className="mt-3 inline-flex items-center gap-1 text-xs text-[#64748b] hover:text-[#94a3b8] transition-colors"
+          >
+            Ver todas las noticias →
+          </Link>
+        )}
+      </section>
+
+      {/* 2. Resumen del grupo */}
       <section>
         <SectionHeader title="Resumen" />
         <GroupStats
@@ -158,29 +174,29 @@ export default async function GroupPage({
           totalPredictions={Number(totalPredictions)}
           scoredMatches={scoredMatches}
           pendingMatches={pendingMatches}
-          leaderName={leader?.display_name ?? null}
+          leaderName={null}
         />
       </section>
 
-      {/* Leaderboard */}
+      {/* 3. Líder actual */}
       <section>
-        <SectionHeader title="Tabla de posiciones" count={leaderboard.length} />
-        <Leaderboard entries={leaderboard} currentUserId={user.id} />
+        <SectionHeader title="Líder actual" />
+        <LeaderCard leaderboard={leaderboard} currentUserId={user.id} />
       </section>
 
-      {/* Prize pool */}
+      {/* 4. Premios proyectados */}
       <section>
-        <SectionHeader title="Premios del Mundial" />
+        <SectionHeader title="Premios proyectados" />
         <PrizeSummary leaderboard={leaderboard} />
       </section>
 
-      {/* Members */}
+      {/* 5. Miembros */}
       <section>
         <SectionHeader title="Miembros" count={members.length} />
         <MemberList members={members} currentUserId={user.id} />
       </section>
 
-      {/* Activity */}
+      {/* 6. Actividad reciente */}
       <section>
         <SectionHeader
           title="Actividad reciente"
@@ -189,16 +205,85 @@ export default async function GroupPage({
         <ActivityFeed entries={activity} currentUserId={user.id} />
       </section>
 
+      {/* Tabla link — full leaderboard lives at /leaderboard */}
+      <Link
+        href="/leaderboard"
+        className="flex items-center justify-between gap-2 rounded-2xl border border-[#1e1e35] bg-[#11111c] px-4 py-3.5 hover:border-[#2a2a45] transition-all group"
+      >
+        <span className="text-sm text-[#94a3b8] group-hover:text-[#f1f5f9] transition-colors">
+          Ver tabla completa
+        </span>
+        <span className="text-xs text-[#475569] group-hover:text-[#64748b] transition-colors">
+          {leaderboard.length} participante{leaderboard.length !== 1 ? "s" : ""} →
+        </span>
+      </Link>
+
       <div className="h-4" />
     </div>
   );
 }
 
-function PrizeSummary({
+// ── Líder actual ──────────────────────────────────────────────────────
+
+function LeaderCard({
   leaderboard,
+  currentUserId,
 }: {
-  leaderboard: import("@/lib/groups").LeaderboardEntry[];
+  leaderboard: LeaderboardEntry[];
+  currentUserId: string;
 }) {
+  const allZero = leaderboard.length === 0 || leaderboard.every((e) => e.total_points === 0);
+
+  if (allZero) {
+    return (
+      <div className="bg-[#11111c] border border-[#1e1e35] rounded-2xl p-4 text-center">
+        <p className="text-xs text-[#475569]">
+          El liderato se definirá cuando haya puntos registrados.
+        </p>
+      </div>
+    );
+  }
+
+  const first  = leaderboard[0];
+  const second = leaderboard[1] ?? null;
+  const isMe   = first.user_id === currentUserId;
+  const tied   = second !== null && second.total_points === first.total_points;
+  const gap    = second !== null && !tied ? first.total_points - second.total_points : null;
+
+  return (
+    <div className="bg-[#11111c] border border-[#f59e0b]/20 rounded-2xl p-4 flex items-center gap-4">
+      <span className="text-2xl leading-none shrink-0">🥇</span>
+      <div className="flex-1 min-w-0">
+        <p className={`text-base font-black truncate ${isMe ? "text-[#38BDF8]" : "text-[#f1f5f9]"}`}>
+          {first.display_name}
+          {isMe && (
+            <span className="text-[10px] text-[#38BDF8]/60 font-mono ml-1.5">tú</span>
+          )}
+        </p>
+        {tied && second && (
+          <p className="text-[11px] text-[#64748b] mt-0.5">
+            Empate con {second.display_name}
+          </p>
+        )}
+        {gap !== null && second && (
+          <p className="text-[11px] text-[#64748b] mt-0.5">
+            {gap} pt{gap !== 1 ? "s" : ""} de ventaja sobre {second.display_name}
+          </p>
+        )}
+      </div>
+      <div className="shrink-0 text-right">
+        <p className="text-2xl font-black text-[#f59e0b] tabular-nums leading-none">
+          {first.total_points}
+        </p>
+        <p className="text-[10px] text-[#64748b]">pts</p>
+      </div>
+    </div>
+  );
+}
+
+// ── Premios proyectados ───────────────────────────────────────────────
+
+function PrizeSummary({ leaderboard }: { leaderboard: LeaderboardEntry[] }) {
   const allZero = leaderboard.every((e) => e.total_points === 0);
   const rank1   = allZero ? [] : leaderboard.filter((e) => e.rank === 1);
   const rank2   = allZero ? [] : leaderboard.filter((e) => e.rank === 2);
@@ -267,13 +352,9 @@ function PrizeSummary({
   );
 }
 
-function SectionHeader({
-  title,
-  count,
-}: {
-  title: string;
-  count?: number;
-}) {
+// ── Section header ────────────────────────────────────────────────────
+
+function SectionHeader({ title, count }: { title: string; count?: number }) {
   return (
     <div className="flex items-center gap-2 mb-3">
       <h2 className="text-sm font-bold text-[#94a3b8] uppercase tracking-wide">

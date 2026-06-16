@@ -3,17 +3,17 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Home, Users, User, BookOpen, Trophy, ListOrdered } from "lucide-react";
+import { Home, Users, Trophy, ListOrdered, Radio } from "lucide-react";
 
 const navItems = [
   { href: "/dashboard",   label: "Inicio",    icon: Home        },
   { href: "/leaderboard", label: "Tabla",     icon: ListOrdered },
-  { href: "/copa",        label: "Copa",      icon: Trophy   },
-  { href: "/community",   label: "Comunidad", icon: Users    },
-  { href: "/profile",     label: "Perfil",    icon: User     },
+  { href: "/en-vivo",     label: "En Vivo",   icon: Radio       },
+  { href: "/copa",        label: "Copa",      icon: Trophy      },
+  { href: "/community",   label: "Comunidad", icon: Users       },
 ];
 
-export default function BottomNav() {
+export default function BottomNav({ hasLiveMatch = false }: { hasLiveMatch?: boolean }) {
   const pathname = usePathname();
 
   return (
@@ -23,6 +23,8 @@ export default function BottomNav() {
           const active =
             pathname === href ||
             (href === "/community" && pathname.startsWith("/groups"));
+          const isEnVivo = href === "/en-vivo";
+
           return (
             <Link
               key={href}
@@ -34,7 +36,12 @@ export default function BottomNav() {
                   : "text-[#64748b] hover:text-[#94a3b8]"
               )}
             >
-              <Icon size={18} strokeWidth={active ? 2.5 : 1.8} />
+              <div className="relative">
+                <Icon size={18} strokeWidth={active ? 2.5 : 1.8} />
+                {isEnVivo && hasLiveMatch && (
+                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#EF4444] animate-pulse" />
+                )}
+              </div>
               <span className="text-[10px] font-medium">{label}</span>
             </Link>
           );

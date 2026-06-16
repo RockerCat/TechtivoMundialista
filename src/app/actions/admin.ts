@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { isAdmin } from "@/lib/db/admin";
+import { getMatchNewsContext } from "@/lib/db/news";
+import { buildHeadline, buildBody, selectImageType } from "@/lib/news";
 
 // ── Types ─────────────────────────────────────────────────────────────
 
@@ -231,6 +233,12 @@ export async function updateMatchResultAction(
       entity_label: matchLabel || matchId,
       old_values: oldMatch ?? null, new_values: newValues,
     });
+  }
+
+  // Generate news when the match is officially closed.
+  // Fire-and-forget: errors are caught internally and never propagate.
+  if (status === "finished") {
+    void generateMatchNews(matchId);
   }
 
   revalidatePath("/admin");
@@ -477,4 +485,42 @@ export async function updateGroupPrizeAction(
   revalidatePath("/admin/invitations");
   revalidatePath("/dashboard");
   return { success: true };
+}
+
+// ── generateMatchNews ─────────────────────────────────────────────────
+// Generates and inserts one news post for a finished match.
+//
+// Guarantees:
+//   · Never throws — all errors are caught and logged internally.
+//   · Idempotent — skips silently if a news row already exists for the
+//     match (application-level check; DB UNIQUE constraint is the backstop).
+//   · No external services — headline/body/image_type are pure templates.
+//
+// Called with `void` from updateMatchResultAction so it never blocks
+// the admin action or the match-close flow.
+
+async function generateMatchNews(matchId: string): Promise<void> {
+  try {
+    const supabase = await createClient();
+
+    // Application-level deduplication check (DB UNIQUE is the safety net)
+    const { data: existing } = await supabase
+      .from("news")
+      .select("id")
+      .eq("match_id", matchId)
+      .maybeSingle();
+
+    if (existing) return;
+
+    const ctx = await getMatchNewsContext(matchId);
+    if (!ctx) return;
+
+    const headline   = buildHeadline(ctx);
+    const body       = buildBody(ctx);
+    const image_type = selectImageType(ctx);
+
+    await supabase.from("news").insert({ match_id: matchId, headline, body, image_type });
+  } catch (err) {
+    console.error("[generateMatchNews] failed for match", matchId, err);
+  }
 }

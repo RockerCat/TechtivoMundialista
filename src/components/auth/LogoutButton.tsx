@@ -7,11 +7,13 @@ import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 
 interface LogoutButtonProps {
-  /** compact: icon-only, used in the navbar on small screens */
+  /** compact: icon-only square, used in the navbar on small screens */
   compact?: boolean;
+  /** menuItem: full-width left-aligned row, used inside dropdown menus */
+  menuItem?: boolean;
 }
 
-export default function LogoutButton({ compact = false }: LogoutButtonProps) {
+export default function LogoutButton({ compact = false, menuItem = false }: LogoutButtonProps) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -34,8 +36,10 @@ export default function LogoutButton({ compact = false }: LogoutButtonProps) {
         "disabled:opacity-50 disabled:cursor-not-allowed",
         "active:scale-[0.97]",
         compact
-          ? "w-9 h-9"          // icon-only square
-          : "h-9 px-3 text-sm" // text + icon
+          ? "w-9 h-9"
+          : menuItem
+          ? "w-full justify-start gap-3 px-4 py-2.5 rounded-none text-sm"
+          : "h-9 px-3 text-sm"
       )}
     >
       {loading ? (
@@ -45,7 +49,7 @@ export default function LogoutButton({ compact = false }: LogoutButtonProps) {
         </svg>
       ) : (
         <>
-          <LogOut size={15} strokeWidth={1.8} />
+          <LogOut size={menuItem ? 14 : 15} strokeWidth={1.8} />
           {!compact && <span className="font-medium">Cerrar sesión</span>}
         </>
       )}
