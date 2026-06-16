@@ -17,6 +17,10 @@ export type RecalculateState   =
   | { error: string }
   | { success: true; matches_processed: number; predictions_scored: number }
   | null;
+export type SnapshotState =
+  | { error: string }
+  | { success: true; snapshot: Record<string, unknown> }
+  | null;
 
 export type MatchPrediction = {
   user_id:       string;
@@ -110,6 +114,34 @@ export async function recalculateAllScoresAction(
   revalidatePath("/admin/ranking");
   revalidatePath("/dashboard");
   return { success: true, ...result };
+}
+
+// ── getAdminSnapshotAction ────────────────────────────────────────────
+// Read-only JSON export of every functional table, for manual backup.
+// No restore path; no passwords, secrets or tokens are included.
+
+export async function getAdminSnapshotAction(): Promise<SnapshotState> {
+  const supabase = await createClient();
+  const { data: { user }, error: authErr } = await supabase.auth.getUser();
+  if (authErr || !user) return { error: "No autenticado." };
+  if (!(await isAdmin(user.id))) return { error: "Sin permisos de administrador." };
+
+  const { data, error } = await supabase.rpc("get_admin_snapshot");
+  if (error) {
+    const msg = error.message;
+    if (msg === "not_admin") return { error: "Sin permisos de administrador." };
+    return { error: `Error al generar el snapshot: ${msg}` };
+  }
+
+  void writeActivity(supabase, {
+    admin_id:     user.id,
+    action:       "export_snapshot",
+    entity_type:  "system",
+    entity_id:    user.id,
+    entity_label: "Snapshot JSON",
+  });
+
+  return { success: true, snapshot: data as Record<string, unknown> };
 }
 
 // ── toggleUserStatusAction ────────────────────────────────────────────
