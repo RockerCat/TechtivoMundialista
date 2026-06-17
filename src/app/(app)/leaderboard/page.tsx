@@ -84,7 +84,7 @@ function FullLeaderboard({
   const projectedPrizes = computeProjectedPrizes(prizePool, entries);
   const hasSplits = [...projectedPrizes.values()].some((p) => p.isSplit);
 
-  const desktopCols = "grid-cols-[2rem_1fr_3rem_3rem_3rem_3rem_5rem]";
+  const desktopCols = "grid-cols-[2rem_1fr_4rem_3rem_3rem_3rem]";
 
   return (
     <div className="flex flex-col gap-2">
@@ -97,7 +97,6 @@ function FullLeaderboard({
         <span className="text-[10px] text-[#f59e0b]/70 uppercase tracking-widest text-center">⚡</span>
         <span className="text-[10px] text-[#38BDF8]/70 uppercase tracking-widest text-center">✓</span>
         <span className="text-[10px] text-[#64748b] uppercase tracking-widest text-center">Preds</span>
-        <span className="text-[10px] text-[#f59e0b]/70 uppercase tracking-widest text-right">Premio</span>
       </div>
 
       {entries.map((entry) => {
@@ -116,6 +115,9 @@ function FullLeaderboard({
         const prize       = projectedPrizes?.get(entry.user_id) ?? null;
         const prizeAmount = prize?.amount ?? null;
         const medal     = MEDALS[entry.rank];
+        const prizeBadge = prizeAmount !== null
+          ? `${entry.rank === 1 ? "🏆" : "🥈"} Premio ${formatCOP(prizeAmount)}`
+          : null;
 
         return (
           <div key={entry.user_id}>
@@ -135,12 +137,19 @@ function FullLeaderboard({
                 )}>
                   {entry.display_name.charAt(0).toUpperCase()}
                 </div>
-                <span className={cn("text-sm font-bold truncate", isMe ? "text-[#38BDF8]" : "text-[#f1f5f9]")}>
-                  {entry.display_name}
-                </span>
-                {isMe && <span className="text-[10px] text-[#38BDF8]/60 font-mono shrink-0">tú</span>}
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className={cn("text-sm font-bold truncate", isMe ? "text-[#38BDF8]" : "text-[#f1f5f9]")}>
+                      {entry.display_name}
+                    </span>
+                    {isMe && <span className="text-[10px] text-[#38BDF8]/60 font-mono shrink-0">tú</span>}
+                  </div>
+                  {prizeBadge && (
+                    <span className="text-[10px] text-[#f59e0b]/80 font-mono">{prizeBadge}</span>
+                  )}
+                </div>
               </div>
-              <span className={cn("text-sm font-black tabular-nums text-center", ptsColor)}>
+              <span className={cn("text-lg font-black tabular-nums text-center", ptsColor)}>
                 {entry.total_points}
               </span>
               <span className={cn("text-sm font-bold tabular-nums text-center", entry.exact_count  > 0 ? "text-[#f59e0b]" : "text-[#2a2a45]")}>
@@ -152,12 +161,6 @@ function FullLeaderboard({
               <span className="text-sm font-bold tabular-nums text-center text-[#64748b]">
                 {entry.pred_count}
               </span>
-              <span className={cn(
-                "text-xs font-black tabular-nums text-right",
-                prizeAmount !== null ? (entry.rank === 1 ? "text-[#f59e0b]" : "text-[#94a3b8]") : "text-[#475569]"
-              )}>
-                {prizeAmount !== null ? formatCOP(prizeAmount) : "—"}
-              </span>
             </div>
 
             {/* ── Mobile card (<sm) ──────────────────────────────────── */}
@@ -165,29 +168,24 @@ function FullLeaderboard({
               "sm:hidden rounded-2xl border px-4 py-3",
               rowBg, rowBorder
             )}>
-              {/* Row 1: medal/rank · name · prize */}
-              <div className="flex items-center gap-2 mb-1.5">
+              {/* Row 1: medal/rank · name (left) — points (right, dominant) */}
+              <div className="flex items-center gap-2">
                 <span className={cn("shrink-0 font-bold tabular-nums", medal ? "text-base leading-none" : cn("text-sm w-5 text-center", rankColor))}>
                   {medal ?? entry.rank}
                 </span>
-                <span className={cn("flex-1 font-bold text-sm", isMe ? "text-[#38BDF8]" : "text-[#f1f5f9]")}>
+                <span className={cn("flex-1 font-bold text-sm truncate", isMe ? "text-[#38BDF8]" : "text-[#f1f5f9]")}>
                   {entry.display_name}
                   {isMe && (
                     <span className="text-[10px] text-[#38BDF8]/60 font-mono ml-1.5">tú</span>
                   )}
                 </span>
-                <span className={cn(
-                  "text-sm font-black tabular-nums shrink-0",
-                  prizeAmount !== null ? (entry.rank === 1 ? "text-[#f59e0b]" : "text-[#94a3b8]") : "text-[#475569]"
-                )}>
-                  {prizeAmount !== null ? formatCOP(prizeAmount) : "—"}
+                <span className={cn("shrink-0 text-right text-2xl font-black tabular-nums leading-none", ptsColor)}>
+                  {entry.total_points}
+                  <span className="text-[10px] font-normal text-[#64748b] ml-1">pts</span>
                 </span>
               </div>
               {/* Row 2: stats strip */}
-              <div className="flex items-center gap-3 pl-7">
-                <span className={cn("text-xs font-black tabular-nums", ptsColor)}>
-                  {entry.total_points} pts
-                </span>
+              <div className="flex items-center gap-3 pl-7 mt-1.5">
                 <span className={cn("text-xs tabular-nums", entry.result_count > 0 ? "text-[#38BDF8]" : "text-[#475569]")}>
                   {entry.result_count} ganador{entry.result_count !== 1 ? "es" : ""}
                 </span>
@@ -198,6 +196,12 @@ function FullLeaderboard({
                   {entry.pred_count} pred{entry.pred_count !== 1 ? "s" : ""}
                 </span>
               </div>
+              {/* Row 3: prize badge (optional, top 1/2 only — discreet, never right-aligned) */}
+              {prizeBadge && (
+                <div className="pl-7 mt-1">
+                  <span className="text-[10px] text-[#f59e0b]/60 font-mono">{prizeBadge}</span>
+                </div>
+              )}
             </div>
 
           </div>
