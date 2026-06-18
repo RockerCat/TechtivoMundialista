@@ -24,11 +24,21 @@ export type TeamEditorialMeta = {
 export const TEAM_EDITORIAL_META: Record<string, TeamEditorialMeta> = {
   ARG: { tags: ["defending_champion"] },
   BRA: { tags: ["historic_power"] },
-  COL: { tags: ["community_favorite"] },
+  GER: { tags: ["historic_power"] },
+  FRA: { tags: ["historic_power"] },
+  ESP: { tags: ["historic_power"] },
+  URU: { tags: ["historic_power"] },
+  ENG: { tags: ["historic_power"] },
+  NED: { tags: ["historic_power"] },
+  POR: { tags: ["historic_power"] },
   USA: { tags: ["host"] },
   MEX: { tags: ["host"] },
   CAN: { tags: ["host"] },
+  CPV: { tags: ["revelation"] },
+  CUW: { tags: ["revelation"] },
+  COL: { tags: ["community_favorite"] },
 };
+
 
 export function getTeamEditorialMeta(code: string | null | undefined): TeamEditorialMeta | null {
   if (!code) return null;
