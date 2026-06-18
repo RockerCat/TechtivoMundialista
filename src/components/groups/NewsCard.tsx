@@ -18,14 +18,14 @@ const ACCENTS: Record<NewsImageType, Accent> = {
   default:     { emoji: "📰", border: "border-[#1e1e35]",     glow: "bg-transparent"         },
 };
 
-// Skip first 2 body lines (match info, redundant with headline).
+// Skip first 3 body lines (match info + result narrative, redundant with headline).
 // Show prediction stats instead.
 function statsPreview(text: string): string {
   const lines = text
     .split("\n")
     .map((l) => l.trim())
     .filter(Boolean);
-  return lines.slice(2, 4).join(" · ");
+  return lines.slice(3, 5).join(" · ");
 }
 
 export default function NewsCard({ item }: { item: NewsWithMatch }) {

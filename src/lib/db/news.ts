@@ -110,6 +110,33 @@ export async function getNewsById(id: string): Promise<NewsWithMatch | null> {
   };
 }
 
+/**
+ * True only when `matchId` is Colombia's earliest match by `starts_at`.
+ * Computed dynamically — never hardcode a match_id or date for this.
+ */
+async function isColombiaDebutMatch(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  matchId: string,
+): Promise<boolean> {
+  const { data: colombia } = await supabase
+    .from("teams")
+    .select("id")
+    .eq("code", "COL")
+    .maybeSingle();
+
+  if (!colombia) return false;
+
+  const { data: firstMatch } = await supabase
+    .from("matches")
+    .select("id")
+    .or(`home_team_id.eq.${colombia.id},away_team_id.eq.${colombia.id}`)
+    .order("starts_at", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  return firstMatch?.id === matchId;
+}
+
 /** Fetches the raw context object from Supabase for news generation. */
 export async function getMatchNewsContext(matchId: string): Promise<NewsContext | null> {
   const supabase = await createClient();
@@ -122,6 +149,9 @@ export async function getMatchNewsContext(matchId: string): Promise<NewsContext 
     console.error("[getMatchNewsContext]", error.message);
     return null;
   }
+  if (!data) return null;
 
-  return (data as NewsContext) ?? null;
+  const is_colombia_debut = await isColombiaDebutMatch(supabase, matchId);
+
+  return { ...(data as NewsContext), is_colombia_debut };
 }

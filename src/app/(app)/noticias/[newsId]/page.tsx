@@ -129,7 +129,6 @@ export default async function NewsDetailPage({
         <NewsShareButton
           headline={item.headline}
           body={item.body}
-          path={`/noticias/${item.id}`}
         />
       </div>
 

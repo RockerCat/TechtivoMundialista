@@ -1,26 +1,25 @@
 "use client";
 
+const NEWS_HUB_URL = "https://pollita.techtivo.com/noticias";
+
 export default function NewsShareButton({
   headline,
   body,
-  path,
 }: {
   headline: string;
   body: string;
-  path: string;
 }) {
   function handleShare() {
-    const origin = typeof window !== "undefined" ? window.location.origin : "";
-    const url = origin + path;
     const text = [
-      "Pollita Techtivo News:",
+      "🎙️ Pollita News",
+      "🤖 Generado por IA",
       "",
       headline,
       "",
       body,
       "",
-      "Leer más en:",
-      url,
+      "📰 Más noticias:",
+      NEWS_HUB_URL,
     ].join("\n");
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
   }

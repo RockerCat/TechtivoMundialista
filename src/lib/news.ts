@@ -1,4 +1,5 @@
 import type { MatchStage } from "@/lib/matches";
+import { getTeamEditorialMeta } from "@/lib/editorial/teamMeta";
 
 // ── Types ─────────────────────────────────────────────────────────────
 
@@ -38,6 +39,8 @@ export type NewsContext = {
   exact_names:  string[];
   winner_names: string[];
   leaderboard:  LeaderboardSnapshotEntry[];
+  /** True only for Colombia's first chronological match in the tournament (by starts_at). */
+  is_colombia_debut: boolean;
 };
 
 // ── Image types ───────────────────────────────────────────────────────
@@ -123,6 +126,42 @@ export function buildHeadline(ctx: NewsContext): string {
   return `${winFlag} ${winner} vence a ${loser} ${score} ${loseFlag}`;
 }
 
+// ── buildResultNarrative ─────────────────────────────────────────────
+// Returns a single narrative sentence describing the result, picking
+// the most relevant storyline instead of a generic recap.
+// Priority: Colombia debut win > defending champion > narrow win > draw > generic.
+
+export function buildResultNarrative(ctx: NewsContext): string {
+  const { home_name, away_name, home_score, away_score, home_code, away_code, is_colombia_debut } = ctx;
+  const score = `${home_score}-${away_score}`;
+
+  if (home_score === away_score) {
+    return `⚽ ${home_name} y ${away_name} repartieron puntos en un duelo parejo: ${score}.`;
+  }
+
+  const homeWon = home_score > away_score;
+  const winner      = homeWon ? home_name : away_name;
+  const loser       = homeWon ? away_name : home_name;
+  const winnerCode  = homeWon ? home_code : away_code;
+  const winScore    = homeWon ? home_score : away_score;
+  const loseScore   = homeWon ? away_score : home_score;
+  const winnerScoreLabel = `${winScore}-${loseScore}`;
+
+  if (is_colombia_debut && winnerCode === "COL") {
+    return `⚽ Colombia comenzó con victoria su participación en el Mundial tras imponerse ${winnerScoreLabel} a ${loser}.`;
+  }
+
+  if (getTeamEditorialMeta(winnerCode)?.tags.includes("defending_champion")) {
+    return `⚽ El campeón vigente hizo valer su jerarquía y venció ${winnerScoreLabel} a ${loser}.`;
+  }
+
+  if (winScore - loseScore === 1 && winScore <= 2) {
+    return `⚽ ${winner} sufrió, pero ganó ${winnerScoreLabel} ante ${loser}.`;
+  }
+
+  return `⚽ ${winner} venció ${winnerScoreLabel} a ${loser}.`;
+}
+
 // ── buildBody ─────────────────────────────────────────────────────────
 // Builds the news body as a block of plain text.
 // Each logical section is separated by a blank line.
@@ -144,6 +183,8 @@ export function buildBody(ctx: NewsContext): string {
   lines.push(
     `${home_flag} ${home_name} ${score} ${away_flag} ${away_name}`,
     `${capitalize(stageLabel)}${groupLabel}.`,
+    "",
+    buildResultNarrative(ctx),
   );
 
   // ── Pronósticos ──────────────────────────────────────────────────
