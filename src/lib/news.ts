@@ -220,19 +220,47 @@ export function buildBody(ctx: NewsContext): string {
 
   // ── Liderato ──────────────────────────────────────────────────────
   if (leaderboard.length > 0) {
-    const leader = leaderboard[0];
-    lines.push(
-      "",
-      leader.total_points > 0
-        ? `🏆 Líder: ${leader.display_name} con ${leader.total_points} pt${leader.total_points !== 1 ? "s" : ""}.`
-        : "🏆 La tabla aún no tiene puntos registrados."
-    );
+    // Leader tier = everyone at the lowest rank value present (ties
+    // share a rank, so this can be more than one person).
+    const leaderRank = Math.min(...leaderboard.map((e) => e.rank));
+    const leaders    = leaderboard.filter((e) => e.rank === leaderRank);
+    const leaderPts  = leaders[0].total_points;
 
-    if (leaderboard.length >= 2) {
-      const second = leaderboard[1];
-      const gap    = leader.total_points - second.total_points;
-      if (gap > 0) {
-        lines.push(`${second.display_name} persigue a ${gap} pt${gap !== 1 ? "s" : ""}.`);
+    if (leaderPts === 0) {
+      lines.push("", "🏆 La tabla aún no tiene puntos registrados.");
+    } else if (leaders.length === 1) {
+      const leader = leaders[0];
+      lines.push("", `🏆 Líder: ${leader.display_name} con ${leaderPts} pt${leaderPts !== 1 ? "s" : ""}.`);
+
+      // Chasers = everyone at the next distinct rank below the leader.
+      // Using rank (not a fixed index) keeps ties together — if two or
+      // more people share second place, all of them are included.
+      const chaserRank = leaderboard
+        .filter((e) => e.rank > leaderRank)
+        .reduce<number | null>((min, e) => (min === null || e.rank < min ? e.rank : min), null);
+
+      if (chaserRank !== null) {
+        const chasers     = leaderboard.filter((e) => e.rank === chaserRank);
+        const chaserNames = chasers.map((c) => c.display_name);
+        const gap         = leaderPts - chasers[0].total_points;
+        const ptsLabel    = `${gap} pt${gap !== 1 ? "s" : ""}`;
+
+        if (chasers.length <= 3) {
+          const verb = chasers.length === 1 ? "persigue" : "persiguen";
+          lines.push(`${joinNames(chaserNames)} ${verb} a ${ptsLabel}.`);
+        } else {
+          lines.push(`${chasers.length} participantes persiguen a ${ptsLabel}: ${joinNames(chaserNames)}.`);
+        }
+      }
+    } else {
+      // Tied leadership — no chasers line, regardless of who else is below.
+      const leaderNames = leaders.map((l) => l.display_name);
+      const ptsLabel     = `${leaderPts} pt${leaderPts !== 1 ? "s" : ""}`;
+
+      if (leaders.length <= 3) {
+        lines.push("", `🏆 ${joinNames(leaderNames)} comparten el liderato con ${ptsLabel}.`);
+      } else {
+        lines.push("", `🏆 ${leaders.length} líderes comparten el liderato con ${ptsLabel}: ${joinNames(leaderNames)}.`);
       }
     }
   }
