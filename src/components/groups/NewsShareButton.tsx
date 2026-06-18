@@ -11,8 +11,8 @@ export default function NewsShareButton({
 }) {
   function handleShare() {
     const text = [
-      "🎙️ Pollita News",
-      "🤖 Generado por IA",
+      "🤖 Pollita News",
+      "🎙️ Generado por IA",
       "",
       headline,
       "",
