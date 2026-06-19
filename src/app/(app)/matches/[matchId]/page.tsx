@@ -2,9 +2,16 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { isAdmin, isUserDisabled } from "@/lib/db/admin";
 import { isGroupMember, getUserGroupsWithMeta } from "@/lib/db/groups";
-import { getMatchDetailPredictions, syncStartedMatches, type MatchPredictionEntry } from "@/lib/db/matches";
+import {
+  getMatchDetailPredictions,
+  getMatchMissingPredictions,
+  syncStartedMatches,
+  type MatchPredictionEntry,
+  type MissingPredictionEntry,
+} from "@/lib/db/matches";
 import {
   formatKickoff,
+  formatPredictionTimestamp,
   PHASE_LABELS,
   PHASE_SCORING,
   simulatePoints,
@@ -73,6 +80,12 @@ export default async function MatchDetailPage({
     revealed && community
       ? await getMatchDetailPredictions(matchId, community.id)
       : [];
+
+  // ── Fetch who hasn't predicted (all statuses — only reveals participation,
+  // not picks, so it's safe before kickoff too) ─────────────────────
+  const missingPreds: MissingPredictionEntry[] = community
+    ? await getMatchMissingPredictions(matchId, community.id)
+    : [];
 
   // ── Derived data ──────────────────────────────────────────────────
   const stage     = match.stage as MatchStage;
@@ -239,6 +252,14 @@ export default async function MatchDetailPage({
             </section>
           )}
         </>
+      )}
+
+      {/* ── Sin pronóstico ───────────────────────────────────────────── */}
+      {community && (
+        <section>
+          <SectionHeader title={`Sin pronóstico (${missingPreds.length})`} />
+          <MissingPredictionsCard missing={missingPreds} />
+        </section>
       )}
 
     </div>
@@ -619,6 +640,11 @@ function PredictionsTable({
         const pts   = hasScore ? entry.sim.points : null;
         const rsn   = hasScore ? entry.sim.reason : null;
 
+        // Treat updates more than a minute after creation as a real edit
+        // (avoids flagging the default created_at ≈ updated_at insert as "modificado").
+        const wasModified =
+          new Date(entry.updated_at).getTime() - new Date(entry.created_at).getTime() > 60_000;
+
         const ptsColor =
           pts === null    ? "text-[#64748b]" :
           pts === 0       ? "text-[#ef4444]/70" :
@@ -639,13 +665,21 @@ function PredictionsTable({
               isMe && "bg-[#38BDF8]/[0.04]"
             )}
           >
-            <p className={cn(
-              "text-sm font-semibold truncate",
-              isMe ? "text-[#38BDF8]" : "text-[#f1f5f9]"
-            )}>
-              {entry.display_name}
-              {isMe && <span className="text-[10px] text-[#38BDF8]/60 font-mono ml-1">tú</span>}
-            </p>
+            <div className="min-w-0">
+              <p className={cn(
+                "text-sm font-semibold truncate",
+                isMe ? "text-[#38BDF8]" : "text-[#f1f5f9]"
+              )}>
+                {entry.display_name}
+                {isMe && <span className="text-[10px] text-[#38BDF8]/60 font-mono ml-1">tú</span>}
+              </p>
+              <p className="text-xs text-[#64748b] whitespace-nowrap truncate">
+                {formatPredictionTimestamp(entry.updated_at)}
+              </p>
+              {wasModified && (
+                <p className="text-[10px] text-[#64748b] whitespace-nowrap">✏️ Modificado</p>
+              )}
+            </div>
 
             <span className="text-sm font-mono font-bold text-[#94a3b8] text-center w-14 tabular-nums">
               {entry.pred_home}–{entry.pred_away}
@@ -666,6 +700,35 @@ function PredictionsTable({
           </div>
         );
       })}
+    </div>
+  );
+}
+
+// ── Missing predictions ───────────────────────────────────────────────
+
+function MissingPredictionsCard({ missing }: { missing: MissingPredictionEntry[] }) {
+  if (missing.length === 0) {
+    return (
+      <div className="bg-[#11111c] border border-[#1e1e35] rounded-2xl p-5 text-center">
+        <p className="text-sm text-[#64748b]">
+          Todos los participantes agregaron pronóstico para este partido.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-[#11111c] border border-[#1e1e35] rounded-2xl overflow-hidden">
+      {missing.map((entry) => (
+        <div
+          key={entry.user_id}
+          className="px-4 py-3 border-b border-[#1e1e35] last:border-b-0"
+        >
+          <p className="text-sm font-semibold text-[#f1f5f9] truncate">
+            {entry.display_name}
+          </p>
+        </div>
+      ))}
     </div>
   );
 }

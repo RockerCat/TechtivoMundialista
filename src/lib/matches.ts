@@ -154,6 +154,23 @@ export function simulatePoints(
   return { points: 0, reason: "Sin puntos" };
 }
 
+/** Compact "19 Jun, 06:25 a. m." label for prediction timestamps. */
+export function formatPredictionTimestamp(isoDate: string): string {
+  const date = new Date(isoDate);
+  const day  = date.toLocaleDateString("es-CO", {
+    day:   "numeric",
+    month: "short",
+    timeZone: "America/Bogota",
+  }).replace(" de ", " ");
+  const time = date.toLocaleTimeString("es-CO", {
+    hour:   "numeric",
+    minute: "2-digit",
+    hour12: true,
+    timeZone: "America/Bogota",
+  });
+  return `${day}, ${time}`;
+}
+
 /** Day bucket key used for grouping matches in the dashboard. */
 export function matchDayKey(startsAt: string): string {
   const date = new Date(startsAt);
