@@ -169,20 +169,19 @@ export function buildResultNarrative(ctx: NewsContext): string {
 
 export function buildBody(ctx: NewsContext): string {
   const {
-    home_flag, away_flag, home_name, away_name, home_score, away_score,
     stage, group_code, total_preds, exact_count, winner_count, zero_count,
     exact_names, winner_names, leaderboard,
   } = ctx;
 
   const stageLabel = STAGE_NEWS_LABEL[stage] ?? stage;
   const groupLabel = group_code ? ` — Grupo ${group_code}` : "";
-  const score      = `${home_score}–${away_score}`;
   const lines: string[] = [];
 
   // ── Partido ──────────────────────────────────────────────────────
+  // Score is omitted here — it's already in the headline and rendered
+  // separately in the detail view's match header.
   lines.push(
-    `${home_flag} ${home_name} ${score} ${away_flag} ${away_name}`,
-    `${capitalize(stageLabel)}${groupLabel}.`,
+    `🏟️ ${capitalize(stageLabel)}${groupLabel}.`,
     "",
     buildResultNarrative(ctx),
   );
