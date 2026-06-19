@@ -640,11 +640,6 @@ function PredictionsTable({
         const pts   = hasScore ? entry.sim.points : null;
         const rsn   = hasScore ? entry.sim.reason : null;
 
-        // Treat updates more than a minute after creation as a real edit
-        // (avoids flagging the default created_at ≈ updated_at insert as "modificado").
-        const wasModified =
-          new Date(entry.updated_at).getTime() - new Date(entry.created_at).getTime() > 60_000;
-
         const ptsColor =
           pts === null    ? "text-[#64748b]" :
           pts === 0       ? "text-[#ef4444]/70" :
@@ -676,9 +671,6 @@ function PredictionsTable({
               <p className="text-xs text-[#64748b] whitespace-nowrap truncate">
                 {formatPredictionTimestamp(entry.updated_at)}
               </p>
-              {wasModified && (
-                <p className="text-[10px] text-[#64748b] whitespace-nowrap">✏️ Modificado</p>
-              )}
             </div>
 
             <span className="text-sm font-mono font-bold text-[#94a3b8] text-center w-14 tabular-nums">
