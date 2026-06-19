@@ -33,6 +33,17 @@ export type MatchPrediction = {
   updated_at:    string;
 };
 
+export type MissingPredictionUser = {
+  user_id:      string;
+  display_name: string;
+};
+
+type AdminUserListRow = {
+  user_id:     string;
+  display_name: string;
+  is_disabled: boolean;
+};
+
 // ── Helpers ───────────────────────────────────────────────────────────
 
 type SupabaseClient = Awaited<ReturnType<typeof createClient>>;
@@ -79,6 +90,38 @@ export async function getMatchPredictionsAction(
   });
   if (error) return { error: error.message };
   return { predictions: (data ?? []) as MatchPrediction[] };
+}
+
+// ── getMatchMissingPredictionsAction ──────────────────────────────────
+// Read-only: active, non-admin group members who have not yet submitted
+// a prediction for this match. Built entirely from existing RPCs —
+// get_admin_user_list (active roster) minus get_match_predictions
+// (who already predicted). No new tables, RLS, or migrations.
+
+export async function getMatchMissingPredictionsAction(
+  matchId: string
+): Promise<{ users?: MissingPredictionUser[]; error?: string }> {
+  const supabase = await createClient();
+
+  const [predictionsRes, usersRes] = await Promise.all([
+    supabase.rpc("get_match_predictions", { p_match_id: matchId }),
+    supabase.rpc("get_admin_user_list"),
+  ]);
+
+  if (predictionsRes.error) return { error: predictionsRes.error.message };
+  if (usersRes.error)       return { error: usersRes.error.message };
+
+  const predictedUserIds = new Set(
+    ((predictionsRes.data ?? []) as MatchPrediction[]).map((p) => p.user_id)
+  );
+
+  // get_admin_user_list already excludes admins; we only need to drop
+  // disabled users and anyone who already predicted.
+  const missing = ((usersRes.data ?? []) as AdminUserListRow[])
+    .filter((u) => !u.is_disabled && !predictedUserIds.has(u.user_id))
+    .map((u) => ({ user_id: u.user_id, display_name: u.display_name }));
+
+  return { users: missing };
 }
 
 // ── recalculateAllScoresAction ────────────────────────────────────────
