@@ -3,8 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { isAdmin } from "@/lib/db/admin";
-import { getMatchNewsContext } from "@/lib/db/news";
-import { buildHeadline, buildBody, selectImageType } from "@/lib/news";
+import { getMatchNewsContext, getRecentResultCategories } from "@/lib/db/news";
+import { buildHeadline, buildBody, selectImageType, classifyResultCategory } from "@/lib/news";
 
 // ── Types ─────────────────────────────────────────────────────────────
 
@@ -590,7 +590,15 @@ async function generateMatchNews(matchId: string): Promise<void> {
     const ctx = await getMatchNewsContext(matchId);
     if (!ctx) return;
 
-    const headline   = buildHeadline(ctx);
+    // Avoid a 3rd consecutive headline from the same result category
+    // (e.g. three "narrow win" headlines in a row) by nudging towards
+    // a pollita-stats-driven headline instead, when one is available.
+    const category         = classifyResultCategory(ctx.home_score, ctx.away_score);
+    const recentCategories  = await getRecentResultCategories(2);
+    const preferPollitaAngle =
+      recentCategories.length === 2 && recentCategories.every((c) => c === category);
+
+    const headline   = buildHeadline(ctx, { preferPollitaAngle });
     const body       = buildBody(ctx);
     const image_type = selectImageType(ctx);
 

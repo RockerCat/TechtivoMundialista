@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
-import type { NewsContext } from "@/lib/news";
+import type { NewsContext, ResultCategory } from "@/lib/news";
+import { classifyResultCategory } from "@/lib/news";
 
 export type NewsWithMatch = {
   id:         string;
@@ -135,6 +136,37 @@ async function isColombiaDebutMatch(
     .maybeSingle();
 
   return firstMatch?.id === matchId;
+}
+
+/**
+ * Returns the result category (draw/narrow/comfortable/rout/high-scoring)
+ * of the most recently generated news posts, most recent first.
+ *
+ * Used only for headline anti-repetition — no schema change needed since
+ * it's derived from scores already joined on `news.match_id`.
+ */
+export async function getRecentResultCategories(limit = 2): Promise<ResultCategory[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("news")
+    .select(`created_at, match:match_id ( home_score, away_score )`)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.error("[getRecentResultCategories]", error.message);
+    return [];
+  }
+
+  return (data ?? []).reduce<ResultCategory[]>((acc, row) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const m = (row.match ?? {}) as any;
+    if (typeof m.home_score === "number" && typeof m.away_score === "number") {
+      acc.push(classifyResultCategory(m.home_score, m.away_score));
+    }
+    return acc;
+  }, []);
 }
 
 /** Fetches the raw context object from Supabase for news generation. */
