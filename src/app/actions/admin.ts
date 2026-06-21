@@ -507,6 +507,15 @@ export async function advancedEditMatchAction(
     new_values:   newValues,
   });
 
+  // Generate news when the match is officially closed through the advanced
+  // editor too — generateMatchNews() is idempotent (skips if a news row
+  // already exists for matchId), so this is safe even if the match was
+  // already closed via updateMatchResultAction.
+  if (status === "finished") {
+    console.log("[advancedEditMatchAction] triggering generateMatchNews for match", matchId);
+    void generateMatchNews(matchId);
+  }
+
   revalidatePath("/admin/matches");
   revalidatePath(`/admin/matches/${matchId}`);
   revalidatePath(`/admin/matches/${matchId}/advanced`);
