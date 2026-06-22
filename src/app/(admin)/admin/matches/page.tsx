@@ -42,7 +42,7 @@ export default async function AdminMatchesPage({ searchParams }: PageProps) {
         </div>
         <div className="flex items-center gap-2 pt-1">
           <Link
-            href="/admin"
+            href="/admin/dashboard"
             className="text-xs text-[#94a3b8] hover:text-[#94a3b8] transition-colors"
           >
             ← Admin

@@ -154,6 +154,7 @@ export async function recalculateAllScoresAction(
   });
 
   revalidatePath("/admin");
+  revalidatePath("/admin/dashboard");
   revalidatePath("/admin/ranking");
   revalidatePath("/dashboard");
   return { success: true, ...result };
@@ -317,6 +318,7 @@ export async function updateMatchResultAction(
   }
 
   revalidatePath("/admin");
+  revalidatePath("/admin/dashboard");
   revalidatePath("/admin/matches");
   revalidatePath("/dashboard");
   revalidatePath("/groups", "layout");

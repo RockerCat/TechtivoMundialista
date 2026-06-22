@@ -46,7 +46,7 @@ export default async function AdminMatchDetailPage({ params }: PageProps) {
           </Link>
           <span className="text-[#2a2a45]">·</span>
           <Link
-            href="/admin"
+            href="/admin/dashboard"
             className="text-xs text-[#94a3b8] hover:text-[#94a3b8] transition-colors"
           >
             Admin
