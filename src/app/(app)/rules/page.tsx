@@ -13,6 +13,7 @@ import {
 } from "@/lib/matches";
 import { formatCOP, FIXED_FIRST_PRIZE, FIXED_SECOND_PRIZE } from "@/lib/groups";
 import { cn } from "@/lib/utils";
+import TabReadyBeacon from "@/components/layout/TabReadyBeacon";
 
 
 export default async function RulesPage() {
@@ -29,6 +30,7 @@ export default async function RulesPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6 space-y-8">
+      <TabReadyBeacon tabId="rules" />
 
       {/* Page header */}
       <div>

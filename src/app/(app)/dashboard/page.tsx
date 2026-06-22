@@ -22,6 +22,7 @@ import LiveMatchPoller from "@/components/dashboard/LiveMatchPoller";
 import LiveMatchCard from "@/components/dashboard/LiveMatchCard";
 import PrizePoolCard from "@/components/dashboard/PrizePoolCard";
 import CalendarView from "@/components/dashboard/CalendarView";
+import TabReadyBeacon from "@/components/layout/TabReadyBeacon";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -79,6 +80,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="max-w-[1320px] mx-auto px-4 py-6">
+      <TabReadyBeacon tabId="dashboard" />
       <LiveMatchPoller hasLiveMatch={hasLiveMatch} />
       {/*
         DOM order: [user-summary] [matches] [leaderboard]

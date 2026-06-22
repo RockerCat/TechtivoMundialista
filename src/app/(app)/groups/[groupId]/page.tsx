@@ -12,6 +12,7 @@ import ActivityFeed from "@/components/groups/ActivityFeed";
 import NewsFeed from "@/components/groups/NewsFeed";
 import CopyButton from "@/components/groups/CopyButton";
 import CopyInviteLinkButton from "@/components/groups/CopyInviteLinkButton";
+import TabReadyBeacon from "@/components/layout/TabReadyBeacon";
 import {
   formatMemberCount,
   formatRelativeDate,
@@ -101,6 +102,7 @@ export default async function GroupPage({
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
+      <TabReadyBeacon tabId="community" />
 
       {/* Back link */}
       <Link

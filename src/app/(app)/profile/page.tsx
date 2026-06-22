@@ -7,6 +7,7 @@ import { isAdmin, isUserDisabled } from "@/lib/db/admin";
 import { matchClosedReason } from "@/lib/matches";
 import { cn } from "@/lib/utils";
 import ChangePasswordForm from "@/components/auth/ChangePasswordForm";
+import TabReadyBeacon from "@/components/layout/TabReadyBeacon";
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -55,6 +56,7 @@ export default async function ProfilePage() {
 
   return (
     <div className="max-w-lg mx-auto px-4 py-6 space-y-5">
+      <TabReadyBeacon tabId="profile" />
 
       {/* Header */}
       <div className="bg-[#11111c] border border-[#1e1e35] rounded-2xl p-6">

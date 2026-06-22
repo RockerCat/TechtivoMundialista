@@ -5,6 +5,7 @@ import { getGroupLeaderboard } from "@/lib/db/leaderboard";
 import { isAdmin, isUserDisabled } from "@/lib/db/admin";
 import { cn } from "@/lib/utils";
 import { formatCOP, computeProjectedPrizes, type LeaderboardEntry, type PrizePool, FIXED_FIRST_PRIZE, FIXED_SECOND_PRIZE } from "@/lib/groups";
+import TabReadyBeacon from "@/components/layout/TabReadyBeacon";
 
 export default async function LeaderboardPage() {
   const supabase = await createClient();
@@ -29,6 +30,7 @@ export default async function LeaderboardPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6">
+      <TabReadyBeacon tabId="leaderboard" />
       <div className="mb-6">
         <h1 className="text-2xl font-black text-[#f1f5f9]">Tabla de posiciones</h1>
         {community && (

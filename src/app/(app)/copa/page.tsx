@@ -7,6 +7,7 @@ import {
   type KnockoutPreviewMatch,
 } from "@/lib/classification";
 import CopaTabs from "@/components/copa/CopaTabs";
+import TabReadyBeacon from "@/components/layout/TabReadyBeacon";
 
 export const metadata = { title: "Copa · Techtivo" };
 
@@ -75,6 +76,7 @@ export default async function CopaPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
+      <TabReadyBeacon tabId="copa" />
       <div>
         <h1 className="text-2xl font-black text-[#f1f5f9]">Camino a la Copa</h1>
         <p className="text-sm text-[#94A3B8] mt-0.5">Mundial FIFA 2026</p>

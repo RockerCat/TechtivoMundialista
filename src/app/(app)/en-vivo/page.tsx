@@ -14,6 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import LiveMatchCard from "@/components/dashboard/LiveMatchCard";
 import LiveMatchPoller from "@/components/dashboard/LiveMatchPoller";
+import TabReadyBeacon from "@/components/layout/TabReadyBeacon";
 
 export default async function EnVivoPage() {
   const supabase = await createClient();
@@ -44,6 +45,7 @@ export default async function EnVivoPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6">
+      <TabReadyBeacon tabId="en-vivo" />
       {/*
         Poller is always mounted so the page auto-refreshes even when idle:
         · liveMatches > 0  → refresh every 3 s while tab is visible
