@@ -6,13 +6,14 @@ import {
   type ClassificationMatch,
   type KnockoutPreviewMatch,
 } from "@/lib/classification";
+import { projectKnockoutBracket } from "@/lib/bracket";
 import CopaTabs from "@/components/copa/CopaTabs";
 import TabReadyBeacon from "@/components/layout/TabReadyBeacon";
 
 export const metadata = { title: "Copa · Techtivo" };
 
 const KNOCKOUT_SELECT =
-  "id, match_number, starts_at, venue, status, home_score, away_score, " +
+  "id, match_number, starts_at, venue, status, home_score, away_score, advancing_team_id, " +
   "home_placeholder, away_placeholder, " +
   "home_team:home_team_id(id, name, code, flag_emoji), " +
   "away_team:away_team_id(id, name, code, flag_emoji)";
@@ -74,6 +75,12 @@ export default async function CopaPage() {
   const bestThirds = computeBestThirds(groups);
   const defaultTab = detectDefaultTab(groupMatches, r32, r16, qf, sf);
 
+  const bracket = projectKnockoutBracket({
+    groups, bestThirds,
+    roundOf32: r32, roundOf16: r16, quarterFinals: qf, semiFinals: sf,
+    thirdPlace, finals,
+  });
+
   return (
     <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
       <TabReadyBeacon tabId="copa" />
@@ -85,12 +92,12 @@ export default async function CopaPage() {
       <CopaTabs
         groups={groups}
         bestThirds={bestThirds}
-        roundOf32={r32}
-        roundOf16={r16}
-        quarterFinals={qf}
-        semiFinals={sf}
-        thirdPlace={thirdPlace}
-        finals={finals}
+        roundOf32={bracket.roundOf32}
+        roundOf16={bracket.roundOf16}
+        quarterFinals={bracket.quarterFinals}
+        semiFinals={bracket.semiFinals}
+        thirdPlace={bracket.thirdPlace}
+        finals={bracket.finals}
         defaultTab={defaultTab}
       />
     </div>

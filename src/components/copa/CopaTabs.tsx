@@ -4,8 +4,8 @@ import { useState } from "react";
 import type {
   GroupStanding,
   TeamStanding,
-  KnockoutPreviewMatch,
 } from "@/lib/classification";
+import type { ProjectedKnockoutMatch } from "@/lib/bracket";
 import { formatKickoff } from "@/lib/matches";
 
 // ── Types ──────────────────────────────────────────────────────────────
@@ -16,12 +16,12 @@ type ViewId = "phase" | "bracket";
 interface Props {
   groups:        GroupStanding[];
   bestThirds:    TeamStanding[];
-  roundOf32:     KnockoutPreviewMatch[];
-  roundOf16:     KnockoutPreviewMatch[];
-  quarterFinals: KnockoutPreviewMatch[];
-  semiFinals:    KnockoutPreviewMatch[];
-  thirdPlace:    KnockoutPreviewMatch[];
-  finals:        KnockoutPreviewMatch[];
+  roundOf32:     ProjectedKnockoutMatch[];
+  roundOf16:     ProjectedKnockoutMatch[];
+  quarterFinals: ProjectedKnockoutMatch[];
+  semiFinals:    ProjectedKnockoutMatch[];
+  thirdPlace:    ProjectedKnockoutMatch[];
+  finals:        ProjectedKnockoutMatch[];
   defaultTab:    string;
 }
 
@@ -51,6 +51,22 @@ function goalDiffColor(d: number): string {
 
 function fmtDiff(d: number): string {
   return d > 0 ? `+${d}` : String(d);
+}
+
+// 🔮 marks a team that was calculated from the current group/knockout
+// standings (projectKnockoutBracket) rather than officially confirmed in
+// the database. No team in a match — `home_team`/`away_team` already
+// set — never renders this. Icon only, no text label, per design.
+function ProjectedMark() {
+  return (
+    <span
+      className="mr-1 shrink-0"
+      title="Proyección basada en la clasificación actual"
+      aria-label="Proyección basada en la clasificación actual"
+    >
+      🔮
+    </span>
+  );
 }
 
 // ══════════════════════════════════════════════════════════════════════
@@ -113,7 +129,7 @@ function GroupCard({ group }: { group: GroupStanding }) {
   );
 }
 
-function KnockoutMatchCard({ match, large = false }: { match: KnockoutPreviewMatch; large?: boolean }) {
+function KnockoutMatchCard({ match, large = false }: { match: ProjectedKnockoutMatch; large?: boolean }) {
   const homeTeam   = match.home_team;
   const awayTeam   = match.away_team;
   const homeFlag   = homeTeam?.flag_emoji;
@@ -150,7 +166,10 @@ function KnockoutMatchCard({ match, large = false }: { match: KnockoutPreviewMat
           <div className="min-w-0">
             {homeTeam ? (
               <>
-                <p className={`${nameSize} font-bold text-[#f1f5f9] truncate`}>{homeTeam.name}</p>
+                <p className={`${nameSize} font-bold text-[#f1f5f9] truncate`}>
+                  {match.home_team_projected && <ProjectedMark />}
+                  {homeTeam.name}
+                </p>
                 <p className="text-[10px] text-[#64748b] font-mono">{homeTeam.code}</p>
               </>
             ) : (
@@ -171,7 +190,10 @@ function KnockoutMatchCard({ match, large = false }: { match: KnockoutPreviewMat
           <div className="min-w-0 text-right">
             {awayTeam ? (
               <>
-                <p className={`${nameSize} font-bold text-[#f1f5f9] truncate`}>{awayTeam.name}</p>
+                <p className={`${nameSize} font-bold text-[#f1f5f9] truncate`}>
+                  {match.away_team_projected && <ProjectedMark />}
+                  {awayTeam.name}
+                </p>
                 <p className="text-[10px] text-[#64748b] font-mono">{awayTeam.code}</p>
               </>
             ) : (
@@ -213,7 +235,7 @@ function GruposTab({ groups }: { groups: GroupStanding[] }) {
 }
 
 function KnockoutTab({ matches, emptyMessage, cols = 2 }: {
-  matches: KnockoutPreviewMatch[];
+  matches: ProjectedKnockoutMatch[];
   emptyMessage: string;
   cols?: 1 | 2;
 }) {
@@ -231,7 +253,7 @@ function KnockoutTab({ matches, emptyMessage, cols = 2 }: {
   );
 }
 
-function FinalTab({ finals, thirdPlace }: { finals: KnockoutPreviewMatch[]; thirdPlace: KnockoutPreviewMatch[] }) {
+function FinalTab({ finals, thirdPlace }: { finals: ProjectedKnockoutMatch[]; thirdPlace: ProjectedKnockoutMatch[] }) {
   const finalMatch = finals[0]     ?? null;
   const thirdMatch = thirdPlace[0] ?? null;
   if (!finalMatch && !thirdMatch) {
@@ -289,7 +311,7 @@ function BracketGroupMini({ group }: { group: GroupStanding }) {
 }
 
 function BracketMatchRow({ match, highlight = false }: {
-  match: KnockoutPreviewMatch;
+  match: ProjectedKnockoutMatch;
   highlight?: boolean;
 }) {
   const home     = match.home_team;
@@ -319,10 +341,11 @@ function BracketMatchRow({ match, highlight = false }: {
           <span className="text-[8px] font-mono text-[#64748b] uppercase tracking-widest">Fin</span>
         )}
       </div>
-      <div className={`flex items-center gap-1.5 px-2 py-1.5 border-b border-[#1A2140]/50 ${homeWins ? "bg-[#22C55E]/[0.06]" : ""}`}>
+      <div className={`flex items-center gap-1 px-2 py-1.5 border-b border-[#1A2140]/50 ${homeWins ? "bg-[#22C55E]/[0.06]" : ""}`}>
         <span className={`text-sm leading-none shrink-0 ${!home ? "opacity-30" : ""}`}>
           {home?.flag_emoji ?? "🏳️"}
         </span>
+        {match.home_team_projected && <span className="text-[9px] leading-none shrink-0" aria-hidden="true">🔮</span>}
         <span className={`text-[11px] font-semibold flex-1 truncate ${
           home ? (homeWins ? "text-[#22C55E]" : "text-[#f1f5f9]") : "text-[#64748b] italic"
         }`}>{homeCode}</span>
@@ -332,10 +355,11 @@ function BracketMatchRow({ match, highlight = false }: {
           </span>
         )}
       </div>
-      <div className={`flex items-center gap-1.5 px-2 py-1.5 ${awayWins ? "bg-[#22C55E]/[0.06]" : ""}`}>
+      <div className={`flex items-center gap-1 px-2 py-1.5 ${awayWins ? "bg-[#22C55E]/[0.06]" : ""}`}>
         <span className={`text-sm leading-none shrink-0 ${!away ? "opacity-30" : ""}`}>
           {away?.flag_emoji ?? "🏳️"}
         </span>
+        {match.away_team_projected && <span className="text-[9px] leading-none shrink-0" aria-hidden="true">🔮</span>}
         <span className={`text-[11px] font-semibold flex-1 truncate ${
           away ? (awayWins ? "text-[#22C55E]" : "text-[#f1f5f9]") : "text-[#64748b] italic"
         }`}>{awayCode}</span>
@@ -561,11 +585,18 @@ export default function CopaTabs({
     localStorage.setItem("camino-view", v);
   }
 
+  // Single source of truth for "is anything in this bracket projected" —
+  // reuses the flags projectKnockoutBracket already computed, no
+  // duplicated logic. Drives whether the legend below is worth showing.
+  const hasAnyProjection = [
+    ...roundOf32, ...roundOf16, ...quarterFinals, ...semiFinals, ...thirdPlace, ...finals,
+  ].some((m) => m.home_team_projected || m.away_team_projected);
+
   return (
     <div className="space-y-4">
 
       {/* ── View toggle ─────────────────────────────────────────── */}
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <div className="flex gap-0.5 bg-[#0B1020] border border-[#1A2140] rounded-xl p-1">
           {(["bracket", "phase"] as ViewId[]).map((v) => {
             const label  = v === "phase" ? "Por fase" : "Bracket";
@@ -585,6 +616,9 @@ export default function CopaTabs({
             );
           })}
         </div>
+        {hasAnyProjection && (
+          <p className="text-[10px] text-[#64748b]">🔮 Proyección basada en la clasificación actual</p>
+        )}
       </div>
 
       {/* ── Phase view ──────────────────────────────────────────── */}
