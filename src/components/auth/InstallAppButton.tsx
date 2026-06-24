@@ -26,7 +26,7 @@ export default function InstallAppButton() {
         onClick={handleClick}
         className="w-full h-9 flex items-center justify-center gap-1.5 text-xs font-semibold text-[#38BDF8] bg-[#38BDF8]/8 border border-[#38BDF8]/20 rounded-xl hover:bg-[#38BDF8]/15 transition-colors"
       >
-        📲 Instalar App
+        {canShowIosInstructions ? "📲 Agregar al inicio" : "📲 Instalar App"}
       </button>
 
       {showIosModal && <IosInstallModal onClose={() => setShowIosModal(false)} />}
@@ -45,7 +45,7 @@ function IosInstallModal({ onClose }: { onClose: () => void }) {
         </div>
 
         <div className="flex items-center justify-between px-5 py-4 border-b border-[#1e1e35]">
-          <h2 className="text-base font-bold text-[#f1f5f9]">📲 Instalar Pollita</h2>
+          <h2 className="text-base font-bold text-[#f1f5f9]">📲 Agregar Pollita al inicio</h2>
           <button
             onClick={onClose}
             className="w-8 h-8 flex items-center justify-center rounded-xl text-[#64748b] hover:text-[#f1f5f9] hover:bg-[#20203a] transition-colors"
