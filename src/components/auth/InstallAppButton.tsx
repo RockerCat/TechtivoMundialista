@@ -36,10 +36,13 @@ export default function InstallAppButton() {
 
 export function IosInstallModal({ onClose }: { onClose: () => void }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+    // z-[60]: above the app chrome layer (Navbar/BottomNav both use z-50) so
+    // this modal never renders underneath the bottom tab bar on authenticated
+    // screens — see src/components/layout/BottomNav.tsx.
+    <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
 
-      <div className="relative z-10 w-full bg-[#11111c] border border-[#2a2a45] rounded-t-3xl sm:rounded-2xl sm:max-w-sm sm:mx-4 animate-fade-in-up">
+      <div className="relative z-10 w-full max-h-[85vh] overflow-y-auto bg-[#11111c] border border-[#2a2a45] rounded-t-3xl sm:rounded-2xl sm:max-w-sm sm:mx-4 animate-fade-in-up">
         <div className="flex justify-center pt-3 pb-1 sm:hidden">
           <div className="w-10 h-1 rounded-full bg-[#2a2a45]" />
         </div>
@@ -54,7 +57,8 @@ export function IosInstallModal({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        <div className="px-5 py-5 flex flex-col gap-4">
+        {/* pb includes the iOS home-indicator safe area when running standalone */}
+        <div className="px-5 pt-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] flex flex-col gap-4">
           <InstructionStep
             icon={<Share size={16} className="text-[#38BDF8]" />}
             text={
