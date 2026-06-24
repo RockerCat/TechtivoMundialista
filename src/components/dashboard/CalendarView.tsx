@@ -13,9 +13,8 @@ type Filter = "today" | "pending" | "live" | "finished" | "all";
 const FILTERS: { id: Filter; label: string }[] = [
   { id: "today",    label: "Hoy"        },
   { id: "pending",  label: "Pendientes" },
-  { id: "live",     label: "En vivo"    },
+  { id: "all",      label: "Por Fecha"      },
   { id: "finished", label: "Finalizados"},
-  { id: "all",      label: "Todos"      },
 ];
 
 // ── Date helpers ──────────────────────────────────────────────────────
