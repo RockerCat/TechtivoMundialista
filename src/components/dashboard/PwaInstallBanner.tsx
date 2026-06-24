@@ -1,22 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { usePwaInstall } from "@/hooks/usePwaInstall";
 import { IosInstallModal } from "@/components/auth/InstallAppButton";
 
-const DISMISS_KEY = "pollita_pwa_install_banner_dismissed";
+// Dismissal is intentionally in-memory only (per Home mount), so the banner
+// reappears next time the user lands on Home — see banner dismissal task.
+// This key is purged below in case it was set by an earlier version that
+// persisted dismissal in localStorage.
+const LEGACY_DISMISS_KEY = "pollita_pwa_install_banner_dismissed";
 
 export default function PwaInstallBanner() {
   const { shouldShowButton, canPromptAndroid, canShowIosInstructions, promptAndroidInstall } =
     usePwaInstall();
-  // Lazy init reads localStorage on the client's first mount — same SSR-safe
-  // pattern as usePwaInstall, avoids a flash of the banner before dismissal
-  // state is known.
-  const [dismissed, setDismissed] = useState(() =>
-    typeof window === "undefined" ? false : localStorage.getItem(DISMISS_KEY) === "1"
-  );
+  const [dismissed, setDismissed] = useState(false);
   const [showIosModal, setShowIosModal] = useState(false);
+
+  useEffect(() => {
+    localStorage.removeItem(LEGACY_DISMISS_KEY);
+  }, []);
 
   if (!shouldShowButton || dismissed) return null;
 
@@ -30,7 +33,6 @@ export default function PwaInstallBanner() {
 
   function handleDismiss() {
     setDismissed(true);
-    localStorage.setItem(DISMISS_KEY, "1");
   }
 
   return (
