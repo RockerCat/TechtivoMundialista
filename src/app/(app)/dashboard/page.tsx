@@ -22,6 +22,7 @@ import LiveMatchPoller from "@/components/dashboard/LiveMatchPoller";
 import LiveMatchCard from "@/components/dashboard/LiveMatchCard";
 import PrizePoolCard from "@/components/dashboard/PrizePoolCard";
 import CalendarView from "@/components/dashboard/CalendarView";
+import PwaInstallBanner from "@/components/dashboard/PwaInstallBanner";
 import TabReadyBeacon from "@/components/layout/TabReadyBeacon";
 
 export default async function DashboardPage() {
@@ -100,6 +101,7 @@ export default async function DashboardPage() {
             ? <LiveMatchesSection matches={liveMatches} />
             : fallbackMatch && <FeaturedMatchCard match={fallbackMatch} />
           }
+          <PwaInstallBanner />
           <CalendarView matches={matches} />
         </main>
 

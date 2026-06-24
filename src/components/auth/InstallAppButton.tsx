@@ -34,7 +34,7 @@ export default function InstallAppButton() {
   );
 }
 
-function IosInstallModal({ onClose }: { onClose: () => void }) {
+export function IosInstallModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
