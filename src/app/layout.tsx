@@ -26,6 +26,18 @@ export const metadata: Metadata = {
     "grupos privados"
   ],
 
+  manifest: "/manifest.webmanifest",
+
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Pollita",
+  },
+
+  icons: {
+    apple: "/apple-touch-icon.png",
+  },
+
   openGraph: {
     title: "Techtivo Pollita - Polla Pollita Interna",
     description:

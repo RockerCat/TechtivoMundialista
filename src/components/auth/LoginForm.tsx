@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import TechtivoWordmark from "@/components/ui/TechtivoWordmark";
+import InstallAppButton from "@/components/auth/InstallAppButton";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, AlertCircle, Hash, CheckCircle2, ArrowRight, Loader2 } from "lucide-react";
@@ -202,6 +203,8 @@ export default function LoginForm({ inviteCode }: LoginFormProps) {
             </Link>
           </p>
         </div>
+
+        <InstallAppButton />
       </Card>
 
       <div className="flex items-center justify-center gap-2 mt-6">

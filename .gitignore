@@ -4,3 +4,9 @@ node_modules/
 .env.local
 tsconfig.tsbuildinfo
 *.patch
+
+# next-pwa generated service worker files
+public/sw.js
+public/sw.js.map
+public/swe-worker-*.js
+public/workbox-*.js
