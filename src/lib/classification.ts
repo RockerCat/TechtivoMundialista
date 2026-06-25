@@ -23,6 +23,11 @@ export type TeamStanding = {
 export type GroupStanding = {
   group_code: string;
   teams: TeamStanding[];  // sorted: index 0 = leader
+  // True once every match in this group has status "finished" — i.e. the
+  // 1st/2nd placements can no longer change. Used by bracket.ts to decide
+  // whether a slot resolved from this group is "official" or still a
+  // "projection" (CLAUDE.md §1/§3).
+  group_finished: boolean;
 };
 
 export type ClassificationMatch = {
@@ -296,13 +301,14 @@ export function computeGroupStandings(
 
   return [...groupsMap.entries()]
     .sort(([a], [b]) => a.localeCompare(b))
-    .map(([group_code, teams]) => ({
-      group_code,
-      teams: sortGroupTeams(
-        teams,
-        matches.filter((m) => m.group_code === group_code)
-      ),
-    }));
+    .map(([group_code, teams]) => {
+      const groupMatches = matches.filter((m) => m.group_code === group_code);
+      return {
+        group_code,
+        teams: sortGroupTeams(teams, groupMatches),
+        group_finished: groupMatches.length > 0 && groupMatches.every((m) => m.status === "finished"),
+      };
+    });
 }
 
 // ── computeBestThirds ──────────────────────────────────────────────────

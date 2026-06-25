@@ -5,7 +5,7 @@ import type {
   GroupStanding,
   TeamStanding,
 } from "@/lib/classification";
-import type { ProjectedKnockoutMatch } from "@/lib/bracket";
+import type { ProjectedKnockoutMatch, KnockoutBracketProjection } from "@/lib/bracket";
 import { formatKickoff } from "@/lib/matches";
 
 // ── Types ──────────────────────────────────────────────────────────────
@@ -22,6 +22,11 @@ interface Props {
   semiFinals:    ProjectedKnockoutMatch[];
   thirdPlace:    ProjectedKnockoutMatch[];
   finals:        ProjectedKnockoutMatch[];
+  // Same matches as above, re-ordered so the bracket-tree view's columns
+  // have adjacent slots feeding the same parent match — see
+  // orderKnockoutBracketForDisplay in lib/bracket.ts. The phase view below
+  // intentionally keeps the chronological order from the props above.
+  bracketTree:   KnockoutBracketProjection;
   defaultTab:    string;
 }
 
@@ -440,7 +445,8 @@ function BracketConnectorSVG({
   );
 }
 
-function BracketView({ groups, roundOf32, roundOf16, quarterFinals, semiFinals, thirdPlace, finals }: Omit<Props, "bestThirds" | "defaultTab">) {
+function BracketView({ groups, bracketTree }: { groups: GroupStanding[]; bracketTree: KnockoutBracketProjection }) {
+  const { roundOf32, roundOf16, quarterFinals, semiFinals, thirdPlace, finals } = bracketTree;
   const playedGroupMatches = groups.reduce((sum, g) => sum + g.teams.reduce((s, t) => s + t.played, 0) / 2, 0);
 
   function ColHeader({ title, titleColor = "text-[#f1f5f9]", subtitle }: {
@@ -572,6 +578,7 @@ export default function CopaTabs({
   semiFinals,
   thirdPlace,
   finals,
+  bracketTree,
   defaultTab,
 }: Props) {
   const [view, setView] = useState<ViewId>(() => {
@@ -657,15 +664,7 @@ export default function CopaTabs({
 
       {/* ── Bracket view ────────────────────────────────────────── */}
       {view === "bracket" && (
-        <BracketView
-          groups={groups}
-          roundOf32={roundOf32}
-          roundOf16={roundOf16}
-          quarterFinals={quarterFinals}
-          semiFinals={semiFinals}
-          thirdPlace={thirdPlace}
-          finals={finals}
-        />
+        <BracketView groups={groups} bracketTree={bracketTree} />
       )}
 
     </div>

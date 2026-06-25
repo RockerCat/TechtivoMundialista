@@ -70,13 +70,22 @@ function parsePlaceholder(placeholder: string | null): ParsedPlaceholder {
 }
 
 // ── Group-stage resolvers ─────────────────────────────────────────────
+//
+// A resolved slot is "official" once its source can no longer change —
+// for a group placement that means every match in that group has
+// finished (CLAUDE.md §1/§3). Until then the same team is still shown,
+// but flagged as a projection.
 
-function resolveGroupWinner(group: string, groups: GroupStanding[]): BracketTeam | null {
-  return groups.find((g) => g.group_code === group)?.teams[0]?.team ?? null;
+type SideResolution = { team: BracketTeam | null; official: boolean };
+
+function resolveGroupWinner(group: string, groups: GroupStanding[]): SideResolution {
+  const g = groups.find((g) => g.group_code === group);
+  return { team: g?.teams[0]?.team ?? null, official: g?.group_finished ?? false };
 }
 
-function resolveGroupRunnerUp(group: string, groups: GroupStanding[]): BracketTeam | null {
-  return groups.find((g) => g.group_code === group)?.teams[1]?.team ?? null;
+function resolveGroupRunnerUp(group: string, groups: GroupStanding[]): SideResolution {
+  const g = groups.find((g) => g.group_code === group);
+  return { team: g?.teams[1]?.team ?? null, official: g?.group_finished ?? false };
 }
 
 // ── Best-third assignment ──────────────────────────────────────────────
@@ -189,16 +198,33 @@ function resolveSide(
   groups: GroupStanding[],
   bestThirdAssignments: Map<string, BracketTeam>,
   slotId: string,
-  outcomes: Map<number, MatchOutcome>
-): BracketTeam | null {
+  outcomes: Map<number, MatchOutcome>,
+  // Best-third rankings can still shift as long as ANY group hasn't
+  // finished — a later group's third could bump a currently-qualifying
+  // one out of the top 8. So a best-third slot can only be "official"
+  // once every group in the tournament has finished.
+  allGroupsFinished: boolean
+): SideResolution {
   const parsed = parsePlaceholder(placeholder);
   switch (parsed.kind) {
     case "group_winner":    return resolveGroupWinner(parsed.group, groups);
     case "group_runner_up": return resolveGroupRunnerUp(parsed.group, groups);
-    case "best_third":      return bestThirdAssignments.get(slotId) ?? null;
-    case "match_winner":    return outcomes.get(parsed.matchNumber)?.winner ?? null;
-    case "match_loser":     return outcomes.get(parsed.matchNumber)?.loser ?? null;
-    case "unresolvable":    return null;
+    case "best_third": {
+      const team = bestThirdAssignments.get(slotId) ?? null;
+      return { team, official: team !== null && allGroupsFinished };
+    }
+    // Winner/loser is only ever known once the source match has actually
+    // finished (see computeOutcome) — so a resolved value here is always
+    // a confirmed result, never a speculative projection.
+    case "match_winner": {
+      const team = outcomes.get(parsed.matchNumber)?.winner ?? null;
+      return { team, official: team !== null };
+    }
+    case "match_loser": {
+      const team = outcomes.get(parsed.matchNumber)?.loser ?? null;
+      return { team, official: team !== null };
+    }
+    case "unresolvable": return { team: null, official: false };
   }
 }
 
@@ -210,7 +236,8 @@ function projectStage(
   matches: KnockoutPreviewMatch[],
   groups: GroupStanding[],
   bestThirds: TeamStanding[],
-  outcomes: Map<number, MatchOutcome>
+  outcomes: Map<number, MatchOutcome>,
+  allGroupsFinished: boolean
 ): ProjectedKnockoutMatch[] {
   // All "Best 3rd (...)" slots in this stage are resolved together as a
   // single assignment problem (see resolveBestThirdAssignments) instead of
@@ -236,19 +263,19 @@ function projectStage(
     const homeIsReal = match.home_team !== null;
     const awayIsReal = match.away_team !== null;
 
-    const projectedHome = homeIsReal
-      ? match.home_team
-      : resolveSide(match.home_placeholder, groups, bestThirdAssignments, `${match.id}:home`, outcomes);
-    const projectedAway = awayIsReal
-      ? match.away_team
-      : resolveSide(match.away_placeholder, groups, bestThirdAssignments, `${match.id}:away`, outcomes);
+    const home: SideResolution = homeIsReal
+      ? { team: match.home_team, official: true }
+      : resolveSide(match.home_placeholder, groups, bestThirdAssignments, `${match.id}:home`, outcomes, allGroupsFinished);
+    const away: SideResolution = awayIsReal
+      ? { team: match.away_team, official: true }
+      : resolveSide(match.away_placeholder, groups, bestThirdAssignments, `${match.id}:away`, outcomes, allGroupsFinished);
 
     const projected: ProjectedKnockoutMatch = {
       ...match,
-      home_team: projectedHome,
-      away_team: projectedAway,
-      home_team_projected: !homeIsReal && projectedHome !== null,
-      away_team_projected: !awayIsReal && projectedAway !== null,
+      home_team: home.team,
+      away_team: away.team,
+      home_team_projected: !homeIsReal && home.team !== null && !home.official,
+      away_team_projected: !awayIsReal && away.team !== null && !away.official,
     };
 
     if (match.match_number !== null) {
@@ -285,16 +312,103 @@ export type KnockoutBracketProjection = {
 // only its arguments, returns new arrays, never touches the database.
 export function projectKnockoutBracket(input: KnockoutBracketInput): KnockoutBracketProjection {
   const { groups, bestThirds } = input;
+  const allGroupsFinished = groups.length > 0 && groups.every((g) => g.group_finished);
   const outcomes = new Map<number, MatchOutcome>();
 
   // Order matters: each stage only ever references match numbers from
   // stages projected before it (round_of_32 → ... → final/third_place).
-  const roundOf32     = projectStage(input.roundOf32, groups, bestThirds, outcomes);
-  const roundOf16     = projectStage(input.roundOf16, groups, bestThirds, outcomes);
-  const quarterFinals = projectStage(input.quarterFinals, groups, bestThirds, outcomes);
-  const semiFinals    = projectStage(input.semiFinals, groups, bestThirds, outcomes);
-  const thirdPlace    = projectStage(input.thirdPlace, groups, bestThirds, outcomes);
-  const finals        = projectStage(input.finals, groups, bestThirds, outcomes);
+  const roundOf32     = projectStage(input.roundOf32, groups, bestThirds, outcomes, allGroupsFinished);
+  const roundOf16     = projectStage(input.roundOf16, groups, bestThirds, outcomes, allGroupsFinished);
+  const quarterFinals = projectStage(input.quarterFinals, groups, bestThirds, outcomes, allGroupsFinished);
+  const semiFinals    = projectStage(input.semiFinals, groups, bestThirds, outcomes, allGroupsFinished);
+  const thirdPlace    = projectStage(input.thirdPlace, groups, bestThirds, outcomes, allGroupsFinished);
+  const finals        = projectStage(input.finals, groups, bestThirds, outcomes, allGroupsFinished);
+
+  return { roundOf32, roundOf16, quarterFinals, semiFinals, thirdPlace, finals };
+}
+
+// ── Display order ───────────────────────────────────────────────────────
+//
+// projectKnockoutBracket above is only concerned with VALUES (which team
+// occupies a slot, and whether that's official or projected) — its
+// arrays stay in whatever order the caller passed in (typically
+// match_number ascending, which is how the fixture is keyed/queried).
+//
+// For RENDERING the bracket tree, though, match_number order is the
+// wrong axis: round_of_32 was numbered roughly by kickoff date, not by
+// which two matches feed the same round_of_16 slot. Rendering in
+// match_number order produces a bracket whose connector lines have to
+// cross.
+//
+// The fix never hardcodes a seeding table — it walks the "Winner M##" /
+// "Loser M##" placeholders that are already part of the official fixture
+// (supabase/migrations/035_knockout_fixtures.sql) to discover, for each
+// match, which two earlier matches feed it. Starting from the single
+// final (trivially "in order") and walking backwards round by round,
+// each round's matches are re-arranged so that the two matches feeding
+// a given parent are always adjacent, and parents appear in the same
+// order their own parents do. That's exactly the property a simple,
+// local, non-crossing connector (see BracketConnectorSVG in CopaTabs.tsx)
+// needs.
+
+function byMatchNumberAscending(matches: ProjectedKnockoutMatch[]): ProjectedKnockoutMatch[] {
+  return [...matches].sort((a, b) => (a.match_number ?? 0) - (b.match_number ?? 0));
+}
+
+// Re-orders `children` so that, walking `parentsInOrder` in order and each
+// parent's home-then-away placeholder, every referenced child appears in
+// that exact sequence — i.e. the two children of parentsInOrder[0] come
+// first (home child, then away child), then the two children of
+// parentsInOrder[1], and so on.
+function orderByParents(
+  children: ProjectedKnockoutMatch[],
+  parentsInOrder: ProjectedKnockoutMatch[]
+): ProjectedKnockoutMatch[] {
+  const byNumber = new Map(
+    children.filter((m) => m.match_number !== null).map((m) => [m.match_number as number, m])
+  );
+  const ordered: ProjectedKnockoutMatch[] = [];
+  const used = new Set<number>();
+
+  for (const parent of parentsInOrder) {
+    for (const placeholder of [parent.home_placeholder, parent.away_placeholder]) {
+      const parsed = parsePlaceholder(placeholder);
+      const matchNumber =
+        parsed.kind === "match_winner" || parsed.kind === "match_loser" ? parsed.matchNumber : null;
+      if (matchNumber === null || used.has(matchNumber)) continue;
+
+      const child = byNumber.get(matchNumber);
+      if (!child) continue;
+
+      ordered.push(child);
+      used.add(matchNumber);
+    }
+  }
+
+  // Defensive only — every real child of a stage IS referenced by some
+  // match in the next stage in this fixture. A child left over here would
+  // mean the fixture itself is incomplete; keep it visible rather than
+  // silently dropping it.
+  for (const child of children) {
+    if (child.match_number === null || !used.has(child.match_number)) ordered.push(child);
+  }
+
+  return ordered;
+}
+
+// Re-orders every knockout stage for bracket-tree rendering. Pure and
+// read-only: never changes which team occupies a slot, never changes the
+// fixture's match relationships — only the array order each stage's
+// matches are returned in.
+export function orderKnockoutBracketForDisplay(
+  bracket: KnockoutBracketProjection
+): KnockoutBracketProjection {
+  const finals        = byMatchNumberAscending(bracket.finals);
+  const semiFinals     = orderByParents(bracket.semiFinals, finals);
+  const quarterFinals  = orderByParents(bracket.quarterFinals, semiFinals);
+  const roundOf16      = orderByParents(bracket.roundOf16, quarterFinals);
+  const roundOf32      = orderByParents(bracket.roundOf32, roundOf16);
+  const thirdPlace     = byMatchNumberAscending(bracket.thirdPlace);
 
   return { roundOf32, roundOf16, quarterFinals, semiFinals, thirdPlace, finals };
 }

@@ -215,6 +215,26 @@ describe("computeGroupStandings", () => {
     expect(a.points).toBe(3);
     expect(c.played).toBe(0);
   });
+
+  it("marks group_finished true only once every match in the group is finished", () => {
+    const matches = [
+      match("G1", A, B, 1, 0),
+      match("G1", A, C, 0, 1),
+      match("G1", A, D, 1, 1),
+      match("G1", B, C, 1, 0),
+      match("G1", B, D, 0, 2),
+      match("G1", C, D, 0, 0),
+    ];
+
+    const [finished] = computeGroupStandings(matches);
+    expect(finished.group_finished).toBe(true);
+
+    const stillPlaying = matches.slice(0, -1).concat({
+      ...matches[5], status: "scheduled", home_score: null, away_score: null,
+    });
+    const [inProgress] = computeGroupStandings(stillPlaying);
+    expect(inProgress.group_finished).toBe(false);
+  });
 });
 
 // ── computeBestThirds: cross-group comparison, no head-to-head ─────────
@@ -224,6 +244,7 @@ describe("computeBestThirds", () => {
     const groups: GroupStanding[] = [
       {
         group_code: "G1",
+        group_finished: true,
         teams: [
           standing(A, "G1", { points: 9 }),
           standing(B, "G1", { points: 6 }),
@@ -232,6 +253,7 @@ describe("computeBestThirds", () => {
       },
       {
         group_code: "G2",
+        group_finished: true,
         teams: [
           standing(D, "G2", { points: 9 }),
           standing(team("Bravo2"), "G2", { points: 6 }),
@@ -249,6 +271,7 @@ describe("computeBestThirds", () => {
     const groups: GroupStanding[] = [
       {
         group_code: "G1",
+        group_finished: true,
         teams: [
           standing(A, "G1", { points: 9 }),
           standing(B, "G1", { points: 6 }),
@@ -257,6 +280,7 @@ describe("computeBestThirds", () => {
       },
       {
         group_code: "G2",
+        group_finished: true,
         teams: [
           standing(D, "G2", { points: 9 }),
           standing(team("Bravo2"), "G2", { points: 6 }),

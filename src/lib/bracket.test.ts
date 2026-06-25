@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { projectKnockoutBracket, resolveBestThirdAssignments, type BestThirdSlot } from "./bracket";
+import {
+  projectKnockoutBracket,
+  resolveBestThirdAssignments,
+  orderKnockoutBracketForDisplay,
+  type BestThirdSlot,
+} from "./bracket";
 import type {
   ClassificationTeam,
   GroupStanding,
@@ -22,9 +27,12 @@ function standing(t: ClassificationTeam, group_code: string, points: number): Te
 }
 
 // Builds a group with teams already in final ranked order (index 0 = leader).
-function group(group_code: string, ranked: ClassificationTeam[]): GroupStanding {
+// `finished` defaults to false: most existing fixtures model a group still
+// in progress, where a resolved slot must stay a projection.
+function group(group_code: string, ranked: ClassificationTeam[], finished = false): GroupStanding {
   return {
     group_code,
+    group_finished: finished,
     teams: ranked.map((t, i) => standing(t, group_code, 9 - i * 3)),
   };
 }
@@ -251,7 +259,10 @@ describe("projectKnockoutBracket — best-third placeholders end-to-end", () => 
 // ── Previous-round winners/losers ─────────────────────────────────────
 
 describe("projectKnockoutBracket — previous-round results", () => {
-  it("advances the real winner of a finished match to the next round via 'Winner M##'", () => {
+  it("advances the real winner of a finished match to the next round via 'Winner M##', marked official (not a projection)", () => {
+    // Unlike a group placement, a knockout winner is only ever resolved
+    // once the source match has actually finished — there is no
+    // speculative version of this, so it's never shown as a projection.
     const r32Match = knockoutMatch({
       match_number: 73,
       status: "finished",
@@ -267,7 +278,7 @@ describe("projectKnockoutBracket — previous-round results", () => {
     );
 
     expect(result.roundOf16[0].home_team?.id).toBe("A1");
-    expect(result.roundOf16[0].home_team_projected).toBe(true);
+    expect(result.roundOf16[0].home_team_projected).toBe(false);
   });
 
   it("resolves the winner of a match decided by penalties using advancing_team_id, not the level score", () => {
@@ -372,5 +383,122 @@ describe("projectKnockoutBracket — previous-round results", () => {
     expect(result.roundOf32[0].status).toBe("finished");
     expect(result.roundOf32[0].home_score).toBe(2);
     expect(result.roundOf32[0].away_score).toBe(1);
+  });
+});
+
+// ── Official vs. projected state (CLAUDE.md §1 / §3) ──────────────────
+
+describe("projectKnockoutBracket — official vs. projected state", () => {
+  it("marks a group leader as a projection while the group is still in progress", () => {
+    const inProgress = group("A", [A1, A2, A3, A4], false);
+    const match = knockoutMatch({ home_placeholder: "Winner Group A" });
+    const result = projectKnockoutBracket(
+      emptyBracketInput({ groups: [inProgress, GROUP_B], roundOf32: [match] })
+    );
+
+    expect(result.roundOf32[0].home_team?.id).toBe("A1");
+    expect(result.roundOf32[0].home_team_projected).toBe(true);
+  });
+
+  it("marks a group leader/runner-up as official once every match in that group has finished", () => {
+    const finished = group("A", [A1, A2, A3, A4], true);
+    const home = knockoutMatch({ home_placeholder: "Winner Group A" });
+    const away = knockoutMatch({ away_placeholder: "Runner-up Group A" });
+    const result = projectKnockoutBracket(
+      emptyBracketInput({ groups: [finished, GROUP_B], roundOf32: [home, away] })
+    );
+
+    expect(result.roundOf32[0].home_team?.id).toBe("A1");
+    expect(result.roundOf32[0].home_team_projected).toBe(false);
+    expect(result.roundOf32[1].away_team?.id).toBe("A2");
+    expect(result.roundOf32[1].away_team_projected).toBe(false);
+  });
+
+  it("keeps a placeholder unresolved, never inventing a team, when its group has no data", () => {
+    const match = knockoutMatch({ home_placeholder: "Winner Group Z" });
+    const result = projectKnockoutBracket(emptyBracketInput({ roundOf32: [match] }));
+
+    expect(result.roundOf32[0].home_team).toBeNull();
+    expect(result.roundOf32[0].home_team_projected).toBe(false);
+  });
+
+  it("marks a resolved best-third slot as a projection while any group is still in progress", () => {
+    const inProgressB = group("B", [B1, B2, B3, B4], false);
+    const bestThirds = [GROUP_A.teams[2], inProgressB.teams[2]];
+    const match = knockoutMatch({ away_placeholder: "Best 3rd (A/B)" });
+
+    // GROUP_A finished, GROUP_B (inProgressB) is not — overall this isn't
+    // locked in yet, because B's third could still change.
+    const result = projectKnockoutBracket(
+      emptyBracketInput({
+        groups: [group("A", [A1, A2, A3, A4], true), inProgressB],
+        bestThirds,
+        roundOf32: [match],
+      })
+    );
+
+    expect(result.roundOf32[0].away_team).not.toBeNull();
+    expect(result.roundOf32[0].away_team_projected).toBe(true);
+  });
+
+  it("marks a resolved best-third slot as official only once every group has finished", () => {
+    const finishedA = group("A", [A1, A2, A3, A4], true);
+    const finishedB = group("B", [B1, B2, B3, B4], true);
+    const bestThirds = [finishedA.teams[2], finishedB.teams[2]];
+    const match = knockoutMatch({ away_placeholder: "Best 3rd (A/B)" });
+
+    const result = projectKnockoutBracket(
+      emptyBracketInput({ groups: [finishedA, finishedB], bestThirds, roundOf32: [match] })
+    );
+
+    expect(result.roundOf32[0].away_team).not.toBeNull();
+    expect(result.roundOf32[0].away_team_projected).toBe(false);
+  });
+});
+
+// ── Bracket-tree display order ──────────────────────────────────────────
+
+describe("orderKnockoutBracketForDisplay", () => {
+  it("re-orders a round so each pair of adjacent matches feeds the same parent, instead of match_number order", () => {
+    // Quarter-finals deliberately reference round_of_16 matches OUT of
+    // ascending order — mirrors the real FIFA 2026 fixture, where R32/R16
+    // match numbers are NOT seeded in bracket-tree order.
+    const r16 = [1, 2, 3, 4].map((n) => knockoutMatch({ match_number: n }));
+    const qf = [
+      knockoutMatch({ match_number: 10, home_placeholder: "Winner M3", away_placeholder: "Winner M1" }),
+      knockoutMatch({ match_number: 11, home_placeholder: "Winner M4", away_placeholder: "Winner M2" }),
+    ];
+
+    const bracket = projectKnockoutBracket(
+      emptyBracketInput({ roundOf16: r16, quarterFinals: qf })
+    );
+    const ordered = orderKnockoutBracketForDisplay(bracket);
+
+    expect(ordered.roundOf16.map((m) => m.match_number)).toEqual([3, 1, 4, 2]);
+    // Adjacent pairs (index 0,1) and (2,3) now both feed one parent each —
+    // exactly what a simple, local, non-crossing connector needs.
+    expect(ordered.quarterFinals.map((m) => m.match_number)).toEqual([10, 11]);
+  });
+
+  it("keeps natural (ascending) order for rounds with a single match per branch", () => {
+    const semis  = [knockoutMatch({ match_number: 101 }), knockoutMatch({ match_number: 102 })];
+    const finalM = [knockoutMatch({ match_number: 104, home_placeholder: "Winner M101", away_placeholder: "Winner M102" })];
+
+    const bracket = projectKnockoutBracket(emptyBracketInput({ semiFinals: semis, finals: finalM }));
+    const ordered = orderKnockoutBracketForDisplay(bracket);
+
+    expect(ordered.finals.map((m) => m.match_number)).toEqual([104]);
+    expect(ordered.semiFinals.map((m) => m.match_number)).toEqual([101, 102]);
+  });
+
+  it("never changes which team occupies a slot — only the array order", () => {
+    const r32Match = knockoutMatch({
+      match_number: 73, status: "finished",
+      home_team: A1, away_team: B2, home_score: 1, away_score: 0,
+    });
+    const bracket = projectKnockoutBracket(emptyBracketInput({ roundOf32: [r32Match] }));
+    const ordered = orderKnockoutBracketForDisplay(bracket);
+
+    expect(ordered.roundOf32).toEqual(bracket.roundOf32);
   });
 });

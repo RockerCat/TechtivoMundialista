@@ -6,7 +6,7 @@ import {
   type ClassificationMatch,
   type KnockoutPreviewMatch,
 } from "@/lib/classification";
-import { projectKnockoutBracket } from "@/lib/bracket";
+import { projectKnockoutBracket, orderKnockoutBracketForDisplay } from "@/lib/bracket";
 import CopaTabs from "@/components/copa/CopaTabs";
 import TabReadyBeacon from "@/components/layout/TabReadyBeacon";
 
@@ -80,6 +80,10 @@ export default async function CopaPage() {
     roundOf32: r32, roundOf16: r16, quarterFinals: qf, semiFinals: sf,
     thirdPlace, finals,
   });
+  // Phase view stays in fixture/chronological order; the bracket-tree view
+  // needs its own derived order so adjacent slots always feed the same
+  // parent match (see orderKnockoutBracketForDisplay for why).
+  const bracketTree = orderKnockoutBracketForDisplay(bracket);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6 space-y-6">
@@ -98,6 +102,7 @@ export default async function CopaPage() {
         semiFinals={bracket.semiFinals}
         thirdPlace={bracket.thirdPlace}
         finals={bracket.finals}
+        bracketTree={bracketTree}
         defaultTab={defaultTab}
       />
     </div>
