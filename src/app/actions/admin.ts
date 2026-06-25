@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { getPublicAppUrl } from "@/lib/site-url";
+import { requireServerAppUrl } from "@/lib/site-url";
 import { isAdmin } from "@/lib/db/admin";
 import { getMatchNewsContext, getRecentResultCategories } from "@/lib/db/news";
 import { buildHeadline, buildBody, selectImageType, classifyResultCategory } from "@/lib/news";
@@ -262,6 +262,15 @@ export async function generateRecoveryLinkAction(
 
   if (!targetId) return { error: "Usuario no especificado." };
 
+  // Fail fast — never let an unconfigured APP_URL fall through to a
+  // localhost link in production.
+  let appUrl: string;
+  try {
+    appUrl = requireServerAppUrl();
+  } catch {
+    return { error: "APP_URL no está configurada." };
+  }
+
   const supabase = await createClient();
   const { data: { user }, error: authErr } = await supabase.auth.getUser();
   if (authErr || !user) return { error: "No autenticado." };
@@ -276,8 +285,6 @@ export async function generateRecoveryLinkAction(
   if (getUserErr || !email) {
     return { error: "No se pudo encontrar al usuario." };
   }
-
-  const appUrl = getPublicAppUrl();
 
   const { data: linkData, error: linkErr } = await adminClient.auth.admin.generateLink({
     type: "recovery",
