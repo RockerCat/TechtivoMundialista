@@ -1,7 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { isAdmin } from "@/lib/db/admin";
 import { getMatchNewsContext, getRecentResultCategories } from "@/lib/db/news";
 import { buildHeadline, buildBody, selectImageType, classifyResultCategory } from "@/lib/news";
@@ -20,6 +22,10 @@ export type RecalculateState   =
 export type SnapshotState =
   | { error: string }
   | { success: true; snapshot: Record<string, unknown> }
+  | null;
+export type GenerateRecoveryLinkState =
+  | { error: string }
+  | { success: true; link: string; email: string }
   | null;
 
 export type MatchPrediction = {
@@ -236,6 +242,71 @@ export async function toggleUserStatusAction(
 
   revalidatePath("/admin/users");
   return { success: true };
+}
+
+// ── generateRecoveryLinkAction ────────────────────────────────────────
+// Admin-only fallback for unreliable "forgot password" emails. Generates
+// a one-time Supabase password-recovery link via the official Admin API
+// (auth.admin.generateLink) — same link type and redirect destination as
+// the standard flow, just handed to the admin instead of emailed by Supabase.
+// The link/token is never persisted or logged; it only ever exists in the
+// action's return value, shown once in the admin's browser.
+
+async function getSiteOrigin(): Promise<string> {
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
+  const h = await headers();
+  const host = h.get("host");
+  const proto = process.env.NODE_ENV === "production" ? "https" : "http";
+  return `${proto}://${host}`;
+}
+
+export async function generateRecoveryLinkAction(
+  _prev: GenerateRecoveryLinkState,
+  formData: FormData
+): Promise<GenerateRecoveryLinkState> {
+  const targetId   = (formData.get("user_id")   as string | null)?.trim() ?? "";
+  const targetName = (formData.get("user_name") as string | null)?.trim() ?? targetId;
+
+  if (!targetId) return { error: "Usuario no especificado." };
+
+  const supabase = await createClient();
+  const { data: { user }, error: authErr } = await supabase.auth.getUser();
+  if (authErr || !user) return { error: "No autenticado." };
+  if (!(await isAdmin(user.id))) return { error: "Sin permisos de administrador." };
+
+  const adminClient = createAdminClient();
+
+  // Look up the target's email server-side via the Admin API rather than
+  // trusting a client-supplied value.
+  const { data: targetUser, error: getUserErr } = await adminClient.auth.admin.getUserById(targetId);
+  const email = targetUser?.user?.email;
+  if (getUserErr || !email) {
+    return { error: "No se pudo encontrar al usuario." };
+  }
+
+  const redirectTo = `${await getSiteOrigin()}/auth/callback?next=/reset-password`;
+
+  const { data: linkData, error: linkErr } = await adminClient.auth.admin.generateLink({
+    type: "recovery",
+    email,
+    options: { redirectTo },
+  });
+
+  if (linkErr) {
+    return { error: `No se pudo generar el enlace: ${linkErr.message}` };
+  }
+
+  const link = linkData.properties.action_link;
+
+  void writeActivity(supabase, {
+    admin_id:     user.id,
+    action:       "generate_recovery_link",
+    entity_type:  "user",
+    entity_id:    targetId,
+    entity_label: targetName,
+  });
+
+  return { success: true, link, email };
 }
 
 // ── updateMatchResultAction ───────────────────────────────────────────

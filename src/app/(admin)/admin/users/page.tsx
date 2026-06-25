@@ -1,5 +1,6 @@
 import { getAdminUsers } from "@/lib/db/admin";
 import UserToggleButton from "@/components/admin/UserToggleButton";
+import RecoveryLinkButton from "@/components/admin/RecoveryLinkButton";
 import { formatRelativeDate } from "@/lib/groups";
 
 export default async function AdminUsersPage() {
@@ -70,7 +71,10 @@ export default async function AdminUsersPage() {
                 </p>
 
                 {/* Actions */}
-                <UserToggleButton userId={u.user_id} userName={u.display_name} isDisabled={u.is_disabled} />
+                <div className="flex items-center gap-1.5">
+                  <RecoveryLinkButton userId={u.user_id} userName={u.display_name} />
+                  <UserToggleButton userId={u.user_id} userName={u.display_name} isDisabled={u.is_disabled} />
+                </div>
               </div>
             ))}
           </div>
