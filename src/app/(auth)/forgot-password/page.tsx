@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Mail, AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { getPublicAppUrl } from "@/lib/site-url";
 import Input from "@/components/ui/Input";
 import TechtivoWordmark from "@/components/ui/TechtivoWordmark";
 
@@ -22,7 +23,7 @@ export default function ForgotPasswordPage() {
     const supabase = createClient();
 
     const { error: resetErr } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: `${window.location.origin}/auth/callback?next=/reset-password`,
+      redirectTo: `${getPublicAppUrl()}/reset-password`,
     });
 
     setLoading(false);

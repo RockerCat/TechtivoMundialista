@@ -1,9 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { getPublicAppUrl } from "@/lib/site-url";
 import { isAdmin } from "@/lib/db/admin";
 import { getMatchNewsContext, getRecentResultCategories } from "@/lib/db/news";
 import { buildHeadline, buildBody, selectImageType, classifyResultCategory } from "@/lib/news";
@@ -246,19 +246,12 @@ export async function toggleUserStatusAction(
 
 // ── generateRecoveryLinkAction ────────────────────────────────────────
 // Admin-only fallback for unreliable "forgot password" emails. Generates
-// a one-time Supabase password-recovery link via the official Admin API
-// (auth.admin.generateLink) — same link type and redirect destination as
-// the standard flow, just handed to the admin instead of emailed by Supabase.
+// a one-time Supabase password-recovery token via the official Admin API
+// (auth.admin.generateLink) and builds our own pollita.techtivo.com URL
+// from `properties.hashed_token` — the admin never sees a supabase.co link.
+// /reset-password verifies it via auth.verifyOtp({ token_hash, type }).
 // The link/token is never persisted or logged; it only ever exists in the
 // action's return value, shown once in the admin's browser.
-
-async function getSiteOrigin(): Promise<string> {
-  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
-  const h = await headers();
-  const host = h.get("host");
-  const proto = process.env.NODE_ENV === "production" ? "https" : "http";
-  return `${proto}://${host}`;
-}
 
 export async function generateRecoveryLinkAction(
   _prev: GenerateRecoveryLinkState,
@@ -284,19 +277,19 @@ export async function generateRecoveryLinkAction(
     return { error: "No se pudo encontrar al usuario." };
   }
 
-  const redirectTo = `${await getSiteOrigin()}/auth/callback?next=/reset-password`;
+  const appUrl = getPublicAppUrl();
 
   const { data: linkData, error: linkErr } = await adminClient.auth.admin.generateLink({
     type: "recovery",
     email,
-    options: { redirectTo },
+    options: { redirectTo: `${appUrl}/reset-password` },
   });
 
   if (linkErr) {
     return { error: `No se pudo generar el enlace: ${linkErr.message}` };
   }
 
-  const link = linkData.properties.action_link;
+  const link = `${appUrl}/reset-password?token_hash=${linkData.properties.hashed_token}&type=recovery`;
 
   void writeActivity(supabase, {
     admin_id:     user.id,

@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Lock, AlertCircle, CheckCircle2, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { validatePassword } from "@/lib/auth-errors";
+import { validatePassword, getAuthErrorMessage } from "@/lib/auth-errors";
 import Input from "@/components/ui/Input";
 import TechtivoWordmark from "@/components/ui/TechtivoWordmark";
 
@@ -19,20 +19,74 @@ export default function ResetPasswordPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error,      setError]      = useState<string | null>(null);
 
+  // Guards against React Strict Mode's double-invoke in dev, which would
+  // otherwise consume a single-use code/token twice.
+  const ranRef = useRef(false);
+
   useEffect(() => {
-    // Errors forwarded from /auth/callback mean the exchange already failed.
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("error")) {
-      setPageState("invalid");
-      return;
+    if (ranRef.current) return;
+    ranRef.current = true;
+
+    const supabase = createClient();
+
+    function clearUrl() {
+      window.history.replaceState(null, "", window.location.pathname);
     }
 
-    // The session was established server-side by /auth/callback.
-    // If a session exists here the user arrived legitimately.
-    const supabase = createClient();
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    async function resolveSession() {
+      // 1. Implicit/hash flow — Supabase recovery tokens delivered as a URL
+      //    fragment (#access_token=...&refresh_token=...&type=recovery).
+      //    The fragment never reaches the server, so it must be read here.
+      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+      const hashAccessToken  = hashParams.get("access_token");
+      const hashRefreshToken = hashParams.get("refresh_token");
+
+      if (hashParams.get("type") === "recovery" && hashAccessToken && hashRefreshToken) {
+        const { error: setErr } = await supabase.auth.setSession({
+          access_token:  hashAccessToken,
+          refresh_token: hashRefreshToken,
+        });
+        clearUrl();
+        setPageState(setErr ? "invalid" : "ready");
+        return;
+      }
+
+      const params = new URLSearchParams(window.location.search);
+
+      // 2. PKCE code flow — self-service "forgot password" links.
+      const code = params.get("code");
+      if (code) {
+        const { error: exchangeErr } = await supabase.auth.exchangeCodeForSession(code);
+        clearUrl();
+        setPageState(exchangeErr ? "invalid" : "ready");
+        return;
+      }
+
+      // 3. Branded token_hash flow — admin-generated recovery links.
+      const tokenHash = params.get("token_hash");
+      if (tokenHash && params.get("type") === "recovery") {
+        const { error: verifyErr } = await supabase.auth.verifyOtp({
+          token_hash: tokenHash,
+          type:       "recovery",
+        });
+        clearUrl();
+        setPageState(verifyErr ? "invalid" : "ready");
+        return;
+      }
+
+      // 4. Explicit error forwarded by a legacy /auth/callback redirect.
+      if (params.get("error")) {
+        setPageState("invalid");
+        return;
+      }
+
+      // 5. Legacy fallback — session already established server-side by an
+      //    older /auth/callback link that redirected here with no params.
+      const { data: { session } } = await supabase.auth.getSession();
       setPageState(session ? "ready" : "invalid");
-    });
+    }
+
+    resolveSession();
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -49,7 +103,7 @@ export default function ResetPasswordPage() {
     setSubmitting(false);
 
     if (updateErr) {
-      setError(updateErr.message ?? "No se pudo actualizar la contraseña.");
+      setError(getAuthErrorMessage(updateErr));
     } else {
       setPageState("success");
       setTimeout(() => router.push("/login"), 2500);
