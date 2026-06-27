@@ -1,3 +1,7 @@
+import type { ClassificationMatch } from "./classification";
+import { computeGroupStandings, computeBestThirds } from "./classification";
+import { projectKnockoutBracket } from "./bracket";
+
 // ── Domain types ──────────────────────────────────────────────────────
 
 export type Team = {
@@ -260,4 +264,73 @@ export function detectCurrentStage(
   if (scheduled) return scheduled.stage;
   // All matches finished — use the last known stage
   return matches[matches.length - 1]?.stage ?? "group";
+}
+
+/**
+ * Resolves knockout match placeholders using bracket projection (same logic as Copa).
+ * Matches whose home_team/away_team are already set in the DB are never overwritten.
+ * Group-stage matches pass through unchanged.
+ */
+export function resolveKnockoutTeams(
+  matches: MatchWithPrediction[]
+): MatchWithPrediction[] {
+  const hasUnresolved = matches.some(
+    (m) => m.stage !== "group" && (m.home_team === null || m.away_team === null)
+  );
+  if (!hasUnresolved) return matches;
+
+  const groupClassificationMatches: ClassificationMatch[] = matches
+    .filter((m) => m.stage === "group")
+    .map((m) => ({
+      group_code: m.group_code,
+      home_score: m.home_score,
+      away_score: m.away_score,
+      status: m.status,
+      home_team: m.home_team,
+      away_team: m.away_team,
+    }));
+
+  const groups     = computeGroupStandings(groupClassificationMatches);
+  const bestThirds = computeBestThirds(groups);
+
+  const byStage = (stage: MatchStage) =>
+    matches.filter((m) => m.stage === stage) as unknown as import("./classification").KnockoutPreviewMatch[];
+
+  const projected = projectKnockoutBracket({
+    groups,
+    bestThirds,
+    roundOf32:     byStage("round_of_32"),
+    roundOf16:     byStage("round_of_16"),
+    quarterFinals: byStage("quarter_final"),
+    semiFinals:    byStage("semi_final"),
+    thirdPlace:    byStage("third_place"),
+    finals:        byStage("final"),
+  });
+
+  const resolvedMap = new Map<string, { home_team: Team | null; away_team: Team | null }>();
+  for (const stage of [
+    projected.roundOf32,
+    projected.roundOf16,
+    projected.quarterFinals,
+    projected.semiFinals,
+    projected.thirdPlace,
+    projected.finals,
+  ]) {
+    for (const m of stage) {
+      resolvedMap.set(m.id, {
+        home_team: m.home_team as Team | null,
+        away_team: m.away_team as Team | null,
+      });
+    }
+  }
+
+  return matches.map((m) => {
+    const resolved = resolvedMap.get(m.id);
+    if (!resolved) return m;
+    return {
+      ...m,
+      home_team: m.home_team ?? resolved.home_team,
+      away_team: m.away_team ?? resolved.away_team,
+    };
+  });
 }

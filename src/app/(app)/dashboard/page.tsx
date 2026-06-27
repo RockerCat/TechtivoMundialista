@@ -9,6 +9,7 @@ import {
   matchClosedReason,
   formatKickoff,
   detectCurrentStage,
+  resolveKnockoutTeams,
   matchTeamName,
   matchTeamFlag,
   PHASE_LABELS,
@@ -44,10 +45,11 @@ export default async function DashboardPage() {
 
   await syncStartedMatches();
 
-  const [matches, groups] = await Promise.all([
+  const [rawMatches, groups] = await Promise.all([
     getMatchesWithPredictions(user.id),
     getUserGroupsWithMeta(user.id),
   ]);
+  const matches = resolveKnockoutTeams(rawMatches);
 
   const community   = groups[0] ?? null;
   const leaderboard = community ? await getGroupLeaderboard(community.id) : [];
