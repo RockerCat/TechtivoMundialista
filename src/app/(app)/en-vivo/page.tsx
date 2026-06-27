@@ -51,7 +51,7 @@ export default async function EnVivoPage() {
         · liveMatches > 0  → refresh every 3 s while tab is visible
         · liveMatches = 0  → refresh every 60 s (checks if any match goes live)
       */}
-      <LiveMatchPoller hasLiveMatch={liveMatches.length > 0} activeInterval={3_000} />
+      <LiveMatchPoller hasLiveMatch={liveMatches.length > 0} activeInterval={10_000} />
 
       {liveMatches.length > 1 ? (
         <MultiLiveView matches={liveMatches} />

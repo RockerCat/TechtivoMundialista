@@ -151,7 +151,7 @@ export default async function MatchDetailPage({
   // ── Render ────────────────────────────────────────────────────────
   return (
     <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
-      <LiveMatchPoller hasLiveMatch={isLive} activeInterval={3_000} />
+      <LiveMatchPoller hasLiveMatch={isLive} activeInterval={10_000} />
 
       {/* Back */}
       <a
