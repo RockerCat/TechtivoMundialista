@@ -38,13 +38,27 @@ export default function AdminCalendarRow({ match }: { match: Match }) {
     useActionState<UpdateMatchState, FormData>(updateMatchResultAction, null);
 
   // Controlled state — syncs from props after each save (same pattern as MatchEditorCard)
-  const [statusVal,    setStatusVal]    = useState<string>(match.status);
-  const [homeScoreVal, setHomeScoreVal] = useState<string | number>(match.home_score ?? "");
-  const [awayScoreVal, setAwayScoreVal] = useState<string | number>(match.away_score ?? "");
+  const [statusVal,       setStatusVal]       = useState<string>(match.status);
+  const [homeScoreVal,    setHomeScoreVal]    = useState<string | number>(match.home_score ?? "");
+  const [awayScoreVal,    setAwayScoreVal]    = useState<string | number>(match.away_score ?? "");
+  const [advancingTeamVal, setAdvancingTeamVal] = useState<string>(match.advancing_team_id ?? "");
 
-  useEffect(() => { setStatusVal(match.status); },              [match.status]);
-  useEffect(() => { setHomeScoreVal(match.home_score ?? ""); }, [match.home_score]);
-  useEffect(() => { setAwayScoreVal(match.away_score ?? ""); }, [match.away_score]);
+  useEffect(() => { setStatusVal(match.status); },                    [match.status]);
+  useEffect(() => { setHomeScoreVal(match.home_score ?? ""); },        [match.home_score]);
+  useEffect(() => { setAwayScoreVal(match.away_score ?? ""); },        [match.away_score]);
+  useEffect(() => { setAdvancingTeamVal(match.advancing_team_id ?? ""); }, [match.advancing_team_id]);
+
+  // Conditions for the advancing-team dropdown
+  const isKnockoutStage   = match.stage !== "group";
+  const bothTeamsResolved = match.home_team !== null && match.away_team !== null;
+  const parsedHome        = homeScoreVal !== "" ? Number(homeScoreVal) : null;
+  const parsedAway        = awayScoreVal !== "" ? Number(awayScoreVal) : null;
+  const scoresAreTied     =
+    parsedHome !== null && parsedAway !== null &&
+    !isNaN(parsedHome) && !isNaN(parsedAway) &&
+    parsedHome === parsedAway;
+  const showAdvancingDropdown = isKnockoutStage && bothTeamsResolved && statusVal === "live"     && scoresAreTied;
+  const preserveAdvancingTeam = isKnockoutStage && bothTeamsResolved && statusVal === "finished" && scoresAreTied;
 
   const matchLabel = `${matchTeamCode(match.home_team, match.home_placeholder)} vs ${matchTeamCode(match.away_team, match.away_placeholder)}${match.group_code ? ` · G${match.group_code}` : ""}`;
 
@@ -156,6 +170,36 @@ export default function AdminCalendarRow({ match }: { match: Match }) {
           </Link>
 
         </div>
+
+        {/* Advancing team — knockout + live + tied + both teams resolved */}
+        {showAdvancingDropdown && (
+          <div className="flex flex-col gap-1 mt-2">
+            <span className="text-[9px] font-semibold text-[#94a3b8] uppercase tracking-wide">
+              Equipo clasificado
+            </span>
+            <select
+              name="advancing_team_id"
+              value={advancingTeamVal}
+              onChange={(e) => setAdvancingTeamVal(e.target.value)}
+              className="w-full h-8 rounded-lg bg-[#0e0e1d] border border-[#2a2a45] text-[#f1f5f9] text-xs px-2 focus:outline-none focus:border-[#38BDF8]/60 transition-colors"
+            >
+              <option value="">— Sin seleccionar —</option>
+              {match.home_team && (
+                <option value={match.home_team.id}>
+                  {matchTeamFlag(match.home_team)} {matchTeamName(match.home_team, match.home_placeholder)} (local)
+                </option>
+              )}
+              {match.away_team && (
+                <option value={match.away_team.id}>
+                  {matchTeamFlag(match.away_team)} {matchTeamName(match.away_team, match.away_placeholder)} (visitante)
+                </option>
+              )}
+            </select>
+          </div>
+        )}
+        {preserveAdvancingTeam && (
+          <input type="hidden" name="advancing_team_id" value={advancingTeamVal} />
+        )}
 
         {/* Feedback */}
         {state && "error" in state && (

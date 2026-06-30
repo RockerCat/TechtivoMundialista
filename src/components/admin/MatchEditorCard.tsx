@@ -267,6 +267,21 @@ export default function MatchEditorCard({ match }: { match: Match }) {
   // Human-readable label passed to server actions for activity logging
   const matchLabel = `${matchTeamCode(match.home_team, match.home_placeholder)} vs ${matchTeamCode(match.away_team, match.away_placeholder)}${match.group_code ? ` · Grupo ${match.group_code}` : ""}`;
 
+  // Conditions for the "Equipo clasificado" field
+  const isKnockoutStage    = match.stage !== "group";
+  const bothTeamsResolved  = match.home_team !== null && match.away_team !== null;
+  const parsedHome         = homeScoreVal !== "" ? Number(homeScoreVal) : null;
+  const parsedAway         = awayScoreVal !== "" ? Number(awayScoreVal) : null;
+  const scoresAreTied      =
+    parsedHome !== null && parsedAway !== null &&
+    !isNaN(parsedHome) && !isNaN(parsedAway) &&
+    parsedHome === parsedAway;
+  // Show the dropdown only while live and tied (admin picks the advancing team mid-match)
+  const showAdvancingDropdown  = isKnockoutStage && bothTeamsResolved && statusVal === "live"     && scoresAreTied;
+  // When closing (Finalizado) a tied knockout, preserve whatever was already saved so the RPC
+  // doesn't complain about a missing advancing_team_id on a finished draw.
+  const preserveAdvancingTeam  = isKnockoutStage && bothTeamsResolved && statusVal === "finished" && scoresAreTied;
+
   return (
     <div className="bg-[#11111c] border border-[#1e1e35] rounded-2xl overflow-hidden">
 
@@ -348,8 +363,8 @@ export default function MatchEditorCard({ match }: { match: Match }) {
               </div>
             </div>
 
-            {/* Advancing team — only for knockout stages (penales) */}
-            {match.stage !== "group" && (match.home_team || match.away_team) && (
+            {/* Advancing team — knockout + live + tied + both teams resolved */}
+            {showAdvancingDropdown && (
               <div className="flex flex-col gap-1.5">
                 <FieldLabel>Equipo clasificado</FieldLabel>
                 <select
@@ -358,7 +373,7 @@ export default function MatchEditorCard({ match }: { match: Match }) {
                   onChange={(e) => setAdvancingTeamVal(e.target.value)}
                   className="h-10 rounded-xl bg-[#0e0e1d] border border-[#2a2a45] text-[#f1f5f9] text-sm px-3 focus:outline-none focus:border-[#38BDF8]/60 focus:ring-2 focus:ring-[#38BDF8]/10 transition-colors"
                 >
-                  <option value="">— No especificado —</option>
+                  <option value="">— Sin seleccionar —</option>
                   {match.home_team && (
                     <option value={match.home_team.id}>
                       {matchTeamFlag(match.home_team)} {matchTeamName(match.home_team, match.home_placeholder)} (local)
@@ -371,9 +386,15 @@ export default function MatchEditorCard({ match }: { match: Match }) {
                   )}
                 </select>
                 <p className="text-[10px] text-[#64748b]">
-                  Requerido al finalizar empate · solo para bracket, no afecta puntuación
+                  Equipo que clasifica en penales · solo para bracket, no afecta puntuación
                 </p>
               </div>
+            )}
+
+            {/* Hidden fallback: when closing (Finalizado) a tied knockout preserve the already-saved
+                advancing team so the RPC doesn't reject a finished draw without one. */}
+            {preserveAdvancingTeam && (
+              <input type="hidden" name="advancing_team_id" value={advancingTeamVal} />
             )}
 
             <FormFeedback state={resultState} />
