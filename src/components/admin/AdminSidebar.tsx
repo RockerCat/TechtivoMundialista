@@ -8,7 +8,6 @@ import {
   CalendarDays,
   Users,
   Link2,
-  Activity,
   ShieldCheck,
 } from "lucide-react";
 import LogoutButton from "@/components/auth/LogoutButton";
@@ -21,7 +20,6 @@ const NAV = [
   { href: "/admin/users",       label: "Usuarios",     icon: Users           },
   { href: "/admin/ranking",         label: "Ranking",        icon: SoccerBallIcon },
   { href: "/admin/invitations",     label: "Invitaciones",   icon: Link2       },
-  { href: "/admin/activity",    label: "Actividad",    icon: Activity        },
   { href: "/admin/security",    label: "Seguridad",    icon: ShieldCheck     },
 ];
 
