@@ -355,6 +355,42 @@ function byMatchNumberAscending(matches: ProjectedKnockoutMatch[]): ProjectedKno
   return [...matches].sort((a, b) => (a.match_number ?? 0) - (b.match_number ?? 0));
 }
 
+// ── Fixed bracket topology (orderByParents fallback) ─────────────────────
+//
+// orderByParents (below) discovers a parent's two children by parsing the
+// parent's LIVE home_placeholder/away_placeholder text. Once a slot is
+// resolved (home_team_id/away_team_id set), that placeholder is cleared to
+// NULL (see admin_edit_match_full) — so the live column can no longer
+// answer "which two earlier matches feed this parent" for an
+// already-decided parent, and orderByParents would otherwise lose track of
+// its children and misplace them.
+//
+// The bracket's SHAPE is fixed at fixture creation and never changes —
+// only who occupies each slot does. This is a read-only, hardcoded mirror
+// of the original placeholder text exactly as seeded in
+// supabase/migrations/035_knockout_fixtures.sql, used ONLY as a fallback to
+// recover a parent's placeholder text for ordering when the live column has
+// been nulled out. It plays no role in resolving which TEAM occupies a
+// slot — that remains entirely driven by resolveSide/computeOutcome above.
+const FIXED_BRACKET_TOPOLOGY: Record<number, { home: string; away: string }> = {
+  89:  { home: "Winner M74",  away: "Winner M77"  },
+  90:  { home: "Winner M73",  away: "Winner M75"  },
+  91:  { home: "Winner M76",  away: "Winner M78"  },
+  92:  { home: "Winner M79",  away: "Winner M80"  },
+  93:  { home: "Winner M83",  away: "Winner M84"  },
+  94:  { home: "Winner M81",  away: "Winner M82"  },
+  95:  { home: "Winner M86",  away: "Winner M88"  },
+  96:  { home: "Winner M85",  away: "Winner M87"  },
+  97:  { home: "Winner M89",  away: "Winner M90"  },
+  98:  { home: "Winner M93",  away: "Winner M94"  },
+  99:  { home: "Winner M91",  away: "Winner M92"  },
+  100: { home: "Winner M95",  away: "Winner M96"  },
+  101: { home: "Winner M97",  away: "Winner M98"  },
+  102: { home: "Winner M99",  away: "Winner M100" },
+  103: { home: "Loser M101",  away: "Loser M102"  },
+  104: { home: "Winner M101", away: "Winner M102" },
+};
+
 // Re-orders `children` so that, walking `parentsInOrder` in order and each
 // parent's home-then-away placeholder, every referenced child appears in
 // that exact sequence — i.e. the two children of parentsInOrder[0] come
@@ -371,7 +407,13 @@ function orderByParents(
   const used = new Set<number>();
 
   for (const parent of parentsInOrder) {
-    for (const placeholder of [parent.home_placeholder, parent.away_placeholder]) {
+    const fixed = parent.match_number !== null ? FIXED_BRACKET_TOPOLOGY[parent.match_number] : undefined;
+    const placeholders = [
+      parent.home_placeholder ?? fixed?.home ?? null,
+      parent.away_placeholder ?? fixed?.away ?? null,
+    ];
+
+    for (const placeholder of placeholders) {
       const parsed = parsePlaceholder(placeholder);
       const matchNumber =
         parsed.kind === "match_winner" || parsed.kind === "match_loser" ? parsed.matchNumber : null;
