@@ -502,3 +502,88 @@ describe("orderKnockoutBracketForDisplay", () => {
     expect(ordered.roundOf32).toEqual(bracket.roundOf32);
   });
 });
+
+// ── Regression: fixed-topology fallback for already-resolved slots ─────
+//
+// Once a knockout slot resolves to a real team, admin_edit_match_full
+// clears that match's home_placeholder/away_placeholder to NULL. If a
+// LATER round's ordering depends on reading THAT match's placeholder text
+// (as orderByParents does), the live column can no longer answer "which
+// two earlier matches feed this parent" — these tests pin down the
+// fixed-topology fallback added specifically to survive that.
+//
+// Uses the real FIFA 2026 match numbers (89–104) because the fallback
+// table is keyed by them — synthetic numbers would never exercise it.
+describe("orderKnockoutBracketForDisplay — fixed topology fallback (resolved slots)", () => {
+  const FRA = team("FRA"), MAR = team("MAR"), ESP = team("ESP"), NOR = team("NOR"), ENG = team("ENG");
+
+  it("keeps the correct round-of-16 order even though several quarter-final parents already have NULL placeholders", () => {
+    const roundOf16 = [89, 90, 91, 92, 93, 94, 95, 96].map((n) => knockoutMatch({ match_number: n }));
+    const quarterFinals = [
+      // Resolved (both sides real teams) — placeholders wiped, as production does.
+      knockoutMatch({ match_number: 97, home_team: FRA, away_team: MAR }),
+      // Partially resolved: home side real, away side still pending.
+      knockoutMatch({ match_number: 98, home_team: ESP, away_placeholder: "Winner M94" }),
+      knockoutMatch({ match_number: 99, home_team: NOR, away_team: ENG }),
+      // Untouched: both sides still placeholders.
+      knockoutMatch({ match_number: 100, home_placeholder: "Winner M95", away_placeholder: "Winner M96" }),
+    ];
+    const semiFinals = [
+      knockoutMatch({ match_number: 101, home_placeholder: "Winner M97", away_placeholder: "Winner M98" }),
+      knockoutMatch({ match_number: 102, home_placeholder: "Winner M99", away_placeholder: "Winner M100" }),
+    ];
+    const finals = [knockoutMatch({ match_number: 104, home_placeholder: "Winner M101", away_placeholder: "Winner M102" })];
+
+    const bracket = projectKnockoutBracket(
+      emptyBracketInput({ roundOf16, quarterFinals, semiFinals, finals })
+    );
+    const ordered = orderKnockoutBracketForDisplay(bracket);
+
+    expect(ordered.roundOf16.map((m) => m.match_number)).toEqual([89, 90, 93, 94, 91, 92, 95, 96]);
+    expect(ordered.quarterFinals.map((m) => m.match_number)).toEqual([97, 98, 99, 100]);
+  });
+
+  it("derives correct order purely from fixed topology when EVERY parent placeholder in the chain is NULL", () => {
+    // Quarter-finals and semi-finals both fully resolved (real teams on
+    // both sides) — no live placeholder text survives anywhere above
+    // round_of_16. Only FIXED_BRACKET_TOPOLOGY can recover the shape.
+    const roundOf16 = [89, 90, 91, 92, 93, 94, 95, 96].map((n) => knockoutMatch({ match_number: n }));
+    const quarterFinals = [97, 98, 99, 100].map((n) =>
+      knockoutMatch({ match_number: n, home_team: team(`H${n}`), away_team: team(`A${n}`) })
+    );
+    const semiFinals = [101, 102].map((n) =>
+      knockoutMatch({ match_number: n, home_team: team(`H${n}`), away_team: team(`A${n}`) })
+    );
+    const finals = [knockoutMatch({ match_number: 104, home_placeholder: "Winner M101", away_placeholder: "Winner M102" })];
+
+    const bracket = projectKnockoutBracket(
+      emptyBracketInput({ roundOf16, quarterFinals, semiFinals, finals })
+    );
+    const ordered = orderKnockoutBracketForDisplay(bracket);
+
+    expect(ordered.semiFinals.map((m) => m.match_number)).toEqual([101, 102]);
+    expect(ordered.quarterFinals.map((m) => m.match_number)).toEqual([97, 98, 99, 100]);
+    expect(ordered.roundOf16.map((m) => m.match_number)).toEqual([89, 90, 93, 94, 91, 92, 95, 96]);
+  });
+
+  it("prefers the live placeholder over the fixed table whenever the live value is still present", () => {
+    // M97's live away_placeholder deliberately does NOT match what
+    // FIXED_BRACKET_TOPOLOGY has for M97 ("Winner M90") — if the fallback
+    // ever took priority over live data, M90 would show up here instead.
+    const roundOf16 = [89, 90].map((n) => knockoutMatch({ match_number: n }));
+    const decoy      = knockoutMatch({ match_number: 999 });
+    const quarterFinals = [
+      knockoutMatch({ match_number: 97, home_placeholder: "Winner M89", away_placeholder: "Winner M999" }),
+    ];
+
+    const bracket = projectKnockoutBracket(
+      emptyBracketInput({ roundOf16: [...roundOf16, decoy], quarterFinals })
+    );
+    const ordered = orderKnockoutBracketForDisplay(bracket);
+
+    // Live placeholder ("Winner M999") wins: M89 (home) is placed, the
+    // decoy M999 is placed too, and the real M90 (which the fixed table
+    // would have supplied) is NOT pulled in.
+    expect(ordered.roundOf16.map((m) => m.match_number)).toEqual([89, 999, 90]);
+  });
+});
