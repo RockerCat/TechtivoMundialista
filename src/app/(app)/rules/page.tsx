@@ -9,6 +9,7 @@ import {
   PHASE_SCORING,
   SCORING_TABLE_ROWS,
   PHASE_EQUIV_ROWS,
+  scoringRowStage,
   type MatchStage,
 } from "@/lib/matches";
 import { formatCOP, FIXED_FIRST_PRIZE, FIXED_SECOND_PRIZE } from "@/lib/groups";
@@ -27,6 +28,7 @@ export default async function RulesPage() {
   const matches = await getMatchesWithPredictions(user.id);
   const currentStage = detectCurrentStage(matches);
   const currentPhaseLabel = PHASE_LABELS[currentStage];
+  const currentRowStage = scoringRowStage(currentStage);
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6 space-y-8">
@@ -166,7 +168,7 @@ export default async function RulesPage() {
 
           {SCORING_TABLE_ROWS.map(({ stage, label }) => {
             const scoring   = PHASE_SCORING[stage];
-            const isCurrent = PHASE_LABELS[stage] === currentPhaseLabel;
+            const isCurrent = stage === currentRowStage;
 
             return (
               <div

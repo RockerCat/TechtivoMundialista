@@ -204,8 +204,8 @@ export const PHASE_LABELS: Record<MatchStage, string> = {
   round_of_16:   "Fase 3",
   quarter_final: "Fase 4",
   semi_final:    "Semifinal",
-  third_place:   "Semifinal",
-  final:         "Final",
+  third_place:   "Finales",
+  final:         "Finales",
 };
 
 // ── Short labels for tabs (dashboard phase selector) ──────────────────
@@ -228,8 +228,18 @@ export const SCORING_TABLE_ROWS: { stage: MatchStage; label: string }[] = [
   { stage: "round_of_16",   label: "Fase 3 — Octavos"        },
   { stage: "quarter_final", label: "Fase 4 — Cuartos"        },
   { stage: "semi_final",    label: "Semifinal"                },
-  { stage: "final",         label: "Final"                    },
+  { stage: "final",         label: "Finales"                  },
 ];
+
+/**
+ * Row of SCORING_TABLE_ROWS that represents a given match stage.
+ * Third place and the Final share the same scoring tier and are both
+ * represented by the "final" row — resolved from the match's own `stage`
+ * field, never inferred from labels/text.
+ */
+export function scoringRowStage(stage: MatchStage): MatchStage {
+  return stage === "third_place" ? "final" : stage;
+}
 
 // ── Phase equivalency rows — single source of truth for rules page ────
 
@@ -250,7 +260,7 @@ export const PHASE_SCORING: Record<MatchStage, ScoringRule> = {
   round_of_16:   { exact: 5, result: 3 },
   quarter_final: { exact: 6, result: 4 },
   semi_final:    { exact: 7, result: 5 },
-  third_place:   { exact: 7, result: 5 },
+  third_place:   { exact: 8, result: 6 },
   final:         { exact: 8, result: 6 },
 };
 
