@@ -16,6 +16,9 @@ export function tabForPathname(pathname: string): TabId | null {
   if (pathname.startsWith("/dashboard")) return "dashboard";
   if (pathname.startsWith("/leaderboard")) return "leaderboard";
   if (pathname.startsWith("/en-vivo")) return "en-vivo";
+  // "Podio" replaces "En vivo" in the same nav slot once the tournament
+  // finishes, so it shares the "en-vivo" tab identity for highlighting.
+  if (pathname.startsWith("/podio")) return "en-vivo";
   if (pathname.startsWith("/copa")) return "copa";
   if (pathname.startsWith("/community") || pathname.startsWith("/groups")) return "community";
   if (pathname.startsWith("/profile")) return "profile";

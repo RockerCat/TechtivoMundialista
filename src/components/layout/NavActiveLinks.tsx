@@ -3,21 +3,30 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Home, Users, Trophy, ListOrdered, Radio } from "lucide-react";
+import { Home, Users, Trophy, ListOrdered, Radio, Award } from "lucide-react";
 import { useTabTransition, tabForPathname, type TabId } from "./TabTransitionProvider";
 
-const navItems: { href: string; label: string; icon: typeof Home; tab: TabId }[] = [
-  { href: "/dashboard",   label: "Inicio",    icon: Home,        tab: "dashboard"   },
-  { href: "/leaderboard", label: "Tabla",     icon: ListOrdered, tab: "leaderboard" },
-  { href: "/en-vivo",     label: "En Vivo",   icon: Radio,       tab: "en-vivo"     },
-  { href: "/copa",        label: "Copa",      icon: Trophy,      tab: "copa"        },
-  { href: "/community",   label: "Comunidad", icon: Users,       tab: "community"   },
-];
-
-export default function NavActiveLinks({ hasLiveMatch = false }: { hasLiveMatch?: boolean }) {
+export default function NavActiveLinks({
+  hasLiveMatch = false,
+  tournamentFinished = false,
+}: {
+  hasLiveMatch?: boolean;
+  tournamentFinished?: boolean;
+}) {
   const pathname = usePathname();
   const { pendingTab, startTabTransition } = useTabTransition();
   const activeTab = pendingTab ?? tabForPathname(pathname);
+
+  // Same nav slot: "En vivo" until the tournament ends, then "Podio".
+  const navItems: { href: string; label: string; icon: typeof Home; tab: TabId }[] = [
+    { href: "/dashboard",   label: "Inicio",    icon: Home,        tab: "dashboard"   },
+    { href: "/leaderboard", label: "Tabla",     icon: ListOrdered, tab: "leaderboard" },
+    tournamentFinished
+      ? { href: "/podio",   label: "Podio",     icon: Award,       tab: "en-vivo"     }
+      : { href: "/en-vivo", label: "En Vivo",   icon: Radio,       tab: "en-vivo"     },
+    { href: "/copa",        label: "Copa",      icon: Trophy,      tab: "copa"        },
+    { href: "/community",   label: "Comunidad", icon: Users,       tab: "community"   },
+  ];
 
   return (
     <>

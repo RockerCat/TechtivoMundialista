@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { isTournamentFinished } from "@/lib/db/matches";
 import Navbar from "@/components/layout/Navbar";
 import BottomNav from "@/components/layout/BottomNav";
 import AppFooter from "@/components/layout/AppFooter";
@@ -14,15 +15,16 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     .limit(1)
     .maybeSingle();
   const hasLiveMatch = !!liveMatch;
+  const tournamentFinished = await isTournamentFinished();
 
   return (
     <TabTransitionProvider>
-      <Navbar hasLiveMatch={hasLiveMatch} />
+      <Navbar hasLiveMatch={hasLiveMatch} tournamentFinished={tournamentFinished} />
       <div className="pb-16 md:pb-0">
         <TabContentGate>{children}</TabContentGate>
         <AppFooter />
       </div>
-      <BottomNav hasLiveMatch={hasLiveMatch} />
+      <BottomNav hasLiveMatch={hasLiveMatch} tournamentFinished={tournamentFinished} />
     </TabTransitionProvider>
   );
 }

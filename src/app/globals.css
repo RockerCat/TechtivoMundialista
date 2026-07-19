@@ -228,6 +228,45 @@ button {
   .animate-confetti-particle { display: none; }
 }
 
+/* ── Podio final — one-time entrance animations ───────────────────────
+   Used only by PodiumView.tsx (final podium page). Fully isolated from
+   the goal-celebration keyframes above: separate names, no shared state.
+   Pure CSS — plays automatically once each element mounts, no JS timers.
+   (The confetti burst itself uses canvas-confetti — see PodioConfetti.tsx.) */
+@keyframes podium-rise {
+  from { opacity: 0; transform: translateY(24px) scaleY(0.85); transform-origin: bottom; }
+  to   { opacity: 1; transform: translateY(0)     scaleY(1); }
+}
+.animate-podium-rise {
+  animation: podium-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes podium-pop {
+  from { opacity: 0; transform: scale(0.85) translateY(6px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+.animate-podium-pop {
+  animation: podium-pop 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Two short pulses on the champion's pedestal border, then settles back
+   to its static gold glow — a wink, not a permanent spectacle. */
+@keyframes champion-glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+  50%      { box-shadow: 0 0 24px 4px rgba(245, 158, 11, 0.35); }
+}
+.animate-champion-glow {
+  animation: champion-glow-pulse 0.8s ease-in-out 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-podium-rise,
+  .animate-podium-pop,
+  .animate-champion-glow {
+    animation: none;
+  }
+}
+
 /* Hide scrollbar while preserving scroll behaviour */
 .no-scrollbar {
   -ms-overflow-style: none;

@@ -64,15 +64,15 @@ export default async function LeaderboardPage() {
   );
 }
 
-const TOP_ACCENT = {
+export const TOP_ACCENT = {
   1: { bg: "bg-[#f59e0b]/[0.04]", border: "border-[#f59e0b]/20", rankText: "text-[#f59e0b]" },
   2: { bg: "bg-[#94a3b8]/[0.03]", border: "border-[#94a3b8]/15", rankText: "text-[#94a3b8]" },
   3: { bg: "bg-[#cd7c3a]/[0.04]", border: "border-[#cd7c3a]/20", rankText: "text-[#cd7c3a]" },
 } as const;
 
-const MEDALS: Record<number, string> = { 1: "🥇", 2: "🥈", 3: "🥉" };
+export const MEDALS: Record<number, string> = { 1: "🥇", 2: "🥈", 3: "🥉" };
 
-function FullLeaderboard({
+export function FullLeaderboard({
   entries,
   currentUserId,
   prizePool,

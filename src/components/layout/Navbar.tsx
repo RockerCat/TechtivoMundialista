@@ -4,7 +4,13 @@ import NavActiveLinks from "./NavActiveLinks";
 import UserMenu from "./UserMenu";
 import TechtivoWordmark from "@/components/ui/TechtivoWordmark";
 
-export default async function Navbar({ hasLiveMatch = false }: { hasLiveMatch?: boolean }) {
+export default async function Navbar({
+  hasLiveMatch = false,
+  tournamentFinished = false,
+}: {
+  hasLiveMatch?: boolean;
+  tournamentFinished?: boolean;
+}) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -24,7 +30,12 @@ export default async function Navbar({ hasLiveMatch = false }: { hasLiveMatch?: 
         </Link>
 
         {user ? (
-          <AuthenticatedNav displayName={displayName} initial={initial} hasLiveMatch={hasLiveMatch} />
+          <AuthenticatedNav
+            displayName={displayName}
+            initial={initial}
+            hasLiveMatch={hasLiveMatch}
+            tournamentFinished={tournamentFinished}
+          />
         ) : (
           <GuestNav />
         )}
@@ -39,16 +50,18 @@ function AuthenticatedNav({
   displayName,
   initial,
   hasLiveMatch,
+  tournamentFinished,
 }: {
   displayName: string;
   initial: string;
   hasLiveMatch: boolean;
+  tournamentFinished: boolean;
 }) {
   return (
     <>
       {/* Desktop center links */}
       <nav className="hidden md:flex items-center gap-1 flex-1 justify-center">
-        <NavActiveLinks hasLiveMatch={hasLiveMatch} />
+        <NavActiveLinks hasLiveMatch={hasLiveMatch} tournamentFinished={tournamentFinished} />
       </nav>
 
       {/* Right side — UserMenu handles both mobile and desktop */}

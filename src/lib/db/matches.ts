@@ -73,6 +73,29 @@ export async function getMatchesWithPredictions(
 }
 
 /**
+ * True once every match in the tournament has status 'finished' (the same
+ * status the rest of the system already uses to mean "match is over" —
+ * see MatchStatus in @/lib/matches). Read-only; never mutates match state.
+ * Fails closed (returns false) on query error so the Podio page never
+ * unlocks prematurely due to a transient DB issue.
+ */
+export async function isTournamentFinished(): Promise<boolean> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("matches")
+    .select("status");
+
+  if (error) {
+    console.error("[isTournamentFinished]", error.message);
+    return false;
+  }
+  if (!data || data.length === 0) return false;
+
+  return data.every((m) => m.status === "finished");
+}
+
+/**
  * Transitions any overdue 'scheduled' match to 'live'.
  * Idempotent and non-fatal: errors are logged but do not block page renders.
  * Must be called server-side (uses Supabase server client).
