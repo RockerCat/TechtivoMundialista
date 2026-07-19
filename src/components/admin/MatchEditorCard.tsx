@@ -461,6 +461,9 @@ export default function MatchEditorCard({ match }: { match: Match }) {
           </form>
         </div>
 
+        {/* ── Section 3: Predictions (read-only) ───────────────────── */}
+        <PredictionsPanel matchId={match.id} startsAt={match.starts_at} />
+
         {/* ── Section 4: Advanced edit link ───────────────────────── */}
         <div className="border-t border-[#1e1e35] px-5 py-3">
           <Link
