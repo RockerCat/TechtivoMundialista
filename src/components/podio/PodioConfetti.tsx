@@ -3,23 +3,17 @@
 import { useEffect } from "react";
 import confetti from "canvas-confetti";
 
-// Only mounted by PodiumView when the tournament has genuinely finished
-// (`!isPreview && !!first`) — mounting itself is the trigger, so there is
-// no extra "active" prop to track. Fires once per browser tab session via
-// sessionStorage: leaving and reopening the page later (new tab/session)
-// can show it again, but it won't repeat from re-renders or from
-// navigating back to the page within the same session.
-const SESSION_KEY = "pollita_podio_confetti_shown";
-
+// While the Podio stays visible and `active` is true, fires a confetti
+// celebration immediately and then again every CELEBRATION_INTERVAL_MS —
+// driven entirely by `active` (set by PodiumView once the podium is
+// actually on screen), with no sessionStorage/localStorage/global state.
 const CONFETTI_COLORS = ["#F59E0B", "#FBBF24", "#FFFFFF", "#38BDF8"];
 
-// Ceremony sequence: top-center, then ~700ms later top-left, then ~700ms
-// later top-right — three distinct explosions rather than a single blast
-// or a continuous stream. Each burst's particles keep falling for a couple
-// seconds on their own, so the last one (fired at ~1400ms) still reads as
-// part of the same celebration through roughly 3–5s in total.
+// Each celebration is 3 distinct explosions (top-center, then ~700ms later
+// top-left, then ~700ms later top-right) rather than a single blast.
 const BURST_ORIGINS_X = [0.5, 0.15, 0.85];
 const BURST_INTERVAL_MS = 700;
+const CELEBRATION_INTERVAL_MS = 5000;
 
 function fireBurst(x: number) {
   confetti({
@@ -36,25 +30,35 @@ function fireBurst(x: number) {
   });
 }
 
-export default function PodioConfetti() {
+// Fires one 3-burst celebration, returning the pending setTimeout ids so
+// callers can cancel it mid-sequence (e.g. on cleanup/unmount).
+function celebrate(): ReturnType<typeof setTimeout>[] {
+  return BURST_ORIGINS_X.map((x, i) =>
+    setTimeout(() => fireBurst(x), i * BURST_INTERVAL_MS)
+  );
+}
+
+export default function PodioConfetti({ active }: { active: boolean }) {
   useEffect(() => {
+    if (!active) return;
     if (typeof window === "undefined") return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    try {
-      if (sessionStorage.getItem(SESSION_KEY)) return;
-      sessionStorage.setItem(SESSION_KEY, "1");
-    } catch {
-      // sessionStorage unavailable (e.g. private browsing) — still fine to
-      // fire once for this mount, just without the cross-navigation guard.
-    }
+    let burstTimers = celebrate();
 
-    const timers = BURST_ORIGINS_X.map((x, i) =>
-      setTimeout(() => fireBurst(x), i * BURST_INTERVAL_MS)
-    );
+    const intervalId = setInterval(() => {
+      burstTimers = celebrate();
+    }, CELEBRATION_INTERVAL_MS);
 
-    return () => timers.forEach(clearTimeout);
-  }, []);
+    // Runs on `active` flipping to false, on unmount, and once more on
+    // React Strict Mode's dev-only synthetic remount — always tearing
+    // down exactly the interval/timers this invocation created, so at
+    // most one interval is ever alive at a time.
+    return () => {
+      clearInterval(intervalId);
+      burstTimers.forEach(clearTimeout);
+    };
+  }, [active]);
 
   return null;
 }

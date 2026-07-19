@@ -1,6 +1,9 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { formatCOP, computeProjectedPrizes, type LeaderboardEntry, type PrizePool } from "@/lib/groups";
-import { FullLeaderboard, TOP_ACCENT, MEDALS } from "@/app/(app)/leaderboard/page";
+import { FullLeaderboard, TOP_ACCENT, MEDALS } from "@/components/leaderboard/FullLeaderboard";
 import PodioConfetti from "./PodioConfetti";
 
 // Read-only Podio ("final podium") view, shared by:
@@ -32,17 +35,48 @@ export default function PodiumView({
   // Confetti + champion phrase only once the tournament is genuinely over —
   // reuses the exact same gate (`!isPreview`) as the champion phrase below,
   // so an admin who keeps the preview open past the real finish sees both
-  // switch on together. PodioConfetti fires once per browser tab session
-  // (sessionStorage) on mount — it can't restart from a normal re-render.
+  // switch on together.
   const showConfetti = !isPreview && !!first;
 
-  return (
-    <div className="max-w-2xl mx-auto px-4 py-6">
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [animationStarted, setAnimationStarted] = useState(false);
 
-      {showConfetti && <PodioConfetti />}
+  // The celebration must start once the Podio is actually visible to the
+  // user, not merely once it mounts — the page can mount while still
+  // hidden behind a tab-transition skeleton (TabContentGate). An
+  // IntersectionObserver on the outer container ties "animationStarted"
+  // to real, on-screen visibility instead of mount timing.
+  useEffect(() => {
+    const node = containerRef.current;
+    if (!node) return;
+
+    if (typeof IntersectionObserver === "undefined") {
+      // Safe fallback for environments without IntersectionObserver.
+      const timer = setTimeout(() => setAnimationStarted(true), 0);
+      return () => clearTimeout(timer);
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setAnimationStarted(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={containerRef} className="max-w-2xl mx-auto px-4 py-6">
+
+      {showConfetti && <PodioConfetti active={animationStarted} />}
 
       {/* Header */}
-      <div className="mb-10 text-center animate-fade-in-up">
+      <div className={cn("mb-10 text-center", animationStarted && "animate-fade-in-up")}>
         <h1 className="text-2xl font-black text-[#f1f5f9]">Podio final</h1>
         <p className="text-sm text-[#94a3b8] mt-1.5 max-w-md mx-auto">
           Pollita llegó a su final. Gracias por participar, competir y vivir juntos cada partido.
@@ -72,6 +106,7 @@ export default function PodiumView({
                 rank={2}
                 className="order-1"
                 prize={projectedPrizes.get(second.user_id) ?? null}
+                animate={animationStarted}
               />
             )}
             {first && (
@@ -80,6 +115,7 @@ export default function PodiumView({
                 rank={1}
                 className="order-2"
                 prize={projectedPrizes.get(first.user_id) ?? null}
+                animate={animationStarted}
               />
             )}
             {third && (
@@ -88,6 +124,7 @@ export default function PodiumView({
                 rank={3}
                 className="order-3"
                 prize={projectedPrizes.get(third.user_id) ?? null}
+                animate={animationStarted}
               />
             )}
           </div>
@@ -156,11 +193,13 @@ function PodiumBlock({
   rank,
   className,
   prize,
+  animate,
 }: {
   entry: LeaderboardEntry;
   rank: 1 | 2 | 3;
   className?: string;
   prize: { amount: number | null; isSplit: boolean } | null;
+  animate: boolean;
 }) {
   const accent = TOP_ACCENT[rank];
   const prizeAmount = prize?.amount ?? null;
@@ -171,8 +210,8 @@ function PodiumBlock({
   return (
     <div className={cn("flex flex-col items-center w-24 sm:w-28", className)}>
       <div
-        className="flex flex-col items-center w-full animate-podium-pop"
-        style={{ animationDelay: `${delay.pop}ms` }}
+        className={cn("flex flex-col items-center w-full", animate && "animate-podium-pop")}
+        style={animate ? { animationDelay: `${delay.pop}ms` } : undefined}
       >
         <div
           className={cn(
@@ -213,15 +252,16 @@ function PodiumBlock({
       </div>
       <div
         className={cn(
-          "w-full rounded-t-xl mt-4 flex items-start justify-center pt-1.5 relative animate-podium-rise",
+          "w-full rounded-t-xl mt-4 flex items-start justify-center pt-1.5 relative",
+          animate && "animate-podium-rise",
           PODIUM_HEIGHT[rank],
           accent.bg,
           accent.border,
           isChampion ? "border-2 shadow-[0_-6px_20px_rgba(245,158,11,0.15)]" : "border"
         )}
-        style={{ animationDelay: `${delay.rise}ms` }}
+        style={animate ? { animationDelay: `${delay.rise}ms` } : undefined}
       >
-        {isChampion && (
+        {isChampion && animate && (
           <span
             aria-hidden="true"
             className="absolute inset-0 rounded-t-xl pointer-events-none animate-champion-glow"

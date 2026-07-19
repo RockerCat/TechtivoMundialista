@@ -1,0 +1,176 @@
+import { cn } from "@/lib/utils";
+import { formatCOP, computeProjectedPrizes, type LeaderboardEntry, type PrizePool } from "@/lib/groups";
+
+// Moved out of src/app/(app)/leaderboard/page.tsx verbatim (no logic changes)
+// so it can be imported by PodiumView.tsx, a Client Component. Importing it
+// from the page module directly would drag that module's server-only
+// imports (next/headers via lib/supabase/server) into the client bundle.
+// This file itself has no client- or server-only APIs, so it's safe to be
+// rendered from either a Server Component (the leaderboard page) or a
+// Client Component (the Podio view).
+
+export const TOP_ACCENT = {
+  1: { bg: "bg-[#f59e0b]/[0.04]", border: "border-[#f59e0b]/20", rankText: "text-[#f59e0b]" },
+  2: { bg: "bg-[#94a3b8]/[0.03]", border: "border-[#94a3b8]/15", rankText: "text-[#94a3b8]" },
+  3: { bg: "bg-[#cd7c3a]/[0.04]", border: "border-[#cd7c3a]/20", rankText: "text-[#cd7c3a]" },
+} as const;
+
+export const MEDALS: Record<number, string> = { 1: "🥇", 2: "🥈", 3: "🥉" };
+
+export function FullLeaderboard({
+  entries,
+  currentUserId,
+  prizePool,
+}: {
+  entries:       LeaderboardEntry[];
+  currentUserId: string;
+  prizePool:     PrizePool;
+}) {
+  const allZero  = entries.every((e) => e.total_points === 0);
+
+  const projectedPrizes = computeProjectedPrizes(prizePool, entries);
+  const hasSplits = [...projectedPrizes.values()].some((p) => p.isSplit);
+
+  const desktopCols = "grid-cols-[2rem_1fr_4rem_3rem_3rem_3rem]";
+
+  return (
+    <div className="flex flex-col gap-2">
+
+      {/* ── Desktop column headers (sm+) ────────────────────────────── */}
+      <div className={cn("hidden sm:grid items-center gap-3 px-4 pb-1", desktopCols)}>
+        <div />
+        <span className="text-[10px] text-[#64748b] uppercase tracking-widest">Jugador</span>
+        <span className="text-[10px] text-[#64748b] uppercase tracking-widest text-center">Pts</span>
+        <span className="text-[10px] text-[#f59e0b]/70 uppercase tracking-widest text-center">⚡</span>
+        <span className="text-[10px] text-[#38BDF8]/70 uppercase tracking-widest text-center">✓</span>
+        <span className="text-[10px] text-[#64748b] uppercase tracking-widest text-center">Preds</span>
+      </div>
+
+      {entries.map((entry) => {
+        const isMe      = entry.user_id === currentUserId;
+        const accent    = entry.rank in TOP_ACCENT
+          ? TOP_ACCENT[entry.rank as keyof typeof TOP_ACCENT]
+          : null;
+        const rowBg     = isMe ? "bg-[#38BDF8]/[0.05]" : accent?.bg    ?? "bg-[#18182a]";
+        const rowBorder = isMe ? "border-[#38BDF8]/25"  : accent?.border ?? "border-[#2a2a45]";
+        const rankColor = isMe ? "text-[#38BDF8]"        : accent?.rankText ?? "text-[#64748b]";
+        const ptsColor  = entry.total_points === 0
+          ? "text-[#2a2a45]"
+          : isMe            ? "text-[#38BDF8]"
+          : entry.rank === 1 ? "text-[#f59e0b]"
+          : "text-[#f1f5f9]";
+        const prize       = projectedPrizes?.get(entry.user_id) ?? null;
+        const prizeAmount = prize?.amount ?? null;
+        const medal     = MEDALS[entry.rank];
+        const prizeBadge = prizeAmount !== null
+          ? `${entry.rank === 1 ? "🏆" : "🥈"} Premio ${formatCOP(prizeAmount)}`
+          : null;
+
+        return (
+          <div key={entry.user_id}>
+
+            {/* ── Desktop row (sm+) ──────────────────────────────────── */}
+            <div className={cn(
+              "hidden sm:grid items-center gap-3 px-4 py-3 rounded-2xl border",
+              desktopCols, rowBg, rowBorder
+            )}>
+              <span className={cn("text-sm font-bold tabular-nums text-center", rankColor)}>
+                {entry.rank}
+              </span>
+              <div className="flex items-center gap-1.5 min-w-0">
+                <div className={cn(
+                  "w-7 h-7 rounded-full flex items-center justify-center shrink-0 text-xs font-bold",
+                  isMe ? "bg-[#38BDF8]/20 text-[#38BDF8]" : "bg-[#1e1e35] text-[#94a3b8]"
+                )}>
+                  {entry.display_name.charAt(0).toUpperCase()}
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className={cn("text-sm font-bold truncate", isMe ? "text-[#38BDF8]" : "text-[#f1f5f9]")}>
+                      {entry.display_name}
+                    </span>
+                    {isMe && <span className="text-[10px] text-[#38BDF8]/60 font-mono shrink-0">tú</span>}
+                  </div>
+                  {prizeBadge && (
+                    <span className="text-[10px] text-[#f59e0b]/80 font-mono">{prizeBadge}</span>
+                  )}
+                </div>
+              </div>
+              <span className={cn("text-lg font-black tabular-nums text-center", ptsColor)}>
+                {entry.total_points}
+              </span>
+              <span className={cn("text-sm font-bold tabular-nums text-center", entry.exact_count  > 0 ? "text-[#f59e0b]" : "text-[#2a2a45]")}>
+                {entry.exact_count}
+              </span>
+              <span className={cn("text-sm font-bold tabular-nums text-center", entry.result_count > 0 ? "text-[#38BDF8]" : "text-[#2a2a45]")}>
+                {entry.result_count}
+              </span>
+              <span className="text-sm font-bold tabular-nums text-center text-[#64748b]">
+                {entry.pred_count}
+              </span>
+            </div>
+
+            {/* ── Mobile card (<sm) ──────────────────────────────────── */}
+            <div className={cn(
+              "sm:hidden rounded-2xl border px-4 py-3",
+              rowBg, rowBorder
+            )}>
+              {/* Row 1: medal/rank · name (left) — points (right, dominant) */}
+              <div className="flex items-center gap-2">
+                <span className={cn("shrink-0 font-bold tabular-nums", medal ? "text-base leading-none" : cn("text-sm w-5 text-center", rankColor))}>
+                  {medal ?? entry.rank}
+                </span>
+                <span className={cn("flex-1 font-bold text-sm truncate", isMe ? "text-[#38BDF8]" : "text-[#f1f5f9]")}>
+                  {entry.display_name}
+                  {isMe && (
+                    <span className="text-[10px] text-[#38BDF8]/60 font-mono ml-1.5">tú</span>
+                  )}
+                </span>
+                <span className={cn("shrink-0 text-right text-2xl font-black tabular-nums leading-none", ptsColor)}>
+                  {entry.total_points}
+                  <span className="text-[10px] font-normal text-[#64748b] ml-1">pts</span>
+                </span>
+              </div>
+              {/* Row 2: stats strip */}
+              <div className="flex items-center gap-3 pl-7 mt-1.5">
+                <span className={cn("text-xs tabular-nums", entry.result_count > 0 ? "text-[#38BDF8]" : "text-[#475569]")}>
+                  {entry.result_count} ganador{entry.result_count !== 1 ? "es" : ""}
+                </span>
+                <span className={cn("text-xs tabular-nums", entry.exact_count > 0 ? "text-[#f59e0b]" : "text-[#475569]")}>
+                  {entry.exact_count} exacto{entry.exact_count !== 1 ? "s" : ""}
+                </span>
+                <span className="text-xs text-[#475569] tabular-nums">
+                  {entry.pred_count} pred{entry.pred_count !== 1 ? "s" : ""}
+                </span>
+              </div>
+              {/* Row 3: prize badge (optional, top 1/2 only — discreet, never right-aligned) */}
+              {prizeBadge && (
+                <div className="pl-7 mt-1">
+                  <span className="text-[10px] text-[#f59e0b]/60 font-mono">{prizeBadge}</span>
+                </div>
+              )}
+            </div>
+
+          </div>
+        );
+      })}
+
+      {allZero && (
+        <p className="text-[11px] text-[#64748b] text-center pt-2 font-mono">
+          Los puntos y premios proyectados aparecerán cuando se confirmen resultados de partidos.
+        </p>
+      )}
+      {!allZero && hasSplits && (
+        <p className="text-[11px] text-[#64748b] text-center pt-2 font-mono">
+          Premio dividido por empate entre jugadores con el mismo puntaje.
+        </p>
+      )}
+
+      <div className="flex items-center gap-4 justify-center pt-3 border-t border-[#1e1e35] mt-2">
+        <span className="text-[10px] text-[#f59e0b]/70">⚡ Marcador exacto</span>
+        <span className="text-[10px] text-[#38BDF8]/70">✓ Ganador correcto</span>
+        <span className="text-[10px] text-[#64748b] hidden sm:inline">Preds = predicciones</span>
+      </div>
+    </div>
+  );
+}

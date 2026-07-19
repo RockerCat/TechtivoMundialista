@@ -259,11 +259,18 @@ button {
   animation: champion-glow-pulse 0.8s ease-in-out 2;
 }
 
+/* Reduced motion: no vertical movement, no scaling, no repeating pulse —
+   just a brief opacity fade so the podium doesn't feel entirely static. */
+@keyframes podium-fade-reduced {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-podium-rise,
   .animate-podium-pop,
   .animate-champion-glow {
-    animation: none;
+    animation: podium-fade-reduced 0.25s ease both;
   }
 }
 
