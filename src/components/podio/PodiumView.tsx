@@ -25,8 +25,23 @@ export default function PodiumView({
   prizePool: PrizePool;
   isPreview: boolean;
 }) {
-  const [first, second, third] = entries;
-  const pointsGap = first && second ? first.total_points - second.total_points : null;
+  // Grouped by literal rank value (1/2/3), never by array index — a rank
+  // is shared by every user tied on total_points (no other tiebreaker), so
+  // a group can hold more than one entry. This is what makes tied users
+  // land in the correct podium slot instead of being mis-labeled by their
+  // position in the sorted array.
+  const rank1 = entries.filter((e) => e.rank === 1);
+  const rank2 = entries.filter((e) => e.rank === 2);
+  const rank3 = entries.filter((e) => e.rank === 3);
+  const podiumEntries = [...rank1, ...rank2, ...rank3];
+
+  // Gap is measured from the champion tier to the next tier that actually
+  // has someone in it (rank 2, or rank 3 if rank 2 was skipped because of
+  // a tie for 1st).
+  const nextTier = rank2.length > 0 ? rank2 : rank3;
+  const pointsGap = rank1.length > 0 && nextTier.length > 0
+    ? rank1[0].total_points - nextTier[0].total_points
+    : null;
 
   // Same prize computation already used on /leaderboard (handles ties/splits) —
   // no new prize logic is introduced here.
@@ -36,7 +51,7 @@ export default function PodiumView({
   // reuses the exact same gate (`!isPreview`) as the champion phrase below,
   // so an admin who keeps the preview open past the real finish sees both
   // switch on together.
-  const showConfetti = !isPreview && !!first;
+  const showConfetti = !isPreview && rank1.length > 0;
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [animationStarted, setAnimationStarted] = useState(false);
@@ -84,9 +99,9 @@ export default function PodiumView({
         <p className="text-sm font-bold text-[#38BDF8] mt-2">
           Nos vemos en la próxima Pollita!
         </p>
-        {!isPreview && first && (
+        {!isPreview && rank1.length > 0 && (
           <p className="text-sm font-bold text-[#f59e0b] mt-3">
-            🏆 {first.display_name}, campeón de Pollita
+            🏆 {joinNames(rank1.map((e) => e.display_name))}, {rank1.length > 1 ? "campeones" : "campeón"} de Pollita
           </p>
         )}
         {isPreview && (
@@ -99,36 +114,39 @@ export default function PodiumView({
       {/* Podium — 1st centered/tallest, 2nd left, 3rd right */}
       {entries.length > 0 && (
         <div className="mb-10">
-          <div className="flex items-end justify-center gap-2 sm:gap-4">
-            {second && (
+          <div className="flex items-end justify-center gap-2 sm:gap-4 flex-wrap">
+            {rank2.map((entry) => (
               <PodiumBlock
-                entry={second}
+                key={entry.user_id}
+                entry={entry}
                 rank={2}
                 className="order-1"
-                prize={projectedPrizes.get(second.user_id) ?? null}
+                prize={projectedPrizes.get(entry.user_id) ?? null}
                 animate={animationStarted}
               />
-            )}
-            {first && (
+            ))}
+            {rank1.map((entry) => (
               <PodiumBlock
-                entry={first}
+                key={entry.user_id}
+                entry={entry}
                 rank={1}
                 className="order-2"
-                prize={projectedPrizes.get(first.user_id) ?? null}
+                prize={projectedPrizes.get(entry.user_id) ?? null}
                 animate={animationStarted}
               />
-            )}
-            {third && (
+            ))}
+            {rank3.map((entry) => (
               <PodiumBlock
-                entry={third}
+                key={entry.user_id}
+                entry={entry}
                 rank={3}
                 className="order-3"
-                prize={projectedPrizes.get(third.user_id) ?? null}
+                prize={projectedPrizes.get(entry.user_id) ?? null}
                 animate={animationStarted}
               />
-            )}
+            ))}
           </div>
-          {[first, second, third].some((e) => e && projectedPrizes.get(e.user_id)?.isSplit) && (
+          {podiumEntries.some((e) => projectedPrizes.get(e.user_id)?.isSplit) && (
             <p className="text-[10px] text-[#64748b] text-center mt-3">
               * Premio dividido por empate entre jugadores con el mismo puntaje.
             </p>
@@ -141,7 +159,7 @@ export default function PodiumView({
         <StatTile label="Participantes" value={entries.length} />
         <StatTile
           label={isPreview ? "Puntaje líder" : "Puntaje campeón"}
-          value={first ? first.total_points : "–"}
+          value={rank1[0] ? rank1[0].total_points : "–"}
         />
         <StatTile
           label={isPreview ? "Dif. 1º–2º" : "Ventaja final"}
@@ -164,6 +182,13 @@ export default function PodiumView({
       </div>
     </div>
   );
+}
+
+// Spanish-style "A, B y C" join, used to name every tied user sharing a spot.
+function joinNames(names: string[]): string {
+  if (names.length <= 1) return names[0] ?? "";
+  if (names.length === 2) return `${names[0]} y ${names[1]}`;
+  return `${names.slice(0, -1).join(", ")} y ${names[names.length - 1]}`;
 }
 
 const PODIUM_LABEL: Record<1 | 2 | 3, string> = {

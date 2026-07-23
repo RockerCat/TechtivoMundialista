@@ -17,8 +17,10 @@ import {
   formatMemberCount,
   formatRelativeDate,
   formatCOP,
+  computeProjectedPrizes,
   type MemberDetail,
   type LeaderboardEntry,
+  type PrizePool,
   FIXED_FIRST_PRIZE,
   FIXED_SECOND_PRIZE,
 } from "@/lib/groups";
@@ -247,10 +249,14 @@ function LeaderCard({
   }
 
   const first  = leaderboard[0];
-  const second = leaderboard[1] ?? null;
-  const isMe   = first.user_id === currentUserId;
-  const tied   = second !== null && second.total_points === first.total_points;
-  const gap    = second !== null && !tied ? first.total_points - second.total_points : null;
+  // All users sharing the leader's rank (total_points is the only tie
+  // criterion — no other stat may split them into different positions).
+  const leaders = leaderboard.filter((e) => e.rank === first.rank);
+  const others  = leaders.filter((e) => e.user_id !== first.user_id);
+  const isMe    = first.user_id === currentUserId;
+  const tied    = others.length > 0;
+  const next    = leaderboard.find((e) => e.rank !== first.rank) ?? null;
+  const gap     = !tied && next !== null ? first.total_points - next.total_points : null;
 
   return (
     <div className="bg-[#11111c] border border-[#f59e0b]/20 rounded-2xl p-4 flex items-center gap-4">
@@ -262,14 +268,14 @@ function LeaderCard({
             <span className="text-[10px] text-[#38BDF8]/60 font-mono ml-1.5">tú</span>
           )}
         </p>
-        {tied && second && (
+        {tied && (
           <p className="text-[11px] text-[#64748b] mt-0.5">
-            Empate con {second.display_name}
+            Empate con {others.map((e) => e.display_name).join(", ")}
           </p>
         )}
-        {gap !== null && second && (
+        {gap !== null && next !== null && (
           <p className="text-[11px] text-[#64748b] mt-0.5">
-            {gap} pt{gap !== 1 ? "s" : ""} de ventaja sobre {second.display_name}
+            {gap} pt{gap !== 1 ? "s" : ""} de ventaja sobre {next.display_name}
           </p>
         )}
       </div>
@@ -287,21 +293,33 @@ function LeaderCard({
 
 function PrizeSummary({ leaderboard }: { leaderboard: LeaderboardEntry[] }) {
   const allZero = leaderboard.every((e) => e.total_points === 0);
-  const rank1   = allZero ? [] : leaderboard.filter((e) => e.rank === 1);
-  const rank2   = allZero ? [] : leaderboard.filter((e) => e.rank === 2);
 
-  const firstSplit   = rank1.length > 1;
-  const firstNames   = rank1.map((e) => e.display_name);
-  const firstAmount  = rank1.length > 1
-    ? Math.round(FIXED_FIRST_PRIZE / rank1.length)
-    : rank1.length === 1 ? FIXED_FIRST_PRIZE : null;
+  // Fixed prizes sponsored by Techtivo — same pool shape used on /leaderboard
+  // and the dashboard's PrizePoolCard, so all three read identical numbers.
+  const prizePool: PrizePool = {
+    config:       { entry_fee: 0, first_place_pct: 0, second_place_pct: 0 },
+    member_count: leaderboard.length,
+    total:        FIXED_FIRST_PRIZE + FIXED_SECOND_PRIZE,
+    first_prize:  FIXED_FIRST_PRIZE,
+    second_prize: FIXED_SECOND_PRIZE,
+  };
+  const projected = computeProjectedPrizes(prizePool, leaderboard);
 
-  const showSecond   = rank1.length <= 1;
-  const secondSplit  = showSecond && rank2.length > 1;
-  const secondNames  = showSecond ? rank2.map((e) => e.display_name) : [];
-  const secondAmount = showSecond && rank2.length > 1
-    ? Math.round(FIXED_SECOND_PRIZE / rank2.length)
-    : showSecond && rank2.length === 1 ? FIXED_SECOND_PRIZE : null;
+  const rank1 = allZero ? [] : leaderboard.filter((e) => e.rank === 1);
+  const rank2 = allZero ? [] : leaderboard.filter((e) => e.rank === 2);
+
+  const firstSplit  = rank1.length > 1;
+  const firstNames  = rank1.map((e) => e.display_name);
+  const firstAmount = rank1[0] ? projected.get(rank1[0].user_id)?.amount ?? null : null;
+
+  // When everyone ties for 1st, rank 2 is empty (SQL RANK() skips it) — the
+  // 2nd prize was already pooled into the 1st-place split above, so this
+  // line mirrors that same amount instead of showing a separate prize.
+  const secondSplit  = rank2.length > 1 || firstSplit;
+  const secondNames  = rank2.map((e) => e.display_name);
+  const secondAmount = rank2[0]
+    ? projected.get(rank2[0].user_id)?.amount ?? null
+    : firstSplit ? firstAmount : null;
 
   return (
     <div className="bg-[#11111c] border border-[#1e1e35] rounded-2xl p-5 space-y-3">

@@ -528,11 +528,10 @@ function buildProjectedLeaderboard(
     };
   });
 
-  raw.sort((a, b) =>
-    b.projected_points - a.projected_points ||
-    b.projected_exact_count - a.projected_exact_count ||
-    b.projected_result_count - a.projected_result_count
-  );
+  // Rank by projected_points only — no other stat (exact scores, correct
+  // winners, etc.) may split two users with the same projected total into
+  // different positions.
+  raw.sort((a, b) => b.projected_points - a.projected_points);
 
   for (let i = 0; i < raw.length; i++) {
     if (i === 0) {
@@ -541,9 +540,7 @@ function buildProjectedLeaderboard(
       const prev = raw[i - 1];
       const curr = raw[i];
       curr.projected_rank =
-        curr.projected_points      === prev.projected_points &&
-        curr.projected_exact_count === prev.projected_exact_count &&
-        curr.projected_result_count === prev.projected_result_count
+        curr.projected_points === prev.projected_points
           ? prev.projected_rank
           : i + 1;
     }
